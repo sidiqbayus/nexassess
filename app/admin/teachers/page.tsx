@@ -124,7 +124,7 @@ export default function TeachersManagementPage() {
       if (subjErr) throw subjErr;
       if (subjData) setSubjectsList(subjData as Subject[]);
 
-      const { data: teacherData, error: teacherErr } = await supabase.from('users').select('*').eq('role', 'teacher').order('full_name', { ascending: true });
+      const { data: teacherData, error: teacherErr } = await supabase.from('users').select('*').eq('role', 'proctor').order('full_name', { ascending: true }); // Role di Supabase adalah 'proctor'
       if (teacherErr) throw teacherErr;
       setTeachers(teacherData || []);
     } catch (err: any) { showToast("Gagal memuat data: " + err.message, "error"); } finally { setLoading(false); }
@@ -199,7 +199,7 @@ export default function TeachersManagementPage() {
         full_name: formData.full_name, 
         username: formData.username, 
         email: `${formData.username}@nexassess.com`, 
-        role: 'teacher', 
+        role: 'proctor', // PASTIKAN ROLE ADALAH PROCTOR (KARENA GURU ADALAH PENGAWAS)
         taught_subjects: formData.taught_subjects, 
         avatar_url: formData.avatar_url || null, 
         ...(formData.password ? { password: formData.password } : {})
@@ -217,7 +217,7 @@ export default function TeachersManagementPage() {
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error || 'Gagal menyimpan ke server');
+      if (!response.ok) throw new Error(result.error || 'Gagal menyimpan ke server. Pastikan API backend berjalan.');
 
       if (editingId) {
         setTeachers(prev => prev.map(t => t.id === editingId ? { ...t, ...payload } : t));
@@ -300,7 +300,7 @@ export default function TeachersManagementPage() {
             email: `${username}@nexassess.com`, 
             password: finalPassword,
             avatar_url: null, 
-            role: 'teacher', 
+            role: 'proctor', // PASTIKAN INI ADALAH PROCTOR
             taught_subjects: matchedSubjectIds,
             isDuplicate: isDuplicateInDB || isDuplicateInFile
           };
@@ -469,13 +469,13 @@ export default function TeachersManagementPage() {
 
       {/* ================= CUSTOM CONFIRM DIALOG ================= */}
       {confirmDialog && confirmDialog.isOpen && (
-        <div className="fixed inset-0 z-[120] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-sm rounded-2xl md:rounded-[2rem] p-6 md:p-8 shadow-2xl border border-slate-200 animate-in zoom-in-95">
             <div className={`w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-[1.5rem] flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-inner ${confirmDialog.type === 'danger' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-amber-50 text-amber-600 border border-amber-100'}`}>
                <AlertTriangle className="w-6 h-6 md:w-8 md:h-8" />
             </div>
             <h3 className="text-lg md:text-xl font-black text-slate-800 mb-2 text-center leading-tight">{confirmDialog.title}</h3>
-            <p className="text-slate-500 text-xs md:text-sm mb-6 md:mb-8 leading-relaxed font-medium text-center">{confirmDialog.message}</p>
+            <p className="text-slate-500 text-xs md:text-sm mb-6 md:mb-8 leading-relaxed font-medium whitespace-pre-wrap text-center">{confirmDialog.message}</p>
             <div className="flex items-center gap-2 md:gap-3">
               <button onClick={() => setConfirmDialog(null)} className="flex-1 py-2.5 md:py-3.5 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-all shadow-sm">Batal</button>
               <button onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }} className={`flex-1 py-2.5 md:py-3.5 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-white transition-all shadow-md active:scale-95 ${confirmDialog.type === 'danger' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'}`}>
@@ -550,7 +550,7 @@ export default function TeachersManagementPage() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
             <GraduationCap className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Data Guru
           </h1>
-          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola data guru, peran sebagai pembuat soal dan pengawas.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola data pengajar, akses login, dan penugasan mata pelajaran.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full md:w-auto mt-2 sm:mt-0">
           <button onClick={() => setIsImportOpen(true)} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto">
@@ -577,7 +577,7 @@ export default function TeachersManagementPage() {
       <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden animate-in fade-in duration-500 z-0">
         <div className="overflow-x-auto custom-scrollbar">
           {/* Tampilan Desktop (Table) */}
-          <table className="w-full text-sm text-left hidden md:table">
+          <table className="w-full text-sm text-left hidden md:table min-w-[700px]">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
               <tr>
                 <th className="px-6 lg:px-8 py-4 md:py-5 w-16 text-center">No</th>
@@ -828,7 +828,7 @@ export default function TeachersManagementPage() {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200">
           <div className="bg-white w-full max-w-4xl rounded-2xl md:rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[95vh] md:max-h-[90vh]">
             <div className="p-4 md:p-6 lg:p-8 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center shrink-0">
-               <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2 md:gap-3 truncate"><FileUp className="w-5 h-5 md:w-6 md:h-6 text-blue-600 shrink-0"/> <span className="truncate">Import Massal Data Guru</span></h3>
+               <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2 md:gap-3 truncate"><FileUp className="w-5 h-5 md:w-6 md:h-6 text-emerald-500 shrink-0"/> <span className="truncate">Import Massal Data Guru</span></h3>
                <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="p-1.5 md:p-2 bg-white text-slate-400 hover:text-rose-500 border border-slate-200 rounded-full transition-colors shadow-sm shrink-0 ml-2"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
             </div>
             
@@ -847,7 +847,7 @@ export default function TeachersManagementPage() {
                </div>
 
                <label className={`border-2 border-dashed rounded-xl md:rounded-[2rem] p-8 sm:p-12 md:p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
-                 <div className="p-3 sm:p-4 md:p-5 bg-white rounded-full shadow-sm border border-slate-200 mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">{importFile ? <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-emerald-500" /> : <FileSpreadsheet className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />}</div>
+                 <div className="p-3 md:p-5 bg-white rounded-full md:rounded-[1.5rem] shadow-sm border border-slate-200 mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">{importFile ? <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-emerald-500" /> : <FileSpreadsheet className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />}</div>
                  <span className="text-base sm:text-lg md:text-xl font-black text-slate-700 mb-1 leading-tight break-words max-w-full px-2">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
                  {!importFile && <span className="text-xs md:text-sm font-medium text-slate-500 px-4">Klik di sini untuk menelusuri file dari komputer Anda</span>}
                  <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleImportFileChange} />
@@ -857,7 +857,7 @@ export default function TeachersManagementPage() {
                  <div className="border border-slate-200 rounded-xl md:rounded-[1.5rem] overflow-hidden shadow-sm animate-in slide-in-from-bottom-2">
                    <div className="flex justify-between items-center p-4 md:p-5 bg-slate-50 border-b border-slate-100">
                       <p className="text-[10px] md:text-sm font-black text-slate-800 flex items-center gap-1.5 md:gap-2"><LayoutList className="w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/> Preview Data <span className="hidden sm:inline">({previewData.length} Baris)</span></p>
-                      <p className="text-[9px] md:text-xs font-bold text-slate-500 bg-white px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-slate-200 shadow-sm whitespace-nowrap"><b className="text-emerald-600">{previewData.filter(d=>!d.isDuplicate).length} Valid</b> <span className="mx-1">•</span> <b className="text-rose-600">{previewData.filter(d=>d.isDuplicate).length} Ganda</b></p>
+                      <p className="text-[9px] md:text-xs font-bold text-slate-500 bg-white px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-slate-200 shadow-sm whitespace-nowrap"><b className="text-emerald-600">{previewData.filter(d=>!d.isDuplicate).length} Valid</b> <span className="mx-1">•</span> <b className="text-rose-600">{previewData.filter(d=>d.isDuplicate).length} Duplikat</b></p>
                    </div>
                    
                    <div className="overflow-x-auto max-h-64 md:max-h-80 custom-scrollbar">
