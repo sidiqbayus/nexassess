@@ -598,7 +598,7 @@ export default function StudentsManagementPage() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
             <Users className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Data Siswa
           </h1>
-          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola data peserta ujian, kelas, profil, dan status akun.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola data peserta ujian, kelas, profil, dan status akun siswa.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full md:w-auto mt-2 sm:mt-0">
           <button onClick={() => setIsImportOpen(true)} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto">

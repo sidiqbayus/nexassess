@@ -838,7 +838,7 @@ export default function ReportsAndAnalyticsPage() {
                <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
                  <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Penilaian & Laporan
                </h1>
-               <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11">Data diambil langsung dari hasil pengerjaan siswa di database.</p>
+               <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11">Kelola hasil ujian, proses penilaian, dan analisis nilai peserta.</p>
              </div>
              <button onClick={() => setIsGlobalPrintModalOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm shadow-md shadow-blue-200 transition-all shrink-0 w-full md:w-auto active:scale-95">
                 <Printer className="w-4 h-4 md:w-4 md:h-4"/> Cetak Hasil Keseluruhan

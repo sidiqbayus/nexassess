@@ -327,8 +327,8 @@ export default function SettingsPage() {
         <div className="flex items-center gap-3 md:gap-4 min-w-0">
            <div className="p-2 md:p-3 bg-blue-50 text-blue-600 rounded-xl shrink-0"><MonitorSmartphone className="w-5 h-5 md:w-6 md:h-6" /></div>
            <div className="min-w-0 flex-1">
-             <h1 className="text-lg md:text-xl font-black text-slate-800 truncate">Pengaturan Sistem</h1>
-             <p className="text-slate-500 text-xs md:text-sm font-medium mt-0.5 truncate">Kelola konfigurasi global aplikasi CBT Anda.</p>
+             <h1 className="text-lg md:text-xl font-black text-slate-800 truncate">Pengaturan</h1>
+             <p className="text-slate-500 text-xs md:text-sm font-medium mt-0.5 truncate">Kelola konfigurasi sistem, preferensi aplikasi, dan pengaturan umum.</p>
            </div>
         </div>
         <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3.5 md:px-8 md:py-3.5 rounded-xl md:rounded-2xl font-bold text-xs md:text-sm transition-all shadow-md shadow-blue-200 active:scale-95 whitespace-nowrap w-full md:w-auto mt-2 md:mt-0 shrink-0">

@@ -745,8 +745,8 @@ export default function UnifiedQuestionsBankPage() {
         <div className="space-y-4 md:space-y-6 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 bg-white p-4 md:p-5 lg:p-6 lg:px-8 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal Master</h1>
-              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium sm:ml-8 md:ml-11">Pilih Folder Mata Pelajaran untuk mengelola soal secara permanen.</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal</h1>
+              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium sm:ml-8 md:ml-11">Kelola kumpulan soal berdasarkan mata pelajaran dan kesulitan.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
               <button onClick={openImportModal} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto"><FileUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> Import Massal</button>
@@ -811,7 +811,7 @@ export default function UnifiedQuestionsBankPage() {
                 </div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight mb-1 truncate leading-tight">{activeSubject.name}</h1>
                 <p className="text-xs md:text-sm font-medium text-blue-100 flex items-center gap-1 md:gap-1.5">
-                  <Database className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bank Soal Master
+                  <Database className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bank Soal
                 </p>
               </div>
             </div>

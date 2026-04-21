@@ -353,9 +353,9 @@ export default function ExamCardsPage() {
       <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[1.5rem] shadow-sm flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
         <div className="text-center md:text-left w-full md:w-auto">
           <h1 className="text-xl md:text-3xl font-black text-slate-800 flex items-center justify-center md:justify-start gap-2 md:gap-3">
-            <IdCard className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Cetak Kartu Ujian
+            <IdCard className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Kartu Ujian
           </h1>
-          <p className="text-slate-500 text-[10px] md:text-sm mt-1 font-medium md:ml-11 leading-snug">Desain biodata tergabung dengan foto 3x4 di kiri, lengkap dengan kustomisasi 2 Logo.</p>
+          <p className="text-slate-500 text-[10px] md:text-sm mt-1 font-medium md:ml-11 leading-snug">Kelola dan cetak kartu ujian peserta sebagai identitas pelaksanaan.</p>
         </div>
         
         <button onClick={handlePrintPDF} disabled={isGeneratingPdf || loading} className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-bold text-xs md:text-sm transition-all shadow-sm active:scale-95 whitespace-nowrap w-full md:w-auto shrink-0">

@@ -118,24 +118,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // DAFTAR MENU DENGAN DESKRIPSI SPESIFIK
+  // DAFTAR MENU (Telah dibersihkan dari 'desc')
   const menuItems = [
-    { name: 'Dashboard', desc: 'Ringkasan sistem CBT, statistik ujian, dan aktivitas terbaru.', icon: LayoutDashboard, href: '/admin/dashboard' },
-    { name: 'Data Siswa', desc: 'Kelola data peserta ujian, kelas, profil, dan status akun siswa.', icon: Users, href: '/admin/students' },
-    { name: 'Data Guru', desc: 'Kelola data guru, peran sebagai pembuat soal dan pengawas.', icon: GraduationCap, href: '/admin/teachers' },
-    { name: 'Ruang Ujian', desc: 'Kelola ruang ujian, pembagian peserta, dan pengaturan lokasi.', icon: Building, href: '/admin/rooms' },
-    { name: 'Mata Pelajaran', desc: 'Kelola data mata pelajaran, kurikulum, dan keterkaitan dengan guru.', icon: BookOpen, href: '/admin/subjects' },
-    { name: 'Bank Soal', desc: 'Kelola kumpulan soal berdasarkan mata pelajaran dan kesulitan.', icon: Database, href: '/admin/questions' },
-    { name: 'Manajemen Ujian', desc: 'Kelola jadwal ujian, durasi, paket soal, serta pengaturannya.', icon: CalendarClock, href: '/admin/exams' },
-    { name: 'Pengawasan Ujian', desc: 'Pantau pelaksanaan ujian secara langsung dan aktivitas peserta.', icon: Activity, href: '/admin/monitoring' },
-    { name: 'Keamanan', desc: 'Kelola pengaturan keamanan ujian seperti token, deteksi kecurangan.', icon: ShieldCheck, href: '/admin/security' },
-    { name: 'Penilaian', desc: 'Kelola hasil ujian, proses penilaian, dan analisis nilai peserta.', icon: BarChart3, href: '/admin/reports' },
-    { name: 'Kartu Ujian', desc: 'Kelola dan cetak kartu ujian peserta sebagai identitas pelaksanaan.', icon: IdCard, href: '/admin/cards' }, 
-    { name: 'Presensi Ujian', desc: 'Kelola kehadiran peserta ujian dan rekap presensi.', icon: ClipboardList, href: '/admin/attendance' }, 
-    { name: 'Pengaturan', desc: 'Kelola konfigurasi sistem, preferensi aplikasi, dan pengaturan umum.', icon: Settings, href: '/admin/settings' },
+    { name: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
+    { name: 'Data Siswa', icon: Users, href: '/admin/students' },
+    { name: 'Data Guru', icon: GraduationCap, href: '/admin/teachers' },
+    { name: 'Ruang Ujian', icon: Building, href: '/admin/rooms' },
+    { name: 'Mata Pelajaran', icon: BookOpen, href: '/admin/subjects' },
+    { name: 'Bank Soal', icon: Database, href: '/admin/questions' },
+    { name: 'Manajemen Ujian', icon: CalendarClock, href: '/admin/exams' },
+    { name: 'Pengawasan Ujian', icon: Activity, href: '/admin/monitoring' },
+    { name: 'Keamanan', icon: ShieldCheck, href: '/admin/security' },
+    { name: 'Penilaian', icon: BarChart3, href: '/admin/reports' },
+    { name: 'Kartu Ujian', icon: IdCard, href: '/admin/cards' }, 
+    { name: 'Presensi Ujian', icon: ClipboardList, href: '/admin/attendance' }, 
+    { name: 'Pengaturan', icon: Settings, href: '/admin/settings' },
   ];
 
-  const currentMenu = menuItems.find(item => pathname.startsWith(item.href)) || menuItems[0];
   const finalAvatarUrl = useMemo(() => getDriveImageUrl(adminProfile?.avatar_url), [adminProfile?.avatar_url]);
   const finalAppIconUrl = useMemo(() => getDriveImageUrl(appSettings.ikon_aplikasi), [appSettings.ikon_aplikasi]);
 
@@ -244,29 +243,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ================= AREA KONTEN UTAMA (KANAN) ================= */}
       <main className="flex-1 flex flex-col h-screen min-w-0 bg-slate-50/50">
         
-        {/* HEADER ATAS */}
+        {/* HEADER ATAS KOSONG - HANYA TOMBOL MENU & PROFIL */}
         <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 z-10 w-full">
           
-          <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+          <div className="flex items-center">
             {/* Tombol Buka Sidebar (Hamburger) jika sedang ditutup */}
             <button onClick={toggleSidebar} className={`p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0 ${isSidebarOpen ? 'md:hidden' : ''}`}>
               <Menu className="w-5 h-5 md:w-5 md:h-5" />
             </button>
-            
-            {/* Judul Halaman & Deskripsi Tersinkron */}
-            <div className="flex flex-col justify-center overflow-hidden h-full py-2">
-               <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3 tracking-tight truncate">
-                 <currentMenu.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 hidden sm:block" /> 
-                 <span className="truncate">{currentMenu.name}</span>
-               </h2>
-               <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 hidden lg:block truncate pr-4">
-                 {currentMenu.desc}
-               </p>
-            </div>
           </div>
 
           {/* Profil Kanan Atas (Tersinkron) */}
-          <div className="relative shrink-0 ml-2" ref={profileRef}>
+          <div className="relative shrink-0 ml-auto" ref={profileRef}>
             <button 
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
               className="flex items-center gap-2 md:gap-3 p-1 md:p-1.5 md:pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1rem] md:rounded-[1.5rem] transition-all select-none"

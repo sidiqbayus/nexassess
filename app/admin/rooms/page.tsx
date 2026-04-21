@@ -755,9 +755,9 @@ export default function RoomsManagementPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-white p-4 sm:p-5 md:px-8 md:py-6 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
               <div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
-                  <Building className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Sesi Ruang Ujian
+                  <Building className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Ruang Ujian
                 </h1>
-                <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola sesi ruangan berdasarkan mata pelajaran dan pengawas yang bertugas.</p>
+                <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola ruang ujian, pembagian peserta, dan pengaturan lokasi.</p>
               </div>
               <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 md:gap-3 w-full md:w-auto mt-1 sm:mt-0">
                 <button onClick={() => setIsImportOpen(true)} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto"><FileUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> Import Massal</button>
