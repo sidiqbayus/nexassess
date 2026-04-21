@@ -8,7 +8,7 @@ import {
   LayoutDashboard, Database, CalendarClock, 
   Settings, LogOut, LoaderCircle, Activity,
   GraduationCap, Building, BookOpen, ShieldCheck,
-  Menu, ChevronLeft, UserCircle2, BarChart3 // <-- Import BarChart3 ditambahkan
+  Menu, ChevronLeft, UserCircle2, BarChart3
 } from 'lucide-react'
 
 // HELPER: Mengubah Link Drive menjadi link Thumbnail (Stabil)
@@ -93,6 +93,11 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     
     checkAuthAndData();
 
+    // Sesuaikan sidebar di perangkat mobile saat pertama kali dimuat
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
@@ -101,6 +106,13 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Tutup sidebar otomatis di HP ketika pindah halaman
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  }, [pathname]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -117,7 +129,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     { name: 'Jadwal Ujian', desc: 'Lihat jadwal ujian, waktu pelaksanaan, dan token (Read-only).', icon: CalendarClock, href: '/teacher/exams' },
     { name: 'Bank Soal', desc: 'Kelola kumpulan soal hanya pada mata pelajaran yang Anda ampu.', icon: Database, href: '/teacher/questions' },
     { name: 'Pengawasan Ujian', desc: 'Pantau ujian secara langsung untuk mapel yang Anda ampu atau awasi.', icon: Activity, href: '/teacher/monitoring' },
-    { name: 'Penilaian', desc: 'Akses rekap nilai, esai, dan analisis untuk mapel yang Anda ampu.', icon: BarChart3, href: '/teacher/reports' }, // <-- MENU BARU DITAMBAHKAN
+    { name: 'Penilaian', desc: 'Akses rekap nilai, esai, dan analisis untuk mapel yang Anda ampu.', icon: BarChart3, href: '/teacher/reports' },
     { name: 'Pengaturan Profil', desc: 'Perbarui nama, NIP, foto profil, dan kata sandi Anda.', icon: Settings, href: '/teacher/settings' },
   ];
 
@@ -136,8 +148,8 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     return (
       <div className="h-screen w-full flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
-           <LoaderCircle className="w-12 h-12 text-blue-600 animate-spin" />
-           <p className="font-bold text-slate-500 uppercase tracking-widest text-sm animate-pulse">Memverifikasi Akses Guru...</p>
+           <LoaderCircle className="w-10 h-10 md:w-12 md:h-12 text-blue-600 animate-spin" />
+           <p className="font-bold text-slate-500 uppercase tracking-widest text-xs md:text-sm animate-pulse">Memverifikasi Akses Guru...</p>
         </div>
       </div>
     )
@@ -146,10 +158,22 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       
-      {/* ================= SIDEBAR KIRI (COLLAPSIBLE) ================= */}
-      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-sm z-20 transition-all duration-300 ease-in-out shrink-0 ${isSidebarOpen ? 'w-72' : 'w-[88px] items-center'}`}>
+      {/* ================= OVERLAY MOBILE ================= */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-200"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* ================= SIDEBAR KIRI (COLLAPSIBLE / DRAWER) ================= */}
+      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-40 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
+        ${isSidebarOpen 
+          ? 'w-[280px] md:w-72 translate-x-0' 
+          : 'w-[280px] md:w-[88px] -translate-x-full md:translate-x-0 md:items-center'}
+      `}>
         
-        <div className={`h-24 flex items-center border-b border-slate-100 shrink-0 relative ${isSidebarOpen ? 'px-8 justify-between' : 'justify-center w-full'}`}>
+        <div className={`h-20 md:h-24 flex items-center border-b border-slate-100 shrink-0 relative ${isSidebarOpen ? 'px-6 md:px-8 justify-between' : 'justify-center w-full'}`}>
           {isSidebarOpen ? (
             <div className="flex items-center gap-3 overflow-hidden">
               {finalAppIconUrl ? (
@@ -158,8 +182,8 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                  <GraduationCap className="w-8 h-8 text-blue-600 shrink-0" />
               )}
               <div className="overflow-hidden">
-                <h1 className="text-2xl font-black text-blue-600 tracking-tight truncate">{appSettings.nama_aplikasi}</h1>
-                <p className="text-slate-400 text-[9px] font-black mt-0.5 uppercase tracking-widest">Portal Guru</p>
+                <h1 className="text-xl md:text-2xl font-black text-blue-600 tracking-tight truncate">{appSettings.nama_aplikasi}</h1>
+                <p className="text-slate-400 text-[8px] md:text-[9px] font-black mt-0.5 uppercase tracking-widest">Portal Guru</p>
               </div>
             </div>
           ) : (
@@ -192,9 +216,9 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                 key={item.name} 
                 href={item.href}
                 title={item.name}
-                className={`flex items-center justify-center w-14 h-14 rounded-[1.2rem] transition-all ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-400 hover:bg-slate-100 hover:text-blue-600'}`}
+                className={`flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-[1.2rem] transition-all ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-400 hover:bg-slate-100 hover:text-blue-600'}`}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-5 h-5 md:w-6 md:h-6" />
               </Link>
             )
           })}
@@ -202,7 +226,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
         <div className={`p-4 border-t border-slate-100 bg-slate-50/80 shrink-0 ${isSidebarOpen ? '' : 'flex justify-center'}`}>
           {isSidebarOpen ? (
-            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-4 py-3.5 w-full rounded-2xl font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95 shadow-sm">
+            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-4 py-3.5 w-full rounded-2xl font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95 shadow-sm text-sm">
               <LogOut className="w-5 h-5" /> Keluar Sistem
             </button>
           ) : (
@@ -214,34 +238,32 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
       </aside>
 
       {/* ================= AREA KONTEN UTAMA (KANAN) ================= */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50/50">
+      <main className="flex-1 flex flex-col h-screen min-w-0 bg-slate-50/50">
         
-        <header className="bg-white border-b border-slate-200 h-24 flex items-center justify-between px-6 md:px-10 shrink-0 z-10">
+        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 z-10 w-full">
           
-          <div className="flex items-center gap-4 overflow-hidden">
-            {!isSidebarOpen && (
-              <button onClick={toggleSidebar} className="p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0">
-                <Menu className="w-5 h-5" />
-              </button>
-            )}
+          <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+            <button onClick={toggleSidebar} className={`p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0 ${isSidebarOpen ? 'md:hidden' : ''}`}>
+              <Menu className="w-5 h-5 md:w-5 md:h-5" />
+            </button>
             
             <div className="flex flex-col justify-center overflow-hidden h-full py-2">
-               <h2 className="text-xl md:text-2xl font-black text-slate-800 flex items-center gap-3 tracking-tight">
-                 <currentMenu.icon className="w-6 h-6 text-blue-600 hidden md:block" /> 
-                 {currentMenu.name}
+               <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3 tracking-tight truncate">
+                 <currentMenu.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 hidden sm:block" /> 
+                 <span className="truncate">{currentMenu.name}</span>
                </h2>
-               <p className="text-sm font-medium text-slate-500 mt-1 hidden sm:block truncate pr-4">
+               <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 hidden lg:block truncate pr-4">
                  {currentMenu.desc}
                </p>
             </div>
           </div>
 
-          <div className="relative shrink-0" ref={profileRef}>
+          <div className="relative shrink-0 ml-2" ref={profileRef}>
             <button 
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-              className="flex items-center gap-3 p-1.5 pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1.5rem] transition-all select-none"
+              className="flex items-center gap-2 md:gap-3 p-1 md:p-1.5 md:pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1rem] md:rounded-[1.5rem] transition-all select-none"
             >
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-black relative shrink-0">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl overflow-hidden bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-black relative shrink-0">
                 {finalAvatarUrl ? (
                   <img 
                     src={finalAvatarUrl} 
@@ -259,16 +281,16 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                   getInitials(teacherProfile?.full_name || '')
                 )}
               </div>
-              <div className="hidden md:block text-left">
-                 <p className="text-sm font-bold text-slate-800 leading-tight">{teacherProfile?.full_name || 'Guru'}</p>
-                 <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">GURU</p>
+              <div className="hidden sm:block text-left pr-2 md:pr-0">
+                 <p className="text-xs md:text-sm font-bold text-slate-800 leading-tight max-w-[100px] md:max-w-[150px] truncate">{teacherProfile?.full_name || 'Guru'}</p>
+                 <p className="text-[8px] md:text-[10px] font-black text-blue-600 uppercase tracking-widest mt-0.5">GURU</p>
               </div>
             </button>
 
             {isProfileMenuOpen && (
-              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
+              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
                 <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col items-center text-center">
-                   <div className="w-16 h-16 rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
+                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1rem] md:rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
                     {finalAvatarUrl ? (
                       <img 
                         src={finalAvatarUrl} 
@@ -286,21 +308,21 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                       getInitials(teacherProfile?.full_name || '')
                     )}
                    </div>
-                   <p className="text-base font-black text-slate-800 line-clamp-1 w-full" title={teacherProfile?.full_name}>{teacherProfile?.full_name}</p>
+                   <p className="text-sm md:text-base font-black text-slate-800 line-clamp-1 w-full" title={teacherProfile?.full_name}>{teacherProfile?.full_name}</p>
                    
-                   <p className="text-xs font-medium text-slate-500 line-clamp-1 w-full mt-0.5">{teacherProfile?.email}</p>
+                   <p className="text-[11px] md:text-xs font-medium text-slate-500 line-clamp-1 w-full mt-0.5">{teacherProfile?.email}</p>
                    
-                   <span className="mt-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                   <span className="mt-2.5 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                      GURU PENGAMPU
                    </span>
                 </div>
                 <div className="p-2">
-                   <Link href="/teacher/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-sm text-slate-700 transition-colors">
-                     <UserCircle2 className="w-5 h-5 text-slate-400" /> Pengaturan Profil
+                   <Link href="/teacher/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-xs md:text-sm text-slate-700 transition-colors">
+                     <UserCircle2 className="w-4 h-4 md:w-5 md:h-5 text-slate-400" /> Pengaturan Profil
                    </Link>
                 </div>
                 <div className="p-2 border-t border-slate-100">
-                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-50 text-red-600 font-black text-sm hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95">
+                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 md:py-3 rounded-xl bg-red-50 text-red-600 font-black text-xs md:text-sm hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95">
                      <LogOut className="w-4 h-4" /> Keluar
                    </button>
                 </div>
@@ -316,7 +338,10 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
       </main>
 
       <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        @media (min-width: 768px) {
+           .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+        }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

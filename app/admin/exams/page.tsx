@@ -15,7 +15,7 @@ interface Exam {
   id: string;
   title: string;
   subject: string;
-  subject_id?: string; // TAMBAHAN: Mendukung Relational ID
+  subject_id?: string;
   target_class: string | string[]; 
   grade_level?: string;
   description?: string;
@@ -27,7 +27,7 @@ interface Exam {
   randomize_questions?: boolean;
   randomize_options?: boolean;
   show_result_after?: boolean;
-  exam_token: string;       
+  exam_token: string;        
   token_updated_at: string; 
   start_time: string;
   end_time: string;
@@ -162,8 +162,8 @@ export default function ExamsManagementPage() {
   };
 
   const formatZonedTimeStr = (isoString: string | null) => {
-     if (!isoString) return 'Belum diatur';
-     return new Date(isoString).toLocaleString('id-ID', { timeZone: appTimeZone, dateStyle: 'medium', timeStyle: 'short' });
+      if (!isoString) return 'Belum diatur';
+      return new Date(isoString).toLocaleString('id-ID', { timeZone: appTimeZone, dateStyle: 'medium', timeStyle: 'short' });
   };
 
   const handleCopyToken = (id: string, token: string) => {
@@ -258,7 +258,6 @@ export default function ExamsManagementPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Sesi tidak valid, silakan login kembali.');
 
-      // PERBAIKAN: Mengikutsertakan subject_id ke dalam Payload Data
       const payload = {
         title: formData.title, subject: formData.subject, subject_id: formData.subject_id, grade_level: formData.grade_level, description: formData.description,
         target_class: formData.target_class, duration_minutes: Number(formData.duration_minutes), min_working_minutes: Number(formData.min_working_minutes), 
@@ -487,17 +486,17 @@ export default function ExamsManagementPage() {
   const assignedTeachers = selectedSubjectData ? teachersList.filter(t => t.taught_subjects?.includes(selectedSubjectData.id)) : [];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 text-slate-900 relative">
+    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 text-slate-900 relative pb-24 md:pb-20 max-w-7xl mx-auto">
       
       {/* ================= TOAST NOTIFICATION ELEGAN ================= */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-[1.5rem] shadow-2xl flex items-center gap-3 border backdrop-blur-sm ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[150] w-[90%] sm:w-auto animate-in slide-in-from-top-10">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-2xl flex items-center gap-2 md:gap-3 border backdrop-blur-sm ${
              toast.type === 'success' ? 'bg-emerald-50/95 border-emerald-200 text-emerald-700' : 
              toast.type === 'warning' ? 'bg-amber-50/95 border-amber-200 text-amber-700' : 'bg-rose-50/95 border-rose-200 text-rose-700'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <AlertTriangle className={`w-5 h-5 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-500 shrink-0" /> : <AlertTriangle className={`w-4 h-4 md:w-5 md:h-5 shrink-0 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
@@ -505,15 +504,15 @@ export default function ExamsManagementPage() {
       {/* ================= CUSTOM CONFIRM DIALOG ================= */}
       {confirmDialog && confirmDialog.isOpen && (
         <div className="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white w-full max-w-sm rounded-[1.5rem] p-8 shadow-2xl border border-slate-200">
-            <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-5 ${confirmDialog.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600'}`}>
-               <AlertTriangle className="w-7 h-7" />
+          <div className="bg-white w-full max-w-sm rounded-[1.5rem] p-6 md:p-8 shadow-2xl border border-slate-200">
+            <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mb-4 md:mb-5 ${confirmDialog.type === 'danger' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600'}`}>
+               <AlertTriangle className="w-6 h-6 md:w-7 md:h-7" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 mb-2">{confirmDialog.title}</h3>
-            <p className="text-slate-500 text-sm mb-8 leading-relaxed font-medium whitespace-pre-wrap">{confirmDialog.message}</p>
-            <div className="flex items-center justify-end gap-3 mt-4">
-              <button onClick={() => setConfirmDialog(null)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-all">Batal</button>
-              <button onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }} className={`px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-md active:scale-95 ${confirmDialog.type === 'danger' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'}`}>
+            <h3 className="text-lg md:text-xl font-black text-slate-800 mb-2">{confirmDialog.title}</h3>
+            <p className="text-slate-500 text-xs md:text-sm mb-6 md:mb-8 leading-relaxed font-medium whitespace-pre-wrap">{confirmDialog.message}</p>
+            <div className="flex items-center justify-end gap-2 md:gap-3 mt-4">
+              <button onClick={() => setConfirmDialog(null)} className="px-4 md:px-5 py-2.5 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition-all">Batal</button>
+              <button onClick={() => { confirmDialog.onConfirm(); setConfirmDialog(null); }} className={`px-4 md:px-5 py-2.5 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-white transition-all shadow-md active:scale-95 ${confirmDialog.type === 'danger' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : 'bg-amber-500 hover:bg-amber-600 shadow-amber-200'}`}>
                  Lanjutkan
               </button>
             </div>
@@ -524,29 +523,29 @@ export default function ExamsManagementPage() {
       {/* ================= MODAL PILIHAN FORMAT CETAK GLOBAL ================= */}
       {isPrintOptionsOpen && (
          <div className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-            <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
-               <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div className="bg-white w-full max-w-sm md:max-w-md rounded-2xl md:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
+               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-5 h-5 text-blue-600"/> Cetak Jadwal Ujian</h3>
-                    <p className="text-sm font-medium text-slate-500 mt-1">Pilih format unduhan jadwal seluruh ujian.</p>
+                    <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-5 h-5 text-blue-600"/> Cetak Jadwal</h3>
+                    <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1">Pilih format unduhan jadwal seluruh ujian.</p>
                   </div>
-                  <button onClick={() => setIsPrintOptionsOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm"><X className="w-5 h-5"/></button>
+                  <button onClick={() => setIsPrintOptionsOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                </div>
-               <div className="p-8 space-y-4">
-                  <button onClick={handlePrintAllExamsPDF} disabled={isGeneratingPdf} className="w-full flex items-center p-4 rounded-2xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group text-left disabled:opacity-50">
-                     <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                        {isGeneratingPdf ? <LoaderCircle className="w-6 h-6 animate-spin" /> : <FileText className="w-6 h-6"/>}
+               <div className="p-5 md:p-8 space-y-3 md:space-y-4">
+                  <button onClick={handlePrintAllExamsPDF} disabled={isGeneratingPdf} className="w-full flex items-center p-3 md:p-4 rounded-xl md:rounded-2xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group text-left disabled:opacity-50">
+                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-3 md:mr-4 group-hover:scale-110 transition-transform shrink-0">
+                        {isGeneratingPdf ? <LoaderCircle className="w-5 h-5 md:w-6 md:h-6 animate-spin" /> : <FileText className="w-5 h-5 md:w-6 md:h-6"/>}
                      </div>
                      <div>
-                       <h4 className="font-bold text-slate-800 text-base">{isGeneratingPdf ? 'Memproses PDF...' : 'Unduh Format PDF'}</h4>
-                       <p className="text-xs text-slate-500 font-medium mt-0.5">Daftar agenda ujian siap print (Landscape).</p>
+                       <h4 className="font-bold text-slate-800 text-sm md:text-base">{isGeneratingPdf ? 'Memproses PDF...' : 'Unduh Format PDF'}</h4>
+                       <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-0.5 leading-snug">Daftar agenda ujian siap print (Landscape).</p>
                      </div>
                   </button>
-                  <button onClick={handleDownloadAllExamsExcel} className="w-full flex items-center p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all group text-left">
-                     <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"><FileSpreadsheet className="w-6 h-6"/></div>
+                  <button onClick={handleDownloadAllExamsExcel} className="w-full flex items-center p-3 md:p-4 rounded-xl md:rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all group text-left">
+                     <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 md:mr-4 group-hover:scale-110 transition-transform shrink-0"><FileSpreadsheet className="w-5 h-5 md:w-6 md:h-6"/></div>
                      <div>
-                       <h4 className="font-bold text-slate-800 text-base">Unduh Excel (.xlsx)</h4>
-                       <p className="text-xs text-slate-500 font-medium mt-0.5">File rekap mentah untuk manajemen jadwal.</p>
+                       <h4 className="font-bold text-slate-800 text-sm md:text-base">Unduh Excel (.xlsx)</h4>
+                       <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-0.5 leading-snug">File rekap mentah untuk manajemen jadwal.</p>
                      </div>
                   </button>
                </div>
@@ -556,55 +555,55 @@ export default function ExamsManagementPage() {
 
       {/* ================= MODAL IMPORT EXCEL MASSAL ================= */}
       {isImportOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
-            <div className="p-6 md:p-8 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center shrink-0">
-               <h3 className="text-xl font-black text-slate-800 flex items-center gap-3"><FileUp className="w-6 h-6 text-emerald-500"/> Import Massal Jadwal Ujian</h3>
-               <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="p-2 bg-white rounded-full border border-slate-200 shadow-sm text-slate-400 hover:text-rose-500 transition-colors"><X className="w-5 h-5"/></button>
+        <div className="fixed inset-0 z-[110] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl border border-slate-200 overflow-hidden animate-in zoom-in-95 flex flex-col max-h-[90vh]">
+            <div className="p-4 md:p-6 lg:p-8 border-b border-slate-100 bg-slate-50/80 flex justify-between items-center shrink-0">
+               <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><FileUp className="w-5 h-5 md:w-6 md:h-6 text-emerald-500 shrink-0"/> <span className="truncate">Import Jadwal Ujian</span></h3>
+               <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="p-1.5 md:p-2 bg-white rounded-full border border-slate-200 shadow-sm text-slate-400 hover:text-rose-500 transition-colors shrink-0"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
             </div>
             
-            <div className="p-6 md:p-8 overflow-y-auto space-y-6">
-               <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                  <div className="flex items-start gap-4">
-                     <div className="p-2 bg-blue-100 text-blue-600 rounded-full shrink-0 mt-1"><Info className="w-6 h-6"/></div>
+            <div className="p-4 md:p-6 lg:p-8 overflow-y-auto space-y-4 md:space-y-6 custom-scrollbar flex-1">
+               <div className="bg-blue-50 border border-blue-100 rounded-xl md:rounded-2xl p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 md:gap-6">
+                  <div className="flex items-start gap-3 md:gap-4">
+                     <div className="p-1.5 md:p-2 bg-blue-100 text-blue-600 rounded-full shrink-0 mt-0.5"><Info className="w-4 h-4 md:w-6 md:h-6"/></div>
                      <div>
-                       <h4 className="font-bold text-blue-900 mb-1 text-lg">Panduan Import Cepat</h4>
-                       <p className="text-sm text-blue-800/80 font-medium">
-                         Anda dapat mengunggah puluhan jadwal ujian sekaligus. Sistem akan otomatis mengatur <b>Token Ujian</b> untuk setiap mata pelajaran secara acak dan aman.
+                       <h4 className="font-bold text-blue-900 mb-1 text-base md:text-lg">Panduan Import Cepat</h4>
+                       <p className="text-xs md:text-sm text-blue-800/80 font-medium leading-relaxed">
+                         Anda dapat mengunggah puluhan jadwal sekaligus. Sistem otomatis mengatur <b>Token Ujian</b> secara acak dan aman.
                        </p>
                      </div>
                   </div>
-                  <button onClick={downloadTemplate} className="shrink-0 text-sm font-bold text-blue-700 bg-white border border-blue-200 px-5 py-3 rounded-xl hover:bg-blue-600 hover:text-white transition-colors flex items-center gap-2 shadow-sm"><Download className="w-4 h-4"/> Unduh Template</button>
+                  <button onClick={downloadTemplate} className="shrink-0 w-full sm:w-auto text-xs md:text-sm font-bold text-blue-700 bg-white border border-blue-200 px-4 md:px-5 py-2.5 md:py-3 rounded-lg md:rounded-xl hover:bg-blue-600 hover:text-white transition-colors flex items-center justify-center gap-2 shadow-sm"><Download className="w-4 h-4"/> Unduh Template</button>
                </div>
 
-               <label className={`border-2 border-dashed rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
-                 <div className="p-5 bg-white rounded-[1.5rem] shadow-sm border border-slate-200 mb-4 group-hover:scale-110 transition-all">{importFile ? <CheckCircle2 className="w-10 h-10 text-emerald-500" /> : <FileUp className="w-10 h-10 text-blue-600" />}</div>
-                 <span className="text-xl font-black text-slate-700 mb-1">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
-                 {!importFile && <span className="text-sm font-medium text-slate-500">Klik di sini untuk menelusuri file dari komputer Anda</span>}
+               <label className={`border-2 border-dashed rounded-xl md:rounded-[2.5rem] p-8 md:p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
+                 <div className="p-3 md:p-5 bg-white rounded-full md:rounded-[1.5rem] shadow-sm border border-slate-200 mb-3 md:mb-4 group-hover:scale-110 transition-all">{importFile ? <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10 text-emerald-500" /> : <FileUp className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />}</div>
+                 <span className="text-base md:text-xl font-black text-slate-700 mb-1 leading-tight break-words px-2">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
+                 {!importFile && <span className="text-xs md:text-sm font-medium text-slate-500">Klik di sini untuk menelusuri file dari komputer</span>}
                  <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleImportFileChange} />
                </label>
 
                {previewData.length > 0 && (
-                 <div className="border border-slate-200 rounded-[1.5rem] overflow-hidden shadow-sm">
-                   <div className="flex justify-between items-center p-5 bg-slate-50 border-b border-slate-100">
-                      <p className="text-sm font-black text-slate-800 uppercase tracking-widest">Preview Data ({previewData.length} Jadwal)</p>
+                 <div className="border border-slate-200 rounded-xl md:rounded-[1.5rem] overflow-hidden shadow-sm animate-in slide-in-from-bottom-2">
+                   <div className="flex justify-between items-center p-4 md:p-5 bg-slate-50 border-b border-slate-100">
+                      <p className="text-[10px] md:text-sm font-black text-slate-800 uppercase tracking-widest">Preview Data ({previewData.length} Jadwal)</p>
                    </div>
                    
-                   <div className="overflow-x-auto max-h-64 custom-scrollbar">
-                     <table className="w-full text-sm text-left">
-                       <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase sticky top-0 z-10 shadow-sm">
-                         <tr><th className="p-4 px-6">Mata Pelajaran & Ujian</th><th className="p-4 px-6">Target Kelas</th><th className="p-4 px-6">Waktu & Durasi</th><th className="p-4 px-6">Token Generate</th></tr>
+                   <div className="overflow-x-auto max-h-48 md:max-h-64 custom-scrollbar">
+                     <table className="w-full text-xs md:text-sm text-left whitespace-nowrap">
+                       <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[10px] md:text-xs sticky top-0 z-10 shadow-sm">
+                         <tr><th className="p-3 md:p-4 px-4 md:px-6">Mata Pelajaran & Ujian</th><th className="p-3 md:p-4 px-4 md:px-6">Target Kelas</th><th className="p-3 md:p-4 px-4 md:px-6">Waktu & Durasi</th><th className="p-3 md:p-4 px-4 md:px-6">Token Generate</th></tr>
                        </thead>
                        <tbody className="divide-y divide-slate-100">
                          {previewData.map((r, i) => (
                            <tr key={i} className="bg-white hover:bg-slate-50">
-                             <td className="p-4 px-6">
+                             <td className="p-3 md:p-4 px-4 md:px-6">
                                <p className="font-bold text-slate-800">{r.subject}</p>
-                               <p className="text-[10px] text-slate-500 uppercase tracking-widest font-black mt-1">{r.title} • {r.grade_level}</p>
+                               <p className="text-[9px] md:text-[10px] text-slate-500 uppercase tracking-widest font-black mt-0.5 md:mt-1">{r.title} • {r.grade_level}</p>
                              </td>
-                             <td className="p-4 px-6 font-medium text-slate-700">{r.target_class.join(', ')}</td>
-                             <td className="p-4 px-6 font-medium text-slate-700">{r.duration_minutes} Mnt</td>
-                             <td className="p-4 px-6 font-mono font-bold text-emerald-600">{r.exam_token}</td>
+                             <td className="p-3 md:p-4 px-4 md:px-6 font-medium text-slate-700">{r.target_class.join(', ')}</td>
+                             <td className="p-3 md:p-4 px-4 md:px-6 font-medium text-slate-700">{r.duration_minutes} Mnt</td>
+                             <td className="p-3 md:p-4 px-4 md:px-6 font-mono font-bold text-emerald-600">{r.exam_token}</td>
                            </tr>
                          ))}
                        </tbody>
@@ -614,10 +613,10 @@ export default function ExamsManagementPage() {
                )}
             </div>
 
-            <div className="p-6 md:p-8 border-t border-slate-100 bg-white flex gap-3 shrink-0">
-               <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="flex-1 py-3.5 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-100 transition-colors shadow-sm">Batal</button>
-               <button onClick={executeImport} disabled={previewData.length === 0 || isImporting} className="flex-1 py-3.5 bg-emerald-500 text-white font-bold rounded-xl shadow-md shadow-emerald-200 hover:bg-emerald-600 active:scale-95 transition-all disabled:bg-slate-300 flex items-center justify-center gap-2">
-                 {isImporting ? <LoaderCircle className="w-5 h-5 animate-spin"/> : <Save className="w-5 h-5"/>} Import & Eksekusi Jadwal
+            <div className="p-4 md:p-6 lg:p-8 border-t border-slate-100 bg-white flex gap-2 md:gap-3 shrink-0">
+               <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="flex-1 py-3 md:py-3.5 bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg md:rounded-xl hover:bg-slate-100 transition-colors shadow-sm text-xs md:text-sm">Batal</button>
+               <button onClick={executeImport} disabled={previewData.length === 0 || isImporting} className="flex-1 py-3 md:py-3.5 bg-emerald-500 text-white font-bold rounded-lg md:rounded-xl shadow-md shadow-emerald-200 hover:bg-emerald-600 active:scale-95 transition-all disabled:bg-slate-300 flex items-center justify-center gap-1.5 md:gap-2 text-xs md:text-sm">
+                 {isImporting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin"/> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} Import Jadwal
                </button>
             </div>
           </div>
@@ -625,49 +624,49 @@ export default function ExamsManagementPage() {
       )}
 
       {/* ================= HEADER UTAMA ================= */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[2rem] border border-blue-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 md:px-8 md:py-6 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-            <CalendarClock className="w-8 h-8 text-blue-600" /> Jadwal Ujian
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+            <CalendarClock className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Jadwal Ujian
           </h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium ml-11">Daftar jadwal diurutkan berdasarkan Waktu Mulai terdekat.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Daftar jadwal diurutkan berdasarkan Waktu Mulai terdekat.</p>
         </div>
         
-        <div className="flex flex-wrap gap-3">
-          <button onClick={() => setIsImportOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-bold text-sm shadow-sm transition-colors w-full md:w-auto"><FileUp className="w-5 h-5 text-emerald-500" /> Import Jadwal</button>
-          <button onClick={openCreateModal} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md shadow-blue-200 transition-all active:scale-95 w-full md:w-auto">
-            <Plus className="w-5 h-5" /> Buat Jadwal Baru
+        <div className="flex flex-col sm:flex-row flex-wrap gap-2.5 md:gap-3 w-full md:w-auto">
+          <button onClick={() => setIsImportOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto"><FileUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> Import Jadwal</button>
+          <button onClick={openCreateModal} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-md shadow-blue-200 transition-all active:scale-95 w-full sm:w-auto">
+            <Plus className="w-4 h-4 md:w-5 md:h-5" /> Buat Jadwal Baru
           </button>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 md:gap-4 mt-2">
         <div className="relative w-full max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type="text" placeholder="Cari mapel atau nama ujian..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.5rem] pl-12 pr-4 py-3.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all placeholder-slate-400" />
+          <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+          <input type="text" placeholder="Cari mapel atau nama ujian..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] pl-10 md:pl-12 pr-4 py-3 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-all placeholder-slate-400" />
         </div>
-        <button onClick={() => setIsPrintOptionsOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-blue-700 border border-slate-200 hover:border-blue-200 px-6 py-3.5 rounded-[1.5rem] font-bold text-sm shadow-sm transition-colors shrink-0">
-           <Download className="w-5 h-5 text-blue-600" /> Unduh Seluruh Jadwal
+        <button onClick={() => setIsPrintOptionsOpen(true)} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-blue-700 border border-slate-200 hover:border-blue-200 px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] font-bold text-xs md:text-sm shadow-sm transition-colors shrink-0 w-full sm:w-auto">
+           <Download className="w-4 h-4 md:w-5 md:h-5 text-blue-600" /> Unduh Seluruh Jadwal
         </button>
       </div>
 
       {/* ================= TABEL DATA UJIAN ================= */}
-      <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden z-0">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+      <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden z-0">
+        <div className="overflow-x-auto custom-scrollbar">
+          <table className="w-full text-sm text-left hidden md:table">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
               <tr>
-                <th className="px-8 py-5 w-[45%]">Informasi Ujian</th>
-                <th className="px-8 py-5 w-[25%]">Waktu & Aturan</th>
-                <th className="px-8 py-5 w-[20%]">Token Akses</th>
-                <th className="px-8 py-5 text-right w-[10%]">Aksi</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[45%]">Informasi Ujian</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[25%]">Waktu & Aturan</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[20%]">Token Akses</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 text-right w-[10%]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading ? (
-                <tr><td colSpan={4} className="text-center py-24"><LoaderCircle className="w-10 h-10 text-blue-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Memuat jadwal...</p></td></tr>
+                <tr><td colSpan={4} className="text-center py-20 md:py-24"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-blue-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">Memuat jadwal...</p></td></tr>
               ) : filteredExams.length === 0 ? (
-                <tr><td colSpan={4} className="text-center py-24"><div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100"><CalendarClock className="w-10 h-10 text-slate-300" /></div><p className="text-slate-500 font-bold text-lg">Belum ada jadwal ujian dibuat.</p></td></tr>
+                <tr><td colSpan={4} className="text-center py-20 md:py-24 px-4"><div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-100"><CalendarClock className="w-8 h-8 md:w-10 md:h-10 text-slate-300" /></div><p className="text-slate-500 font-bold text-sm md:text-lg">Belum ada jadwal ujian dibuat.</p></td></tr>
               ) : (
                 filteredExams.map((exam) => {
                   const examTeachers = getTeachersForExam(exam.subject, exam.grade_level || '');
@@ -676,42 +675,42 @@ export default function ExamsManagementPage() {
                   return (
                     <tr key={exam.id} className="hover:bg-blue-50/30 transition-colors">
                       
-                      <td className="px-8 py-5">
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-start gap-4">
-                             <div className="w-12 h-12 rounded-[1.2rem] bg-blue-50 flex items-center justify-center border border-blue-100 shrink-0 shadow-sm mt-0.5">
-                                <BookOpen className="w-6 h-6 text-blue-600"/>
+                          <div className="flex items-start gap-3 md:gap-4 min-w-0">
+                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-[1.2rem] bg-blue-50 flex items-center justify-center border border-blue-100 shrink-0 shadow-sm mt-0.5">
+                                <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-blue-600"/>
                              </div>
-                             <div>
-                                <p className="font-black text-slate-800 text-base leading-tight flex flex-wrap items-center gap-2 mb-1">
-                                  {exam.subject}
-                                  {isTitlePresent && <span className="text-slate-500 font-bold text-xs bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm">{exam.title}</span>}
+                             <div className="min-w-0 flex-1">
+                                <p className="font-black text-slate-800 text-sm md:text-base leading-tight flex flex-wrap items-center gap-1.5 md:gap-2 mb-1 truncate">
+                                  <span className="truncate">{exam.subject}</span>
+                                  {isTitlePresent && <span className="text-slate-500 font-bold text-[9px] md:text-[10px] bg-white px-1.5 md:px-2 py-0.5 rounded border border-slate-200 shadow-sm whitespace-nowrap">{exam.title}</span>}
                                 </p>
                                 
-                                <div className="flex flex-wrap items-center gap-2 mt-2">
-                                  <span className="inline-flex items-center gap-1.5 text-[10px] font-black bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 uppercase tracking-widest">
-                                    <GraduationCap className="w-3.5 h-3.5"/> {exam.grade_level || 'Umum'}
+                                <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-1.5 md:mt-2">
+                                  <span className="inline-flex items-center gap-1 md:gap-1.5 text-[9px] md:text-[10px] font-black bg-indigo-50 text-indigo-600 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-indigo-100 uppercase tracking-widest whitespace-nowrap">
+                                    <GraduationCap className="w-3 h-3 md:w-3.5 md:h-3.5"/> {exam.grade_level || 'Umum'}
                                   </span>
-                                  <span className="text-slate-300">|</span>
+                                  <span className="text-slate-300 hidden sm:inline">|</span>
                                   <div className="flex flex-wrap gap-1">
                                     {examTeachers.length > 0 ? (
                                        examTeachers.map((tName, i) => (
-                                         <span key={i} className="text-[10px] font-bold text-slate-600 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-sm flex items-center gap-1">
-                                           <UserCircle2 className="w-3 h-3 text-blue-400"/> {tName}
+                                         <span key={i} className="text-[9px] md:text-[10px] font-bold text-slate-600 bg-white px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200 shadow-sm flex items-center gap-1 whitespace-nowrap">
+                                           <UserCircle2 className="w-2.5 h-2.5 md:w-3 md:h-3 text-blue-400"/> {tName}
                                          </span>
                                        ))
                                     ) : (
-                                       <span className="text-[10px] italic text-slate-400 font-bold">Tanpa pengampu</span>
+                                       <span className="text-[9px] md:text-[10px] italic text-slate-400 font-bold whitespace-nowrap">Tanpa pengampu</span>
                                     )}
                                   </div>
                                 </div>
                              </div>
                           </div>
 
-                          <div className="mt-2 bg-amber-50/50 p-3 rounded-[1rem] border border-amber-100 w-fit max-w-full">
-                             <div className="flex items-center gap-2">
-                                <Users className="w-4 h-4 text-amber-500 shrink-0"/>
-                                <span className="text-xs font-bold text-slate-700 leading-snug break-words">
+                          <div className="mt-2 bg-amber-50/50 p-2.5 md:p-3 rounded-xl md:rounded-[1rem] border border-amber-100 w-fit max-w-full">
+                             <div className="flex items-center gap-1.5 md:gap-2">
+                                <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500 shrink-0"/>
+                                <span className="text-[10px] md:text-xs font-bold text-slate-700 leading-snug break-words">
                                    {Array.isArray(exam.target_class) ? exam.target_class.join(', ') : (exam.target_class || 'Semua')}
                                 </span>
                              </div>
@@ -719,40 +718,40 @@ export default function ExamsManagementPage() {
                         </div>
                       </td>
 
-                      <td className="px-8 py-5">
-                        <div className="flex flex-col gap-2">
-                          <p className="text-slate-700 font-black text-xs flex items-center gap-2">
-                            <CalendarClock className="w-4 h-4 text-emerald-500" /> 
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
+                        <div className="flex flex-col gap-1.5 md:gap-2">
+                          <p className="text-slate-700 font-black text-[11px] md:text-xs flex items-center gap-1.5 md:gap-2">
+                            <CalendarClock className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500 shrink-0" /> 
                             {formatZonedTimeStr(exam.start_time)} {/* Sync Zone */}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-slate-500 font-bold text-[10px] bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 uppercase tracking-widest">{exam.duration_minutes} Menit</span>
-                            <span className="text-blue-600 font-bold text-[10px] bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100 uppercase tracking-widest">{exam.max_attempts || 1}x Ujian</span>
+                          <div className="flex items-center gap-1.5 md:gap-2 mt-0.5 md:mt-1">
+                            <span className="text-slate-500 font-bold text-[9px] md:text-[10px] bg-slate-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200 uppercase tracking-widest whitespace-nowrap">{exam.duration_minutes} Menit</span>
+                            <span className="text-blue-600 font-bold text-[9px] md:text-[10px] bg-blue-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-blue-100 uppercase tracking-widest whitespace-nowrap">{exam.max_attempts || 1}x Ujian</span>
                           </div>
                         </div>
                       </td>
                       
-                      <td className="px-8 py-5">
-                         <div className="flex items-center gap-2 w-52">
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
+                         <div className="flex items-center gap-1.5 md:gap-2 w-full md:w-48 lg:w-52">
                             <div className="relative flex-1">
-                              <input type="text" value={exam.exam_token} readOnly className="w-full bg-blue-50/50 border border-blue-200 rounded-[1rem] px-3 py-2.5 text-xs text-center text-blue-700 font-black tracking-widest outline-none shadow-sm uppercase pr-12" />
-                              <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-black text-blue-500 bg-white px-1.5 py-0.5 rounded shadow-sm border border-blue-100">
+                              <input type="text" value={exam.exam_token} readOnly className="w-full bg-blue-50/50 border border-blue-200 rounded-xl md:rounded-[1rem] px-2.5 md:px-3 py-2 md:py-2.5 text-[11px] md:text-xs text-center text-blue-700 font-black tracking-widest outline-none shadow-sm uppercase pr-10 md:pr-12" />
+                              <div className="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 text-[8px] md:text-[9px] font-black text-blue-500 bg-white px-1 md:px-1.5 py-0.5 rounded shadow-sm border border-blue-100">
                                 {formatTime(getSecondsLeft(exam.token_updated_at))}
                               </div>
                             </div>
-                            <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-full shadow-sm transition-colors">
-                              {copiedTokenId === exam.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                            <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2 md:p-2.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-full shadow-sm transition-colors shrink-0">
+                              {copiedTokenId === exam.id ? <Check className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                             </button>
-                            <button onClick={() => handleRotateDbToken(exam.id)} title="Acak Token Manual" className="p-2.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-full shadow-sm transition-colors">
-                              <Shuffle className="w-4 h-4" />
+                            <button onClick={() => handleRotateDbToken(exam.id)} title="Acak Token Manual" className="p-2 md:p-2.5 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-full shadow-sm transition-colors shrink-0">
+                              <Shuffle className="w-3.5 h-3.5 md:w-4 md:h-4" />
                             </button>
                          </div>
                       </td>
 
-                      <td className="px-8 py-5 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button onClick={() => openEditModal(exam)} className="p-2.5 bg-white hover:bg-blue-50 text-slate-400 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-full transition-colors shadow-sm" title="Edit Jadwal"><Edit3 className="w-4 h-4" /></button>
-                          <button onClick={() => handleDelete(exam)} className="p-2.5 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-full transition-colors shadow-sm" title="Hapus Jadwal"><Trash2 className="w-4 h-4" /></button>
+                      <td className="px-6 lg:px-8 py-4 md:py-5 text-right">
+                        <div className="flex items-center justify-end gap-1.5 md:gap-2 transition-opacity">
+                          <button onClick={() => openEditModal(exam)} className="p-2 md:p-2.5 bg-white hover:bg-blue-50 text-slate-400 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-full transition-colors shadow-sm shrink-0" title="Edit Jadwal"><Edit3 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                          <button onClick={() => handleDelete(exam)} className="p-2 md:p-2.5 bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-full transition-colors shadow-sm shrink-0" title="Hapus Jadwal"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
                         </div>
                       </td>
                     </tr>
@@ -761,6 +760,98 @@ export default function ExamsManagementPage() {
               )}
             </tbody>
           </table>
+
+          {/* TAMPILAN MOBILE (List Card) */}
+          <div className="md:hidden flex flex-col divide-y divide-slate-100">
+             {loading ? (
+                <div className="py-16 text-center px-4">
+                   <LoaderCircle className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-3" />
+                   <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Memuat jadwal...</p>
+                </div>
+             ) : filteredExams.length === 0 ? (
+                <div className="py-16 text-center px-4">
+                   <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-100"><CalendarClock className="w-8 h-8 text-slate-300" /></div>
+                   <p className="text-slate-500 font-bold text-sm">Belum ada jadwal ujian dibuat.</p>
+                </div>
+             ) : (
+                filteredExams.map((exam) => {
+                   const examTeachers = getTeachersForExam(exam.subject, exam.grade_level || '');
+                   const isTitlePresent = exam.title && exam.title.trim() !== '';
+
+                   return (
+                      <div key={exam.id} className="p-4 flex flex-col gap-4 hover:bg-blue-50/30 transition-colors">
+                         <div className="flex items-start gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100 shrink-0 shadow-sm mt-0.5">
+                               <BookOpen className="w-5 h-5 text-blue-600"/>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                               <p className="font-black text-slate-800 text-sm leading-tight flex flex-wrap items-center gap-1.5 mb-1 truncate">
+                                 <span className="truncate">{exam.subject}</span>
+                                 {isTitlePresent && <span className="text-slate-500 font-bold text-[9px] bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-sm whitespace-nowrap">{exam.title}</span>}
+                               </p>
+                               <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                                 <span className="inline-flex items-center gap-1 text-[9px] font-black bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded border border-indigo-100 uppercase tracking-widest whitespace-nowrap">
+                                    <GraduationCap className="w-3 h-3"/> {exam.grade_level || 'Umum'}
+                                 </span>
+                                 <div className="flex flex-wrap gap-1">
+                                   {examTeachers.length > 0 ? (
+                                      examTeachers.map((tName, i) => (
+                                        <span key={i} className="text-[9px] font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm flex items-center gap-1 whitespace-nowrap">
+                                          <UserCircle2 className="w-2.5 h-2.5 text-blue-400"/> <span className="truncate max-w-[80px]">{tName}</span>
+                                        </span>
+                                      ))
+                                   ) : (
+                                      <span className="text-[9px] italic text-slate-400 font-bold whitespace-nowrap">Tanpa pengampu</span>
+                                   )}
+                                 </div>
+                               </div>
+                            </div>
+                         </div>
+
+                         <div className="bg-amber-50/50 p-2.5 rounded-lg border border-amber-100">
+                            <div className="flex items-center gap-1.5">
+                               <Users className="w-3.5 h-3.5 text-amber-500 shrink-0"/>
+                               <span className="text-[10px] font-bold text-slate-700 leading-snug break-words">
+                                  {Array.isArray(exam.target_class) ? exam.target_class.join(', ') : (exam.target_class || 'Semua')}
+                               </span>
+                            </div>
+                         </div>
+
+                         <div className="flex flex-col gap-1.5">
+                           <p className="text-slate-700 font-black text-[11px] flex items-center gap-1.5">
+                             <CalendarClock className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> 
+                             {formatZonedTimeStr(exam.start_time)}
+                           </p>
+                           <div className="flex items-center gap-1.5 mt-0.5">
+                             <span className="text-slate-500 font-bold text-[9px] bg-slate-50 px-2 py-0.5 rounded border border-slate-200 uppercase tracking-widest">{exam.duration_minutes} Menit</span>
+                             <span className="text-blue-600 font-bold text-[9px] bg-blue-50 px-2 py-0.5 rounded border border-blue-100 uppercase tracking-widest">{exam.max_attempts || 1}x Ujian</span>
+                           </div>
+                         </div>
+
+                         <div className="flex items-center gap-2 mt-1">
+                            <div className="relative flex-1">
+                              <input type="text" value={exam.exam_token} readOnly className="w-full bg-blue-50/50 border border-blue-200 rounded-lg px-2.5 py-2 text-[11px] text-center text-blue-700 font-black tracking-widest outline-none shadow-sm uppercase pr-10" />
+                              <div className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-black text-blue-500 bg-white px-1.5 py-0.5 rounded shadow-sm border border-blue-100">
+                                {formatTime(getSecondsLeft(exam.token_updated_at))}
+                              </div>
+                            </div>
+                            <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-lg shadow-sm transition-colors shrink-0">
+                              {copiedTokenId === exam.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                            <button onClick={() => handleRotateDbToken(exam.id)} title="Acak Token Manual" className="p-2 bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 text-slate-400 rounded-lg shadow-sm transition-colors shrink-0">
+                              <Shuffle className="w-3.5 h-3.5" />
+                            </button>
+                         </div>
+
+                         <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                           <button onClick={() => openEditModal(exam)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Edit3 className="w-3.5 h-3.5" /> Edit</button>
+                           <button onClick={() => handleDelete(exam)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-rose-500 hover:bg-rose-50 hover:text-rose-600 border border-rose-200 hover:border-rose-300 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Trash2 className="w-3.5 h-3.5" /> Hapus</button>
+                         </div>
+                      </div>
+                   );
+                })
+             )}
+          </div>
         </div>
       </div>
 
@@ -768,63 +859,63 @@ export default function ExamsManagementPage() {
           MODAL SUPER LENGKAP: BUAT & EDIT JADWAL
       ========================================================================= */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[95vh] my-auto border border-slate-200">
+        <div className="fixed inset-0 bg-slate-900/60 z-[100] flex items-center justify-center p-2 sm:p-4 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[95vh] my-auto border border-slate-200">
             
-            <div className="bg-slate-50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0 z-10 sticky top-0">
+            <div className="bg-slate-50 border-b border-slate-100 p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shrink-0 z-10 sticky top-0">
               <div>
-                <h2 className="text-2xl md:text-3xl font-black text-slate-800">{editingId ? 'Edit Jadwal Ujian' : 'Buat Ujian Baru'}</h2>
-                <p className="text-sm text-slate-500 mt-1 font-medium">Konfigurasi jadwal, aturan, dan keamanan ujian.</p>
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800">{editingId ? 'Edit Jadwal Ujian' : 'Buat Ujian Baru'}</h2>
+                <p className="text-xs md:text-sm text-slate-500 mt-0.5 md:mt-1 font-medium">Konfigurasi jadwal, aturan, dan keamanan ujian.</p>
               </div>
-              <div className="flex gap-3">
-                <button onClick={() => setIsModalOpen(false)} className="p-3.5 bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-full transition-all shadow-sm"><X className="w-5 h-5" /></button>
-                <button onClick={handleSubmit} disabled={isSubmitting} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-8 py-3.5 rounded-2xl font-bold text-sm transition-all shadow-md active:scale-95 hidden md:flex">
-                  {isSubmitting ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                  {isSubmitting ? 'Menyimpan...' : (editingId ? 'Update Jadwal' : 'Simpan Jadwal')}
+              <div className="flex gap-2.5 md:gap-3 self-end md:self-auto w-full md:w-auto mt-2 md:mt-0">
+                <button onClick={() => setIsModalOpen(false)} className="flex items-center justify-center p-2.5 md:p-3.5 bg-white border border-slate-200 hover:bg-rose-50 text-slate-400 hover:text-rose-500 rounded-xl md:rounded-full transition-all shadow-sm shrink-0"><X className="w-4 h-4 md:w-5 md:h-5" /></button>
+                <button onClick={handleSubmit} disabled={isSubmitting} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-1.5 md:gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all text-xs md:text-sm">
+                  {isSubmitting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Save className="w-4 h-4 md:w-5 md:h-5" />}
+                  <span className="hidden sm:inline">{isSubmitting ? 'Menyimpan...' : (editingId ? 'Update Jadwal' : 'Simpan Jadwal')}</span>
+                  <span className="sm:hidden">{isSubmitting ? 'Menyimpan...' : 'Simpan'}</span>
                 </button>
               </div>
             </div>
 
-            <div id="modal-scroll-area" className="overflow-y-auto p-6 md:p-8 flex-1 bg-slate-50/50 custom-scrollbar">
-              <form id="exam-form" className="space-y-6 pb-10">
+            <div id="modal-scroll-area" className="overflow-y-auto p-4 sm:p-6 md:p-8 flex-1 bg-slate-50/50 custom-scrollbar">
+              <form id="exam-form" className="space-y-4 md:space-y-6 pb-6 md:pb-10">
                 
                 {/* 1. INFORMASI DASAR */}
-                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-                  <div className="flex items-center gap-3 mb-6"><div className="p-3 bg-blue-50 text-blue-600 rounded-[1.2rem]"><BookOpen className="w-6 h-6" /></div><h2 className="text-xl font-black text-slate-800">Informasi Dasar Ujian</h2></div>
+                <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+                  <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6"><div className="p-2 md:p-3 bg-blue-50 text-blue-600 rounded-xl md:rounded-[1.2rem]"><BookOpen className="w-5 h-5 md:w-6 md:h-6" /></div><h2 className="text-lg md:text-xl font-black text-slate-800">Informasi Dasar Ujian</h2></div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
                     
                     {/* KOLOM KIRI */}
-                    <div className="space-y-6">
-                       <div className="bg-slate-50 border border-slate-200 p-6 rounded-[1.5rem] shadow-sm">
-                          <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-3 flex items-center gap-2"><BookOpen className="w-4 h-4"/> Pilih Mata Pelajaran *</label>
-                          <div className="relative mb-3">
-                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <div className="space-y-4 md:space-y-6">
+                       <div className="bg-slate-50 border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[1.5rem] shadow-sm">
+                          <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-2 md:mb-3 flex items-center gap-1.5 md:gap-2"><BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4"/> Pilih Mata Pelajaran *</label>
+                          <div className="relative mb-2 md:mb-3">
+                             <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                              <input 
                                 type="text" placeholder="Ketik untuk mencari mapel..." 
                                 value={subjectSearch} onChange={(e) => setSubjectSearch(e.target.value)}
-                                className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all"
+                                className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-10 md:pl-11 pr-3 md:pr-4 py-2.5 md:py-3 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all"
                              />
                           </div>
                           
-                          <div className="max-h-48 overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
+                          <div className="max-h-40 md:max-h-48 overflow-y-auto space-y-1.5 pr-2 custom-scrollbar">
                              {filteredModalSubjects.length === 0 ? (
-                                <p className="text-xs italic text-slate-400 text-center py-4 font-bold bg-white rounded-xl border border-slate-200">Mata pelajaran tidak ditemukan.</p>
+                                <p className="text-[10px] md:text-xs italic text-slate-400 text-center py-3 md:py-4 font-bold bg-white rounded-lg md:rounded-xl border border-slate-200">Mata pelajaran tidak ditemukan.</p>
                              ) : (
                                 filteredModalSubjects.map(s => {
                                    const isSelected = formData.subject_id === s.id;
                                    return (
                                       <div 
                                          key={s.id} 
-                                         // PERBAIKAN FATAL: Simpan subject_id ke dalam state saat list diklik
                                          onClick={() => setFormData(prev => ({...prev, subject: s.name, subject_id: s.id, grade_level: s.grade_level}))}
-                                         className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${isSelected ? 'bg-blue-50 border-blue-500 shadow-sm' : 'bg-white border-transparent hover:border-slate-200 hover:shadow-sm'}`}
+                                         className={`p-3 md:p-4 rounded-lg md:rounded-xl border-2 cursor-pointer transition-all flex justify-between items-center ${isSelected ? 'bg-blue-50 border-blue-500 shadow-sm' : 'bg-white border-transparent hover:border-slate-200 hover:shadow-sm'}`}
                                       >
-                                         <div>
-                                            <p className={`text-sm font-black ${isSelected ? 'text-blue-800' : 'text-slate-800'}`}>{s.name}</p>
-                                            <p className={`text-[10px] font-black uppercase tracking-widest mt-1 ${isSelected ? 'text-blue-500' : 'text-slate-400'}`}>{s.grade_level}</p>
+                                         <div className="min-w-0 pr-2">
+                                            <p className={`text-xs md:text-sm font-black truncate ${isSelected ? 'text-blue-800' : 'text-slate-800'}`}>{s.name}</p>
+                                            <p className={`text-[9px] md:text-[10px] font-black uppercase tracking-widest mt-0.5 md:mt-1 truncate ${isSelected ? 'text-blue-500' : 'text-slate-400'}`}>{s.grade_level}</p>
                                          </div>
-                                         {isSelected && <CheckCircle2 className="w-5 h-5 text-blue-600" />}
+                                         {isSelected && <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-600 shrink-0" />}
                                       </div>
                                    )
                                 })
@@ -833,14 +924,14 @@ export default function ExamsManagementPage() {
                        </div>
 
                        {formData.subject && (
-                         <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-5 animate-in fade-in shadow-sm">
-                            <label className="text-xs font-black text-indigo-500 uppercase tracking-widest block mb-3 flex items-center gap-2"><UserCircle2 className="w-4 h-4"/> Guru Pengampu Terdeteksi</label>
-                            <div className="flex flex-wrap gap-2">
+                         <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl md:rounded-2xl p-4 md:p-5 animate-in fade-in shadow-sm">
+                            <label className="text-[10px] md:text-xs font-black text-indigo-500 uppercase tracking-widest block mb-2 md:mb-3 flex items-center gap-1.5 md:gap-2"><UserCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4"/> Guru Pengampu Terdeteksi</label>
+                            <div className="flex flex-wrap gap-1.5 md:gap-2">
                                {assignedTeachers.length === 0 ? (
-                                  <span className="text-xs font-bold text-indigo-400 bg-white px-3 py-1.5 rounded-lg border border-indigo-100 shadow-sm">Belum ada guru untuk mapel ini</span>
+                                  <span className="text-[10px] md:text-xs font-bold text-indigo-400 bg-white px-2.5 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-indigo-100 shadow-sm">Belum ada guru</span>
                                 ) : (
                                   assignedTeachers.map(t => (
-                                     <span key={t.id} className="flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-white px-3 py-1.5 rounded-lg border border-indigo-200 shadow-sm"><UserCircle2 className="w-4 h-4 text-indigo-400"/> {t.full_name}</span>
+                                     <span key={t.id} className="flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs font-bold text-indigo-700 bg-white px-2.5 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-indigo-200 shadow-sm"><UserCircle2 className="w-3 h-3 md:w-4 md:h-4 text-indigo-400"/> {t.full_name}</span>
                                   ))
                                )}
                             </div>
@@ -848,117 +939,117 @@ export default function ExamsManagementPage() {
                        )}
 
                        <div>
-                         <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2 mt-4 ml-1">Sub Judul Ujian (Opsional)</label>
-                         <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Contoh: Ulangan Harian 1, UTS Ganjil..." className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 font-bold shadow-sm transition-all" />
+                         <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2 mt-2 md:mt-4 ml-1">Sub Judul Ujian (Opsional)</label>
+                         <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Contoh: Ulangan Harian 1, UTS Ganjil..." className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 font-bold shadow-sm transition-all" />
                        </div>
                     </div>
                     
                     {/* KOLOM KANAN */}
-                    <div className="space-y-6">
-                      <div className="space-y-3 bg-blue-50/30 p-6 rounded-[1.5rem] border border-blue-100 shadow-sm">
-                        <label className="text-xs font-black text-blue-600 flex items-center justify-between uppercase tracking-widest">
-                          <span className="flex items-center gap-2"><KeyRound className="w-4 h-4"/> Token Akses *</span><span className="text-[9px] text-blue-600 bg-white px-2.5 py-1 rounded-full border border-blue-200 shadow-sm">Auto-Rotate</span>
+                    <div className="space-y-4 md:space-y-6">
+                      <div className="space-y-2 md:space-y-3 bg-blue-50/30 p-4 md:p-6 rounded-xl md:rounded-[1.5rem] border border-blue-100 shadow-sm">
+                        <label className="text-[10px] md:text-xs font-black text-blue-600 flex flex-wrap items-center justify-between gap-1 uppercase tracking-widest">
+                          <span className="flex items-center gap-1.5 md:gap-2"><KeyRound className="w-3.5 h-3.5 md:w-4 md:h-4"/> Token Akses *</span><span className="text-[8px] md:text-[9px] text-blue-600 bg-white px-2 md:px-2.5 py-0.5 md:py-1 rounded-full border border-blue-200 shadow-sm whitespace-nowrap">Auto-Rotate</span>
                         </label>
-                        <div className="flex gap-3">
+                        <div className="flex gap-2 md:gap-3">
                           <div className="relative w-full">
-                            <input type="text" required name="exam_token" value={formData.exam_token} readOnly className="w-full bg-white border-2 border-blue-200 rounded-[1.5rem] px-4 py-3.5 text-sm text-center text-blue-700 font-black tracking-widest outline-none shadow-sm uppercase pr-16" />
-                            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1.5 rounded-lg border border-blue-100 shadow-sm">
-                              <Timer className="w-3.5 h-3.5" /> {formatTime(getSecondsLeft(formData.token_updated_at))}
+                            <input type="text" required name="exam_token" value={formData.exam_token} readOnly className="w-full bg-white border-2 border-blue-200 rounded-lg md:rounded-[1.5rem] px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm text-center text-blue-700 font-black tracking-widest outline-none shadow-sm uppercase pr-14 md:pr-16" />
+                            <div className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[9px] md:text-[10px] font-black text-blue-600 bg-blue-50 px-1.5 md:px-2 py-1 md:py-1.5 rounded-md md:rounded-lg border border-blue-100 shadow-sm">
+                              <Timer className="w-3 h-3 md:w-3.5 md:h-3.5" /> {formatTime(getSecondsLeft(formData.token_updated_at))}
                             </div>
                           </div>
-                          <button type="button" onClick={handleRefreshModalToken} title="Acak Manual & Simpan" className="w-14 h-14 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 text-slate-400 rounded-full shadow-sm shrink-0 transition-colors flex items-center justify-center"><Shuffle className="w-5 h-5" /></button>
+                          <button type="button" onClick={handleRefreshModalToken} title="Acak Manual & Simpan" className="w-10 h-10 md:w-14 md:h-14 bg-white border border-slate-200 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 text-slate-400 rounded-lg md:rounded-full shadow-sm shrink-0 transition-colors flex items-center justify-center"><Shuffle className="w-4 h-4 md:w-5 md:h-5" /></button>
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2 ml-1 flex items-center gap-2"><FileText className="w-4 h-4"/> Deskripsi (Opsional)</label>
-                        <textarea name="description" value={formData.description} onChange={handleInputChange} rows={5} placeholder="Instruksi pengerjaan singkat..." className="w-full bg-white border border-slate-200 rounded-[1.5rem] p-5 text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 resize-none font-medium shadow-sm transition-all custom-scrollbar" />
+                      <div className="space-y-1.5 md:space-y-2">
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2 ml-1 flex items-center gap-1.5 md:gap-2"><FileText className="w-3.5 h-3.5 md:w-4 md:h-4"/> Deskripsi (Opsional)</label>
+                        <textarea name="description" value={formData.description} onChange={handleInputChange} rows={4} placeholder="Instruksi pengerjaan singkat..." className="w-full bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] p-3 md:p-5 text-xs md:text-sm text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 resize-none font-medium shadow-sm transition-all custom-scrollbar" />
                       </div>
                     </div>
                   </div>
 
                   {/* BAWAH FULL WIDTH: TARGET KELAS */}
-                  <div className="mt-8 bg-slate-50 border border-slate-200 rounded-[1.5rem] p-6 shadow-sm">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-                      <div className="flex items-center gap-2"><Target className="w-5 h-5 text-emerald-500" /><label className="text-sm font-black text-slate-800 uppercase tracking-widest">Target Kelas *</label></div>
-                      <span className="text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-lg shadow-sm">{formData.target_class.length} Terpilih</span>
+                  <div className="mt-6 md:mt-8 bg-slate-50 border border-slate-200 rounded-xl md:rounded-[1.5rem] p-4 md:p-6 shadow-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 md:gap-3 mb-3 md:mb-5">
+                      <div className="flex items-center gap-1.5 md:gap-2"><Target className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /><label className="text-xs md:text-sm font-black text-slate-800 uppercase tracking-widest">Target Kelas *</label></div>
+                      <span className="text-[9px] md:text-[10px] font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg shadow-sm self-start sm:self-auto">{formData.target_class.length} Terpilih</span>
                     </div>
-                    <div className="flex flex-wrap gap-3 max-h-[200px] overflow-y-auto p-2 custom-scrollbar bg-white rounded-2xl border border-slate-200 shadow-inner">
+                    <div className="flex flex-wrap gap-2 md:gap-3 max-h-[150px] md:max-h-[200px] overflow-y-auto p-1.5 md:p-2 custom-scrollbar bg-white rounded-xl md:rounded-2xl border border-slate-200 shadow-inner">
                       {availableClasses.length > 0 ? availableClasses.map(cls => (
-                        <button key={cls} type="button" onClick={() => handleClassToggle(cls)} className={`px-5 py-2.5 rounded-xl text-sm font-black transition-all border ${formData.target_class.includes(cls) ? 'bg-emerald-500 text-white border-emerald-600 shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-emerald-300 shadow-sm'}`}>{cls}</button>
-                      )) : <p className="text-sm text-slate-500 font-medium p-4 italic bg-slate-50 rounded-xl w-full text-center border border-slate-100">Belum ada data kelas siswa.</p>}
+                        <button key={cls} type="button" onClick={() => handleClassToggle(cls)} className={`px-3 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl text-xs md:text-sm font-black transition-all border ${formData.target_class.includes(cls) ? 'bg-emerald-500 text-white border-emerald-600 shadow-md' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-emerald-300 shadow-sm'}`}>{cls}</button>
+                      )) : <p className="text-xs md:text-sm text-slate-500 font-medium p-3 md:p-4 italic bg-slate-50 rounded-xl w-full text-center border border-slate-100">Belum ada data kelas siswa.</p>}
                     </div>
                   </div>
                 </div>
 
                 {/* 2. JADWAL & WAKTU & ATURAN PENGERJAAN */}
-                <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-                  <div className="flex items-center gap-3 mb-6"><div className="p-3 bg-amber-50 text-amber-600 rounded-[1.2rem]"><Clock className="w-6 h-6" /></div><h2 className="text-xl font-black text-slate-800">Aturan & Waktu Ujian</h2></div>
+                <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+                  <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6"><div className="p-2 md:p-3 bg-amber-50 text-amber-600 rounded-xl md:rounded-[1.2rem]"><Clock className="w-5 h-5 md:w-6 md:h-6" /></div><h2 className="text-lg md:text-xl font-black text-slate-800">Aturan & Waktu Ujian</h2></div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div className="space-y-3">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block ml-1">Durasi (Menit) *</label>
-                      <input type="number" required min="5" name="duration_minutes" value={formData.duration_minutes} onChange={handleInputChange} className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3.5 text-base font-black text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 text-center shadow-sm transition-all" />
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+                    <div className="space-y-1.5 md:space-y-3">
+                      <label className="text-[9px] md:text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-widest block ml-0.5 md:ml-1">Durasi (Menit) *</label>
+                      <input type="number" required min="5" name="duration_minutes" value={formData.duration_minutes} onChange={handleInputChange} className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-sm md:text-base font-black text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-2 text-center shadow-sm transition-all" />
                     </div>
-                    <div className="space-y-3">
-                      <label className="text-xs font-black text-emerald-600 uppercase tracking-widest block ml-1">Min. Submit (Mnt) *</label>
-                      <input type="number" required min="0" max={formData.duration_minutes} name="min_working_minutes" value={formData.min_working_minutes} onChange={handleInputChange} className="w-full bg-emerald-50 border-2 border-emerald-200 rounded-xl px-4 py-3.5 text-base font-black text-emerald-800 focus:outline-none focus:border-emerald-500 focus:ring-2 text-center shadow-sm transition-all" placeholder="0 = Bebas" title="Mencegah siswa langsung submit" />
+                    <div className="space-y-1.5 md:space-y-3">
+                      <label className="text-[9px] md:text-[10px] sm:text-xs font-black text-emerald-600 uppercase tracking-widest block ml-0.5 md:ml-1">Min. Submit *</label>
+                      <input type="number" required min="0" max={formData.duration_minutes} name="min_working_minutes" value={formData.min_working_minutes} onChange={handleInputChange} className="w-full bg-emerald-50 border-2 border-emerald-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-sm md:text-base font-black text-emerald-800 focus:outline-none focus:border-emerald-500 focus:ring-2 text-center shadow-sm transition-all" placeholder="0 = Bebas" title="Mencegah siswa langsung submit" />
                     </div>
-                    <div className="space-y-3">
-                      <label className="text-xs font-black text-blue-600 uppercase tracking-widest block ml-1">Batas Mengerjakan *</label>
-                      <input type="number" required min="1" name="max_attempts" value={formData.max_attempts} onChange={handleInputChange} className="w-full bg-blue-50 border-2 border-blue-200 rounded-xl px-4 py-3.5 text-base font-black text-blue-800 focus:outline-none focus:border-blue-500 focus:ring-2 text-center shadow-sm transition-all" title="Jumlah maksimal siswa boleh mengulang (Default 1)" />
+                    <div className="space-y-1.5 md:space-y-3">
+                      <label className="text-[9px] md:text-[10px] sm:text-xs font-black text-blue-600 uppercase tracking-widest block ml-0.5 md:ml-1">Batas Coba *</label>
+                      <input type="number" required min="1" name="max_attempts" value={formData.max_attempts} onChange={handleInputChange} className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-sm md:text-base font-black text-blue-800 focus:outline-none focus:border-blue-500 focus:ring-2 text-center shadow-sm transition-all" title="Jumlah maksimal siswa boleh mengulang (Default 1)" />
                     </div>
-                    <div className="space-y-3">
-                      <label className="text-xs font-black text-indigo-600 uppercase tracking-widest block ml-1">KKM (Lulus) *</label>
-                      <input type="number" required min="0" max="100" name="passing_score" value={formData.passing_score} onChange={handleInputChange} className="w-full bg-indigo-50 border-2 border-indigo-200 rounded-xl px-4 py-3.5 text-base font-black text-indigo-800 focus:outline-none focus:border-indigo-500 focus:ring-2 text-center shadow-sm transition-all" />
+                    <div className="space-y-1.5 md:space-y-3">
+                      <label className="text-[9px] md:text-[10px] sm:text-xs font-black text-indigo-600 uppercase tracking-widest block ml-0.5 md:ml-1">KKM (Lulus) *</label>
+                      <input type="number" required min="0" max="100" name="passing_score" value={formData.passing_score} onChange={handleInputChange} className="w-full bg-indigo-50 border-2 border-indigo-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-sm md:text-base font-black text-indigo-800 focus:outline-none focus:border-indigo-500 focus:ring-2 text-center shadow-sm transition-all" />
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-amber-50/50 rounded-[1.5rem] border border-amber-100 shadow-sm relative">
-                    <div className="absolute -top-3 right-5 text-[10px] font-black text-amber-600 bg-amber-100 px-3 py-1 rounded-full uppercase tracking-widest border border-amber-200">Waktu {appTimeZone}</div>
-                    <div className="space-y-3"><label className="text-xs font-black text-amber-800 uppercase tracking-widest block ml-1 flex items-center gap-2"><CalendarClock className="w-4 h-4"/> Waktu Mulai Akses (Opsional)</label><input type="datetime-local" name="start_time" value={formData.start_time} onChange={handleInputChange} className="w-full bg-white border border-amber-200 rounded-xl px-5 py-3.5 text-sm text-slate-800 font-black focus:outline-none focus:border-amber-500 focus:ring-2 shadow-sm transition-all" /></div>
-                    <div className="space-y-3"><label className="text-xs font-black text-amber-800 uppercase tracking-widest block ml-1 flex items-center gap-2"><CalendarClock className="w-4 h-4"/> Waktu Tutup Akses (Opsional)</label><input type="datetime-local" name="end_time" value={formData.end_time} onChange={handleInputChange} className="w-full bg-white border border-amber-200 rounded-xl px-5 py-3.5 text-sm text-slate-800 font-black focus:outline-none focus:border-amber-500 focus:ring-2 shadow-sm transition-all" /></div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 p-4 md:p-6 bg-amber-50/50 rounded-xl md:rounded-[1.5rem] border border-amber-100 shadow-sm relative">
+                    <div className="absolute -top-2 md:-top-3 right-3 md:right-5 text-[8px] md:text-[10px] font-black text-amber-600 bg-amber-100 px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-widest border border-amber-200">Waktu {appTimeZone}</div>
+                    <div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-black text-amber-800 uppercase tracking-widest block ml-0.5 md:ml-1 flex items-center gap-1.5 md:gap-2"><CalendarClock className="w-3.5 h-3.5 md:w-4 md:h-4"/> Waktu Mulai Akses (Opsional)</label><input type="datetime-local" name="start_time" value={formData.start_time} onChange={handleInputChange} className="w-full bg-white border border-amber-200 rounded-lg md:rounded-xl px-3 md:px-5 py-2.5 md:py-3.5 text-xs md:text-sm text-slate-800 font-black focus:outline-none focus:border-amber-500 focus:ring-2 shadow-sm transition-all" /></div>
+                    <div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-black text-amber-800 uppercase tracking-widest block ml-0.5 md:ml-1 flex items-center gap-1.5 md:gap-2"><CalendarClock className="w-3.5 h-3.5 md:w-4 md:h-4"/> Waktu Tutup Akses (Opsional)</label><input type="datetime-local" name="end_time" value={formData.end_time} onChange={handleInputChange} className="w-full bg-white border border-amber-200 rounded-lg md:rounded-xl px-3 md:px-5 py-2.5 md:py-3.5 text-xs md:text-sm text-slate-800 font-black focus:outline-none focus:border-amber-500 focus:ring-2 shadow-sm transition-all" /></div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   {/* 3. ACAK & OPSI */}
-                  <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm h-full">
-                    <div className="flex items-center gap-3 mb-6"><div className="p-3 bg-indigo-50 text-indigo-600 rounded-[1.2rem]"><Dna className="w-6 h-6" /></div><h2 className="text-xl font-black text-slate-800">Acak & Opsi</h2></div>
-                    <div className="space-y-4">
-                      <label className="flex items-start gap-4 cursor-pointer group p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
-                        <input type="checkbox" name="randomize_questions" checked={formData.randomize_questions} onChange={handleInputChange} className="w-6 h-6 mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm" />
-                        <div><span className="text-sm font-black text-slate-800 block">Acak Urutan Soal</span><span className="text-xs font-medium text-slate-500 block mt-1 leading-relaxed">Mencegah siswa saling mencocokkan nomor urut.</span></div>
+                  <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm h-full">
+                    <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6"><div className="p-2 md:p-3 bg-indigo-50 text-indigo-600 rounded-xl md:rounded-[1.2rem]"><Dna className="w-5 h-5 md:w-6 md:h-6" /></div><h2 className="text-lg md:text-xl font-black text-slate-800">Acak & Opsi</h2></div>
+                    <div className="space-y-3 md:space-y-4">
+                      <label className="flex items-start gap-3 md:gap-4 cursor-pointer group p-3 md:p-4 rounded-xl md:rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
+                        <input type="checkbox" name="randomize_questions" checked={formData.randomize_questions} onChange={handleInputChange} className="w-5 h-5 md:w-6 md:h-6 mt-0.5 md:mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm shrink-0" />
+                        <div><span className="text-xs md:text-sm font-black text-slate-800 block leading-tight">Acak Urutan Soal</span><span className="text-[10px] md:text-xs font-medium text-slate-500 block mt-0.5 md:mt-1 leading-snug">Mencegah siswa saling mencocokkan nomor urut.</span></div>
                       </label>
-                      <label className="flex items-start gap-4 cursor-pointer group p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
-                        <input type="checkbox" name="randomize_options" checked={formData.randomize_options} onChange={handleInputChange} className="w-6 h-6 mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm" />
-                        <div><span className="text-sm font-black text-slate-800 block">Acak Pilihan Jawaban (A, B, C)</span><span className="text-xs font-medium text-slate-500 block mt-1 leading-relaxed">Berlaku untuk tipe PG dan Menjodohkan.</span></div>
+                      <label className="flex items-start gap-3 md:gap-4 cursor-pointer group p-3 md:p-4 rounded-xl md:rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
+                        <input type="checkbox" name="randomize_options" checked={formData.randomize_options} onChange={handleInputChange} className="w-5 h-5 md:w-6 md:h-6 mt-0.5 md:mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm shrink-0" />
+                        <div><span className="text-xs md:text-sm font-black text-slate-800 block leading-tight">Acak Pilihan Jawaban (A, B, C)</span><span className="text-[10px] md:text-xs font-medium text-slate-500 block mt-0.5 md:mt-1 leading-snug">Berlaku untuk tipe PG dan Menjodohkan.</span></div>
                       </label>
-                      <label className="flex items-start gap-4 cursor-pointer group p-4 rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
-                        <input type="checkbox" name="show_result_after" checked={formData.show_result_after} onChange={handleInputChange} className="w-6 h-6 mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm" />
-                        <div><span className="text-sm font-black text-slate-800 block">Tampilkan Nilai Instan</span><span className="text-xs font-medium text-slate-500 block mt-1 leading-relaxed">Siswa dapat melihat skor akhir setelah klik selesai.</span></div>
+                      <label className="flex items-start gap-3 md:gap-4 cursor-pointer group p-3 md:p-4 rounded-xl md:rounded-2xl bg-slate-50 hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 transition-all shadow-sm">
+                        <input type="checkbox" name="show_result_after" checked={formData.show_result_after} onChange={handleInputChange} className="w-5 h-5 md:w-6 md:h-6 mt-0.5 md:mt-0.5 cursor-pointer accent-indigo-600 rounded shadow-sm shrink-0" />
+                        <div><span className="text-xs md:text-sm font-black text-slate-800 block leading-tight">Tampilkan Nilai Instan</span><span className="text-[10px] md:text-xs font-medium text-slate-500 block mt-0.5 md:mt-1 leading-snug">Siswa dapat melihat skor akhir setelah klik selesai.</span></div>
                       </label>
                     </div>
                   </div>
 
                   {/* 4. KEAMANAN */}
-                  <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm h-full">
-                    <div className="flex items-center gap-3 mb-6"><div className="p-3 bg-rose-50 text-rose-600 rounded-[1.2rem]"><ShieldAlert className="w-6 h-6" /></div><h2 className="text-xl font-black text-slate-800">Keamanan Anti-Cheat</h2></div>
-                    <div className="space-y-4">
-                      <label className="text-xs font-black text-slate-500 uppercase tracking-widest block ml-1">Batas Pindah Aplikasi/Tab</label>
-                      <div className="bg-rose-50/50 border border-rose-100 p-6 rounded-2xl shadow-sm">
-                         <p className="text-xs text-rose-800 font-bold mb-5 leading-relaxed">Sistem akan memblokir dan menutup paksa ujian (force submit) jika siswa pindah tab untuk mencari jawaban di internet melebihi batas ini.</p>
-                         <div className="flex items-center gap-5">
-                           <input type="range" min="1" max="10" name="max_tab_switches" value={formData.max_tab_switches} onChange={handleInputChange} className="flex-1 accent-rose-500 h-2 bg-slate-200 rounded-lg cursor-pointer shadow-sm" />
-                           <span className="bg-white text-rose-600 font-black px-5 py-2.5 rounded-xl border border-rose-200 w-20 text-center shadow-sm text-lg">{formData.max_tab_switches}</span>
+                  <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm h-full">
+                    <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6"><div className="p-2 md:p-3 bg-rose-50 text-rose-600 rounded-xl md:rounded-[1.2rem]"><ShieldAlert className="w-5 h-5 md:w-6 md:h-6" /></div><h2 className="text-lg md:text-xl font-black text-slate-800">Keamanan Anti-Cheat</h2></div>
+                    <div className="space-y-3 md:space-y-4">
+                      <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block ml-0.5 md:ml-1">Batas Pindah Aplikasi/Tab</label>
+                      <div className="bg-rose-50/50 border border-rose-100 p-4 md:p-6 rounded-xl md:rounded-2xl shadow-sm">
+                         <p className="text-[10px] md:text-xs text-rose-800 font-bold mb-4 md:mb-5 leading-snug md:leading-relaxed">Sistem akan memblokir dan menutup paksa ujian (force submit) jika siswa pindah tab untuk mencari jawaban di internet melebihi batas ini.</p>
+                         <div className="flex items-center gap-3 md:gap-5">
+                           <input type="range" min="1" max="10" name="max_tab_switches" value={formData.max_tab_switches} onChange={handleInputChange} className="flex-1 accent-rose-500 h-1.5 md:h-2 bg-slate-200 rounded-lg cursor-pointer shadow-sm" />
+                           <span className="bg-white text-rose-600 font-black px-3 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl border border-rose-200 w-12 md:w-20 text-center shadow-sm text-sm md:text-lg">{formData.max_tab_switches}</span>
                          </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <button onClick={handleSubmit} disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all w-full mt-6 md:hidden">
-                  {isSubmitting ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                <button onClick={handleSubmit} disabled={isSubmitting} className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 py-3.5 sm:py-4 rounded-xl md:rounded-2xl font-black flex items-center justify-center gap-2 shadow-md active:scale-95 transition-all mt-6 md:hidden text-xs sm:text-sm">
+                  {isSubmitting ? <LoaderCircle className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" /> : <Save className="w-4 h-4 sm:w-5 sm:h-5" />}
                   {isSubmitting ? 'Menyimpan...' : (editingId ? 'Update Jadwal' : 'Simpan Jadwal Ujian')}
                 </button>
 

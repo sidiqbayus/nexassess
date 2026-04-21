@@ -480,84 +480,83 @@ export default function AttendanceAndReportPage() {
     });
   };
 
-
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative">
+    <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24">
       
       {/* TOAST NOTIFICATION */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[150] w-[90%] sm:w-auto animate-in slide-in-from-top-10">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-2xl flex items-center gap-2 md:gap-3 border ${
              toast.type === 'success' ? 'bg-emerald-500 border-emerald-400 text-white' : 
              toast.type === 'warning' ? 'bg-amber-500 border-amber-400 text-white' : 'bg-rose-500 border-rose-400 text-white'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 shrink-0" /> : <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 shrink-0" />}
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
 
       {/* HEADER UTAMA DENGAN TOMBOL CETAK DI KANAN ATAS (Kotak Putih Melengkung) */}
-      <div className="bg-white border border-slate-200 p-6 rounded-[1.5rem] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-200 p-4 sm:p-5 md:p-6 rounded-xl md:rounded-[1.5rem] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-            <ClipboardList className="w-8 h-8 text-blue-600" /> Absensi & Berita Acara
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+            <ClipboardList className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> <span className="truncate">Absensi & Berita Acara</span>
           </h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium ml-11">Buat dan cetak administrasi ujian dengan kustomisasi kop surat total.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Buat dan cetak administrasi ujian dengan kustomisasi kop surat total.</p>
         </div>
 
         {/* TOMBOL CETAK */}
-        <button onClick={handlePrint} className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-6 py-3 rounded-2xl font-bold text-sm shadow-sm transition-colors shrink-0">
-           <Printer className="w-5 h-5"/> Cetak {activeTab === 'absen' ? 'Daftar Hadir' : 'Berita Acara'}
+        <button onClick={handlePrint} className="flex items-center justify-center gap-1.5 md:gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-2xl font-bold text-xs md:text-sm shadow-sm transition-colors shrink-0 w-full md:w-auto">
+           <Printer className="w-4 h-4 md:w-5 md:h-5"/> Cetak {activeTab === 'absen' ? 'Daftar Hadir' : 'Berita Acara'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 md:gap-8">
          
          {/* ================= PANEL KIRI: PENGATURAN & FILTER ================= */}
-         <div className="xl:col-span-5 space-y-6">
+         <div className="xl:col-span-5 space-y-4 md:space-y-6">
             
             {/* TABS SELECTOR */}
-            <div className="flex bg-slate-200/70 p-1.5 rounded-2xl shadow-inner">
+            <div className="flex bg-slate-200/70 p-1 md:p-1.5 rounded-xl md:rounded-2xl shadow-inner">
                <button 
                   onClick={() => setActiveTab('absen')} 
-                  className={`flex-1 py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${activeTab === 'absen' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'}`}
+                  className={`flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg md:rounded-xl font-black text-xs md:text-sm flex items-center justify-center gap-1.5 md:gap-2 transition-all truncate ${activeTab === 'absen' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'}`}
                >
-                  <Users className="w-4 h-4"/> Daftar Hadir
+                  <Users className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"/> <span className="truncate">Daftar Hadir</span>
                </button>
                <button 
                   onClick={() => setActiveTab('berita_acara')} 
-                  className={`flex-1 py-3 px-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${activeTab === 'berita_acara' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'}`}
+                  className={`flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg md:rounded-xl font-black text-xs md:text-sm flex items-center justify-center gap-1.5 md:gap-2 transition-all truncate ${activeTab === 'berita_acara' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200'}`}
                >
-                  <FileText className="w-4 h-4"/> Berita Acara
+                  <FileText className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"/> <span className="truncate">Berita Acara</span>
                </button>
             </div>
 
             {/* FILTER DATA */}
-            <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm space-y-4">
-               <div className="flex items-center gap-2 mb-2 border-b border-slate-100 pb-3">
-                  <Search className="w-5 h-5 text-indigo-500"/>
-                  <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest">Filter Data Siswa</h2>
+            <div className="bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] p-4 md:p-6 shadow-sm space-y-3 md:space-y-4">
+               <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2 border-b border-slate-100 pb-2 md:pb-3">
+                  <Search className="w-4 h-4 md:w-5 md:h-5 text-indigo-500"/>
+                  <h2 className="text-[10px] md:text-sm font-black text-slate-800 uppercase tracking-widest">Filter Data Siswa</h2>
                </div>
                
-               <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5"/> Jadwal Ujian (Mapel)</label>
-                  <select value={selectedExamId} onChange={(e) => setSelectedExamId(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none cursor-pointer truncate">
+               <div className="space-y-1 md:space-y-1.5">
+                  <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5"/> Jadwal Ujian (Mapel)</label>
+                  <select value={selectedExamId} onChange={(e) => setSelectedExamId(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 outline-none cursor-pointer truncate pr-8">
                      {exams.map(e => <option key={e.id} value={e.id}>{e.subject} - {e.title} ({e.grade_level || 'Umum'})</option>)}
                   </select>
                </div>
                
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                     <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><Building className="w-3.5 h-3.5"/> Ruangan</label>
-                     <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none cursor-pointer">
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+                  <div className="space-y-1 md:space-y-1.5">
+                     <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><Building className="w-3.5 h-3.5"/> Ruangan</label>
+                     <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 outline-none cursor-pointer pr-8">
                         <option value="Semua">Semua Ruang</option>
                         {rooms.map(r => <option key={r.id} value={r.id}>{r.room_name}</option>)}
                      </select>
                   </div>
-                  <div className="space-y-1.5">
-                     <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><Users className="w-3.5 h-3.5"/> Kelas</label>
-                     <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none cursor-pointer">
+                  <div className="space-y-1 md:space-y-1.5">
+                     <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><Users className="w-3.5 h-3.5"/> Kelas</label>
+                     <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 outline-none cursor-pointer pr-8">
                         <option value="Semua">Semua Kelas</option>
                         {availableClassesForExam.map(c => <option key={c} value={c}>{c}</option>)}
                      </select>
@@ -566,135 +565,135 @@ export default function AttendanceAndReportPage() {
             </div>
 
             {/* PENGATURAN KOP & TTD */}
-            <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm space-y-4">
+            <div className="bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] p-4 md:p-6 shadow-sm space-y-3 md:space-y-4">
                
                {/* BARIS KOP SURAT DINAMIS */}
-               <div className="flex justify-between items-center mb-2 border-b border-slate-100 pb-3">
-                  <div className="flex items-center gap-2">
-                     <LayoutTemplate className="w-5 h-5 text-indigo-500"/>
-                     <h2 className="text-sm font-black text-slate-800 uppercase tracking-widest">Kop Surat</h2>
+               <div className="flex justify-between items-center mb-1.5 md:mb-2 border-b border-slate-100 pb-2 md:pb-3">
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                     <LayoutTemplate className="w-4 h-4 md:w-5 md:h-5 text-indigo-500"/>
+                     <h2 className="text-[10px] md:text-sm font-black text-slate-800 uppercase tracking-widest">Kop Surat</h2>
                   </div>
-                  <div className="flex gap-2">
-                     <button onClick={removeHeader} title="Kurangi Baris Kop" className="w-6 h-6 flex items-center justify-center bg-rose-100 text-rose-600 rounded-lg hover:bg-rose-200 transition-colors"><Minus className="w-3 h-3"/></button>
-                     <button onClick={addHeader} title="Tambah Baris Kop" className="w-6 h-6 flex items-center justify-center bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"><Plus className="w-3 h-3"/></button>
+                  <div className="flex gap-1.5 md:gap-2">
+                     <button onClick={removeHeader} title="Kurangi Baris Kop" className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center bg-rose-100 text-rose-600 rounded-md md:rounded-lg hover:bg-rose-200 transition-colors"><Minus className="w-3 h-3"/></button>
+                     <button onClick={addHeader} title="Tambah Baris Kop" className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center bg-blue-100 text-blue-600 rounded-md md:rounded-lg hover:bg-blue-200 transition-colors"><Plus className="w-3 h-3"/></button>
                   </div>
                </div>
                
                {/* KELOMPOK LOGO */}
-               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
-                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 border-b border-slate-200 pb-1">Pengaturan Logo</p>
+               <div className="p-3 md:p-4 bg-slate-50 rounded-lg md:rounded-xl border border-slate-200 space-y-3 md:space-y-4">
+                  <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 border-b border-slate-200 pb-1">Pengaturan Logo</p>
                   
                   {/* LOGO 1 (KIRI) */}
                   <div className="space-y-1.5">
-                     <label className="text-xs font-black text-slate-600 flex items-center justify-between">
-                        <span>Logo 1 (Kiri)</span><span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">Kosongkan jika ingin disembunyikan</span>
+                     <label className="text-[10px] md:text-xs font-black text-slate-600 flex items-center justify-between">
+                        <span>Logo 1 (Kiri)</span><span className="text-[8px] md:text-[9px] text-blue-500 bg-blue-50 px-1 md:px-1.5 py-0.5 rounded">Kosongkan jika ingin disembunyikan</span>
                      </label>
                      <div className="relative">
-                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                        <input type="url" name="logoUrl" value={docSettings.logoUrl} onChange={handleSettingChange} placeholder="Link Logo Kiri (GDrive)" className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <ImageIcon className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/>
+                        <input type="url" name="logoUrl" value={docSettings.logoUrl} onChange={handleSettingChange} placeholder="Link Logo Kiri (GDrive)" className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-8 md:pl-9 pr-3 md:pr-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
                      </div>
                      {docSettings.logoUrl && (
-                        <div className="pt-2 space-y-2">
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Ukuran</span><input type="range" name="logoSize" min="30" max="150" value={docSettings.logoSize} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoSize}</span></div>
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser X</span><input type="range" name="logoOffsetX" min="-50" max="50" value={docSettings.logoOffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoOffsetX}</span></div>
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser Y</span><input type="range" name="logoOffsetY" min="-50" max="50" value={docSettings.logoOffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoOffsetY}</span></div>
+                        <div className="pt-1.5 md:pt-2 space-y-1.5 md:space-y-2">
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Ukuran</span><input type="range" name="logoSize" min="30" max="150" value={docSettings.logoSize} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoSize}</span></div>
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser X</span><input type="range" name="logoOffsetX" min="-50" max="50" value={docSettings.logoOffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoOffsetX}</span></div>
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser Y</span><input type="range" name="logoOffsetY" min="-50" max="50" value={docSettings.logoOffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logoOffsetY}</span></div>
                         </div>
                      )}
                   </div>
 
                   {/* LOGO 2 (KANAN) */}
-                  <div className="space-y-1.5 pt-3 border-t border-slate-200">
-                     <label className="text-xs font-black text-slate-600 flex items-center justify-between">
-                        <span>Logo 2 (Kanan)</span><span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">Kosongkan jika ingin disembunyikan</span>
+                  <div className="space-y-1.5 pt-2.5 md:pt-3 border-t border-slate-200">
+                     <label className="text-[10px] md:text-xs font-black text-slate-600 flex items-center justify-between">
+                        <span>Logo 2 (Kanan)</span><span className="text-[8px] md:text-[9px] text-blue-500 bg-blue-50 px-1 md:px-1.5 py-0.5 rounded">Kosongkan jika ingin disembunyikan</span>
                      </label>
                      <div className="relative">
-                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                        <input type="url" name="logo2Url" value={docSettings.logo2Url} onChange={handleSettingChange} placeholder="Link Logo Kanan (GDrive)" className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <ImageIcon className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/>
+                        <input type="url" name="logo2Url" value={docSettings.logo2Url} onChange={handleSettingChange} placeholder="Link Logo Kanan (GDrive)" className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-8 md:pl-9 pr-3 md:pr-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
                      </div>
                      {docSettings.logo2Url && (
-                        <div className="pt-2 space-y-2">
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Ukuran</span><input type="range" name="logo2Size" min="30" max="150" value={docSettings.logo2Size} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2Size}</span></div>
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser X</span><input type="range" name="logo2OffsetX" min="-50" max="50" value={docSettings.logo2OffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2OffsetX}</span></div>
-                           <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser Y</span><input type="range" name="logo2OffsetY" min="-50" max="50" value={docSettings.logo2OffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2OffsetY}</span></div>
+                        <div className="pt-1.5 md:pt-2 space-y-1.5 md:space-y-2">
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Ukuran</span><input type="range" name="logo2Size" min="30" max="150" value={docSettings.logo2Size} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2Size}</span></div>
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser X</span><input type="range" name="logo2OffsetX" min="-50" max="50" value={docSettings.logo2OffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2OffsetX}</span></div>
+                           <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser Y</span><input type="range" name="logo2OffsetY" min="-50" max="50" value={docSettings.logo2OffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1 md:h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-4 text-right">{docSettings.logo2OffsetY}</span></div>
                         </div>
                      )}
                   </div>
                </div>
 
-               <div className="space-y-2 mt-4">
+               <div className="space-y-2 mt-3 md:mt-4">
                   {docSettings.headers.map((h, i) => (
-                     <div key={i} className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                     <div key={i} className="flex flex-col gap-2 p-2 md:p-3 bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl">
                         <div className="flex gap-2 items-center">
-                           <span className="text-[10px] font-black text-slate-400 uppercase w-12 shrink-0">Baris {i+1}</span>
-                           <input type="text" value={h.text} onChange={e => handleHeaderChange(i, 'text', e.target.value)} className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 outline-none" placeholder="Teks Kop" />
+                           <span className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase w-10 md:w-12 shrink-0">Baris {i+1}</span>
+                           <input type="text" value={h.text} onChange={e => handleHeaderChange(i, 'text', e.target.value)} className="flex-1 bg-white border border-slate-200 rounded-md md:rounded-lg px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm font-bold text-slate-800 outline-none min-w-0" placeholder="Teks Kop" />
                         </div>
-                        <div className="flex gap-2 items-center pl-14">
-                           <input type="number" value={h.size} onChange={e => handleHeaderChange(i, 'size', Number(e.target.value))} className="w-16 bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold outline-none text-center" title="Ukuran Huruf (px)" />
-                           <input type="color" value={h.color} onChange={e => handleHeaderChange(i, 'color', e.target.value)} className="w-8 h-8 rounded cursor-pointer border-0 p-0" title="Warna Teks" />
-                           <button onClick={() => handleHeaderChange(i, 'bold', !h.bold)} className={`p-1.5 rounded-lg border transition-colors ${h.bold ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-100'}`} title="Tebal (Bold)">
-                              <Bold className="w-4 h-4"/>
+                        <div className="flex gap-2 items-center pl-12 md:pl-14">
+                           <input type="number" value={h.size} onChange={e => handleHeaderChange(i, 'size', Number(e.target.value))} className="w-12 md:w-16 bg-white border border-slate-200 rounded-md md:rounded-lg px-1.5 md:px-2 py-1 text-[10px] md:text-xs font-bold outline-none text-center" title="Ukuran Huruf (px)" />
+                           <input type="color" value={h.color} onChange={e => handleHeaderChange(i, 'color', e.target.value)} className="w-6 h-6 md:w-8 md:h-8 rounded cursor-pointer border-0 p-0 shrink-0" title="Warna Teks" />
+                           <button onClick={() => handleHeaderChange(i, 'bold', !h.bold)} className={`p-1 md:p-1.5 rounded-md md:rounded-lg border transition-colors shrink-0 ${h.bold ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-100'}`} title="Tebal (Bold)">
+                              <Bold className="w-3.5 h-3.5 md:w-4 md:h-4"/>
                            </button>
                         </div>
                      </div>
                   ))}
                </div>
 
-               <div className="pt-4 border-t border-slate-100 space-y-4">
+               <div className="pt-3 md:pt-4 border-t border-slate-100 space-y-3 md:space-y-4">
                   <div className="space-y-1.5">
-                     <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><CalendarClock className="w-3.5 h-3.5"/> Tanggal Dokumen</label>
-                     <input type="date" name="examDate" value={docSettings.examDate} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 outline-none" />
+                     <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><CalendarClock className="w-3.5 h-3.5"/> Tanggal Dokumen</label>
+                     <input type="date" name="examDate" value={docSettings.examDate} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 outline-none" />
                   </div>
 
                   {/* TEKS PENGANTAR TANDA TANGAN (GLOBAL) */}
-                  <div className="space-y-3 bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 mt-4 shadow-inner">
-                     <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-1.5 mb-2"><AlignLeft className="w-3.5 h-3.5"/> Teks Pengantar Tanda Tangan</p>
+                  <div className="space-y-2.5 md:space-y-3 bg-indigo-50/50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-indigo-100 mt-3 md:mt-4 shadow-inner">
+                     <p className="text-[9px] md:text-[10px] font-black text-indigo-500 uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2"><AlignLeft className="w-3.5 h-3.5"/> Teks Pengantar Tanda Tangan</p>
                      
-                     <textarea name="sigTopText" value={docSettings.sigTopText} onChange={handleSettingChange} rows={2} placeholder="Misal: Wonosari, 30 Maret 2026..." className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 outline-none resize-none leading-relaxed" />
+                     <textarea name="sigTopText" value={docSettings.sigTopText} onChange={handleSettingChange} rows={2} placeholder="Misal: Wonosari, 30 Maret 2026..." className="w-full bg-white border border-slate-200 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-bold text-slate-800 outline-none resize-none leading-relaxed" />
                      
-                     <div className="flex gap-2 mb-2">
-                        <select name="sigTopAlign" value={docSettings.sigTopAlign} onChange={handleSettingChange} className="flex-1 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 outline-none cursor-pointer">
+                     <div className="flex gap-2 mb-1.5 md:mb-2">
+                        <select name="sigTopAlign" value={docSettings.sigTopAlign} onChange={handleSettingChange} className="flex-1 bg-white border border-slate-200 rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-bold text-slate-800 outline-none cursor-pointer">
                            <option value="left">Rata Kiri</option>
                            <option value="center">Rata Tengah</option>
                            <option value="right">Rata Kanan</option>
                         </select>
                      </div>
                      
-                     <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-slate-600 w-16">Jarak Bawah</span>
+                     <div className="flex items-center gap-2 md:gap-3">
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-600 w-14 md:w-16">Jarak Bawah</span>
                         <input type="range" name="sigTopMarginBottom" min="0" max="100" value={docSettings.sigTopMarginBottom} onChange={handleSettingChange} className="flex-1 accent-indigo-500" />
-                        <span className="text-[10px] font-bold text-slate-400 w-6 text-right">{docSettings.sigTopMarginBottom}px</span>
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-6 text-right">{docSettings.sigTopMarginBottom}px</span>
                      </div>
-                     <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold text-slate-600 w-16">Geser Kiri/Kanan</span>
+                     <div className="flex items-center gap-2 md:gap-3">
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-600 w-14 md:w-16">Geser Horz.</span>
                         <input type="range" name="sigTopX" min="-200" max="200" value={docSettings.sigTopX} onChange={handleSettingChange} className="flex-1 accent-indigo-500" />
-                        <span className="text-[10px] font-bold text-slate-400 w-6 text-right">{docSettings.sigTopX}px</span>
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-6 text-right">{docSettings.sigTopX}px</span>
                      </div>
                   </div>
                   
                   {/* PENGATURAN PENGAWAS DINAMIS */}
-                  <div className="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                  <div className="space-y-2.5 md:space-y-3 bg-slate-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-slate-200">
                      <div className="flex justify-between items-center">
-                        <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><UserCircle2 className="w-4 h-4"/> Kolom Tanda Tangan</label>
-                        <div className="flex gap-2">
-                           <button onClick={removeProctor} title="Kurangi Kolom TTD" className="w-7 h-7 flex items-center justify-center bg-rose-100 text-rose-600 rounded-lg hover:bg-rose-200 transition-colors"><Minus className="w-4 h-4"/></button>
-                           <button onClick={addProctor} title="Tambah Kolom TTD" className="w-7 h-7 flex items-center justify-center bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"><Plus className="w-4 h-4"/></button>
+                        <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><UserCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4"/> Kolom Tanda Tangan</label>
+                        <div className="flex gap-1.5 md:gap-2">
+                           <button onClick={removeProctor} title="Kurangi Kolom TTD" className="w-5 h-5 md:w-7 md:h-7 flex items-center justify-center bg-rose-100 text-rose-600 rounded-md md:rounded-lg hover:bg-rose-200 transition-colors"><Minus className="w-3 h-3 md:w-4 md:h-4"/></button>
+                           <button onClick={addProctor} title="Tambah Kolom TTD" className="w-5 h-5 md:w-7 md:h-7 flex items-center justify-center bg-blue-100 text-blue-600 rounded-md md:rounded-lg hover:bg-blue-200 transition-colors"><Plus className="w-3 h-3 md:w-4 md:h-4"/></button>
                         </div>
                      </div>
 
-                     <div className={`grid grid-cols-1 ${docSettings.proctors.length > 1 ? 'md:grid-cols-2' : ''} gap-4`}>
+                     <div className={`grid grid-cols-1 ${docSettings.proctors.length > 1 ? 'sm:grid-cols-2' : ''} gap-3 md:gap-4`}>
                         {docSettings.proctors.map((p, idx) => (
-                           <div key={idx} className="space-y-2 p-3 bg-white border border-slate-200 rounded-xl relative shadow-sm">
-                              <p className="text-[10px] font-black text-slate-300 absolute top-3 right-3 uppercase tracking-widest">#{idx + 1}</p>
+                           <div key={idx} className="space-y-1.5 md:space-y-2 p-2.5 md:p-3 bg-white border border-slate-200 rounded-lg md:rounded-xl relative shadow-sm">
+                              <p className="text-[9px] md:text-[10px] font-black text-slate-300 absolute top-2.5 right-2.5 md:top-3 md:right-3 uppercase tracking-widest">#{idx + 1}</p>
                               
-                              <input type="text" value={p.role} onChange={(e) => handleProctorTextChange(idx, 'role', e.target.value)} placeholder="Jabatan (Pengawas/Kepsek)" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-black text-blue-700 outline-none" />
+                              <input type="text" value={p.role} onChange={(e) => handleProctorTextChange(idx, 'role', e.target.value)} placeholder="Jabatan (Pengawas/Kepsek)" className="w-full bg-white border border-slate-200 rounded-md md:rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-black text-blue-700 outline-none" />
                               
-                              <select onChange={(e) => handleProctorSelect(idx, e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-800 outline-none cursor-pointer">
+                              <select onChange={(e) => handleProctorSelect(idx, e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-md md:rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-bold text-slate-800 outline-none cursor-pointer">
                                  <option value="">Pilih Dari Database...</option>
                                  {teachers.map(t => <option key={t.id} value={t.id}>{t.full_name}</option>)}
                               </select>
                               
-                              <input type="text" value={p.name} onChange={(e) => handleProctorTextChange(idx, 'name', e.target.value)} placeholder="Ketik Nama Manual" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold outline-none" />
-                              <input type="text" value={p.nip} onChange={(e) => handleProctorTextChange(idx, 'nip', e.target.value)} placeholder="NIP (Opsional)" className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium outline-none" />
+                              <input type="text" value={p.name} onChange={(e) => handleProctorTextChange(idx, 'name', e.target.value)} placeholder="Ketik Nama Manual" className="w-full bg-white border border-slate-200 rounded-md md:rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-bold outline-none" />
+                              <input type="text" value={p.nip} onChange={(e) => handleProctorTextChange(idx, 'nip', e.target.value)} placeholder="NIP (Opsional)" className="w-full bg-white border border-slate-200 rounded-md md:rounded-lg px-2.5 md:px-3 py-1.5 md:py-2 text-[10px] md:text-xs font-medium outline-none" />
                            </div>
                         ))}
                      </div>
@@ -702,9 +701,9 @@ export default function AttendanceAndReportPage() {
                </div>
 
                {activeTab === 'berita_acara' && (
-                  <div className="pt-4 border-t border-slate-100 space-y-1.5 animate-in fade-in slide-in-from-top-2">
-                     <label className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><PenTool className="w-3.5 h-3.5"/> Catatan Kejadian Ujian</label>
-                     <textarea name="notes" value={docSettings.notes} onChange={handleSettingChange} rows={3} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 outline-none resize-none leading-relaxed" placeholder="Ketikan catatan insiden atau kejadian di sini..." />
+                  <div className="pt-3 md:pt-4 border-t border-slate-100 space-y-1 md:space-y-1.5 animate-in fade-in slide-in-from-top-2">
+                     <label className="text-[10px] md:text-xs font-bold text-slate-500 flex items-center gap-1.5"><PenTool className="w-3.5 h-3.5"/> Catatan Kejadian Ujian</label>
+                     <textarea name="notes" value={docSettings.notes} onChange={handleSettingChange} rows={3} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 outline-none resize-none leading-relaxed" placeholder="Ketikan catatan insiden atau kejadian di sini..." />
                   </div>
                )}
             </div>
@@ -713,19 +712,26 @@ export default function AttendanceAndReportPage() {
 
          {/* ================= PANEL KANAN: LIVE PREVIEW ================= */}
          <div className="xl:col-span-7 space-y-6">
-            <div className="bg-slate-200/50 border border-slate-200 rounded-[1.5rem] p-6 shadow-inner h-[1000px] overflow-y-auto flex flex-col items-center">
-               <div className="w-full flex items-center justify-between mb-6 max-w-[210mm]">
-                  <h2 className="text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><Eye className="w-4 h-4"/> Pratinjau Cetak (A4)</h2>
-                  <span className="bg-white px-3 py-1 rounded-lg border border-slate-200 text-xs font-bold text-blue-600 shadow-sm">{filteredStudents.length} Peserta</span>
+            {/* Pada layar mobile/tablet, tambahkan pesan instruksi scroll */}
+            <div className="md:hidden text-center text-[10px] text-slate-500 font-bold mb-2">
+               <span className="bg-slate-200 px-2 py-1 rounded">Geser dokumen (Preview A4) untuk melihat penuh</span>
+            </div>
+            
+            <div className="bg-slate-200/50 border border-slate-200 rounded-xl md:rounded-[1.5rem] p-2 md:p-6 shadow-inner h-[60vh] sm:h-[80vh] md:h-[1000px] overflow-auto flex flex-col items-center custom-scrollbar">
+               <div className="w-full flex items-center justify-between mb-4 md:mb-6 max-w-[210mm] shrink-0 sticky left-0 right-0">
+                  <h2 className="text-[10px] md:text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 md:gap-2"><Eye className="w-3.5 h-3.5 md:w-4 h-4"/> Pratinjau Cetak (A4)</h2>
+                  <span className="bg-white px-2.5 md:px-3 py-1 rounded-md md:rounded-lg border border-slate-200 text-[10px] md:text-xs font-bold text-blue-600 shadow-sm">{filteredStudents.length} Peserta</span>
                </div>
 
                {loading ? (
-                  <div className="flex justify-center py-20"><LoaderCircle className="w-8 h-8 text-blue-500 animate-spin"/></div>
+                  <div className="flex justify-center py-20 w-full"><LoaderCircle className="w-8 h-8 md:w-8 md:h-8 text-blue-500 animate-spin"/></div>
                ) : (
-                  // KERTAS A4 PREVIEW (SKALA ASLI)
+                  // KERTAS A4 PREVIEW (SKALA ASLI - Dalam Wrapper Overflow)
+                  // Gunakan style transform untuk scale down di HP agar tidak terlalu raksasa,
+                  // atau biarkan dengan overflow-auto. Di sini menggunakan overflow-auto + margin auto.
                   <div 
-                     className="bg-white shadow-xl pointer-events-none" 
-                     style={{ width: '210mm', minHeight: '297mm', padding: '20mm', boxSizing: 'border-box' }}
+                     className="bg-white shadow-xl pointer-events-none shrink-0" 
+                     style={{ width: '210mm', minHeight: '297mm', padding: '20mm', boxSizing: 'border-box', marginBottom: '20px' }}
                      dangerouslySetInnerHTML={{ __html: activeTab === 'absen' ? getAttendanceHtml() : getReportHtml() }}
                   />
                )}

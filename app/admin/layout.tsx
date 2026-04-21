@@ -27,7 +27,7 @@ interface AppSettings {
 
 interface AdminProfile {
   id: string;
-  email: string; // <-- PERBAIKAN: Menambahkan email di sini
+  email: string;
   full_name: string;
   role: string;
   avatar_url: string;
@@ -89,6 +89,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     
     checkAuthAndData();
 
+    // Sesuaikan sidebar di perangkat mobile saat pertama kali dimuat
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+
     // Close profile dropdown if clicked outside
     const handleClickOutside = (event: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
@@ -99,6 +104,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Tutup sidebar otomatis di HP ketika pindah halaman
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setIsSidebarOpen(false);
+    }
+  }, [pathname]);
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     window.location.href = '/login' 
@@ -108,19 +120,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // DAFTAR MENU DENGAN DESKRIPSI SPESIFIK
   const menuItems = [
-    { name: 'Dashboard', desc: 'Ringkasan sistem CBT, statistik ujian, dan aktivitas terbaru pengguna.', icon: LayoutDashboard, href: '/admin/dashboard' },
+    { name: 'Dashboard', desc: 'Ringkasan sistem CBT, statistik ujian, dan aktivitas terbaru.', icon: LayoutDashboard, href: '/admin/dashboard' },
     { name: 'Data Siswa', desc: 'Kelola data peserta ujian, kelas, profil, dan status akun siswa.', icon: Users, href: '/admin/students' },
-    { name: 'Data Guru', desc: 'Kelola data guru, peran sebagai pembuat soal dan pengawas, serta akses akun.', icon: GraduationCap, href: '/admin/teachers' },
-    { name: 'Ruang Ujian', desc: 'Kelola ruang ujian, pembagian peserta, dan pengaturan lokasi ujian.', icon: Building, href: '/admin/rooms' },
+    { name: 'Data Guru', desc: 'Kelola data guru, peran sebagai pembuat soal dan pengawas.', icon: GraduationCap, href: '/admin/teachers' },
+    { name: 'Ruang Ujian', desc: 'Kelola ruang ujian, pembagian peserta, dan pengaturan lokasi.', icon: Building, href: '/admin/rooms' },
     { name: 'Mata Pelajaran', desc: 'Kelola data mata pelajaran, kurikulum, dan keterkaitan dengan guru.', icon: BookOpen, href: '/admin/subjects' },
-    { name: 'Bank Soal', desc: 'Kelola kumpulan soal berdasarkan mata pelajaran, tingkat kesulitan, dan kategori.', icon: Database, href: '/admin/questions' },
-    { name: 'Manajemen Ujian', desc: 'Kelola jadwal ujian, durasi, paket soal, serta pengaturan pelaksanaan ujian.', icon: CalendarClock, href: '/admin/exams' },
-    { name: 'Pengawasan Ujian', desc: 'Pantau pelaksanaan ujian secara langsung dan aktivitas peserta selama ujian.', icon: Activity, href: '/admin/monitoring' },
-    { name: 'Keamanan', desc: 'Kelola pengaturan keamanan ujian seperti token, batas akses, dan deteksi kecurangan.', icon: ShieldCheck, href: '/admin/security' },
+    { name: 'Bank Soal', desc: 'Kelola kumpulan soal berdasarkan mata pelajaran dan kesulitan.', icon: Database, href: '/admin/questions' },
+    { name: 'Manajemen Ujian', desc: 'Kelola jadwal ujian, durasi, paket soal, serta pengaturannya.', icon: CalendarClock, href: '/admin/exams' },
+    { name: 'Pengawasan Ujian', desc: 'Pantau pelaksanaan ujian secara langsung dan aktivitas peserta.', icon: Activity, href: '/admin/monitoring' },
+    { name: 'Keamanan', desc: 'Kelola pengaturan keamanan ujian seperti token, deteksi kecurangan.', icon: ShieldCheck, href: '/admin/security' },
     { name: 'Penilaian', desc: 'Kelola hasil ujian, proses penilaian, dan analisis nilai peserta.', icon: BarChart3, href: '/admin/reports' },
-    { name: 'Kartu Ujian', desc: 'Kelola dan cetak kartu ujian peserta sebagai identitas saat pelaksanaan ujian.', icon: IdCard, href: '/admin/cards' }, 
-    { name: 'Presensi Ujian', desc: 'Kelola kehadiran peserta ujian dan rekap presensi selama pelaksanaan ujian.', icon: ClipboardList, href: '/admin/attendance' }, 
-    { name: 'Pengaturan', desc: 'Kelola konfigurasi sistem, preferensi aplikasi, dan pengaturan umum CBT.', icon: Settings, href: '/admin/settings' },
+    { name: 'Kartu Ujian', desc: 'Kelola dan cetak kartu ujian peserta sebagai identitas pelaksanaan.', icon: IdCard, href: '/admin/cards' }, 
+    { name: 'Presensi Ujian', desc: 'Kelola kehadiran peserta ujian dan rekap presensi.', icon: ClipboardList, href: '/admin/attendance' }, 
+    { name: 'Pengaturan', desc: 'Kelola konfigurasi sistem, preferensi aplikasi, dan pengaturan umum.', icon: Settings, href: '/admin/settings' },
   ];
 
   const currentMenu = menuItems.find(item => pathname.startsWith(item.href)) || menuItems[0];
@@ -140,28 +152,39 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="h-screen w-full flex items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-4">
-           <LoaderCircle className="w-12 h-12 text-blue-600 animate-spin" />
-           <p className="font-bold text-slate-500 uppercase tracking-widest text-sm animate-pulse">Memverifikasi Akses...</p>
+           <LoaderCircle className="w-10 h-10 md:w-12 md:h-12 text-blue-600 animate-spin" />
+           <p className="font-bold text-slate-500 uppercase tracking-widest text-xs md:text-sm animate-pulse">Memverifikasi Akses...</p>
         </div>
       </div>
     )
   }
 
-  // JIKA AMAN, TAMPILKAN DESAIN ANDA
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       
-      {/* ================= SIDEBAR KIRI (COLLAPSIBLE) ================= */}
-      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-sm z-20 transition-all duration-300 ease-in-out shrink-0 ${isSidebarOpen ? 'w-72' : 'w-[88px] items-center'}`}>
+      {/* ================= OVERLAY MOBILE ================= */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-200"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      {/* ================= SIDEBAR KIRI (COLLAPSIBLE / DRAWER) ================= */}
+      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-40 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
+        ${isSidebarOpen 
+          ? 'w-[280px] md:w-72 translate-x-0' 
+          : 'w-[280px] md:w-[88px] -translate-x-full md:translate-x-0 md:items-center'}
+      `}>
         
         {/* Logo / Nama Aplikasi */}
-        <div className={`h-24 flex items-center border-b border-slate-100 shrink-0 relative ${isSidebarOpen ? 'px-8 justify-between' : 'justify-center w-full'}`}>
+        <div className={`h-20 md:h-24 flex items-center border-b border-slate-100 shrink-0 relative ${isSidebarOpen ? 'px-6 md:px-8 justify-between' : 'justify-center w-full'}`}>
           {isSidebarOpen ? (
             <div className="flex items-center gap-3 overflow-hidden">
               {finalAppIconUrl && <img src={finalAppIconUrl} alt="Icon" className="w-8 h-8 object-contain shrink-0" />}
               <div className="overflow-hidden">
-                <h1 className="text-2xl font-black text-blue-600 tracking-tight truncate">{appSettings.nama_aplikasi}</h1>
-                <p className="text-slate-400 text-[9px] font-black mt-0.5 uppercase tracking-widest">Admin Panel</p>
+                <h1 className="text-xl md:text-2xl font-black text-blue-600 tracking-tight truncate">{appSettings.nama_aplikasi}</h1>
+                <p className="text-slate-400 text-[8px] md:text-[9px] font-black mt-0.5 uppercase tracking-widest">Admin Panel</p>
               </div>
             </div>
           ) : (
@@ -186,7 +209,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link 
                 key={item.name} 
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl font-bold transition-all text-sm ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-500 hover:bg-slate-100 hover:text-blue-600'}`}
+                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl md:rounded-2xl font-bold transition-all text-sm ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-500 hover:bg-slate-100 hover:text-blue-600'}`}
               >
                 <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                 <span className="truncate">{item.name}</span>
@@ -196,9 +219,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.name} 
                 href={item.href}
                 title={item.name} // Tooltip bawaan browser
-                className={`flex items-center justify-center w-14 h-14 rounded-[1.2rem] transition-all ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-400 hover:bg-slate-100 hover:text-blue-600'}`}
+                className={`flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-[1.2rem] transition-all ${isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-slate-400 hover:bg-slate-100 hover:text-blue-600'}`}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-5 h-5 md:w-6 md:h-6" />
               </Link>
             )
           })}
@@ -207,7 +230,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Tombol Logout Bawah */}
         <div className={`p-4 border-t border-slate-100 bg-slate-50/80 shrink-0 ${isSidebarOpen ? '' : 'flex justify-center'}`}>
           {isSidebarOpen ? (
-            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-4 py-3.5 w-full rounded-2xl font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95 shadow-sm">
+            <button onClick={handleLogout} className="flex items-center justify-center gap-2 px-4 py-3.5 w-full rounded-xl md:rounded-2xl font-bold text-red-600 bg-red-50 hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95 shadow-sm text-sm">
               <LogOut className="w-5 h-5" /> Keluar Sistem
             </button>
           ) : (
@@ -219,38 +242,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* ================= AREA KONTEN UTAMA (KANAN) ================= */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden bg-slate-50/50">
+      <main className="flex-1 flex flex-col h-screen min-w-0 bg-slate-50/50">
         
         {/* HEADER ATAS */}
-        <header className="bg-white border-b border-slate-200 h-24 flex items-center justify-between px-6 md:px-10 shrink-0 z-10">
+        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 z-10 w-full">
           
-          <div className="flex items-center gap-4 overflow-hidden">
+          <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
             {/* Tombol Buka Sidebar (Hamburger) jika sedang ditutup */}
-            {!isSidebarOpen && (
-              <button onClick={toggleSidebar} className="p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0">
-                <Menu className="w-5 h-5" />
-              </button>
-            )}
+            <button onClick={toggleSidebar} className={`p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0 ${isSidebarOpen ? 'md:hidden' : ''}`}>
+              <Menu className="w-5 h-5 md:w-5 md:h-5" />
+            </button>
             
             {/* Judul Halaman & Deskripsi Tersinkron */}
             <div className="flex flex-col justify-center overflow-hidden h-full py-2">
-               <h2 className="text-xl md:text-2xl font-black text-slate-800 flex items-center gap-3 tracking-tight">
-                 <currentMenu.icon className="w-6 h-6 text-blue-600 hidden md:block" /> 
-                 {currentMenu.name}
+               <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3 tracking-tight truncate">
+                 <currentMenu.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 hidden sm:block" /> 
+                 <span className="truncate">{currentMenu.name}</span>
                </h2>
-               <p className="text-sm font-medium text-slate-500 mt-1 hidden sm:block truncate pr-4">
+               <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 hidden lg:block truncate pr-4">
                  {currentMenu.desc}
                </p>
             </div>
           </div>
 
           {/* Profil Kanan Atas (Tersinkron) */}
-          <div className="relative shrink-0" ref={profileRef}>
+          <div className="relative shrink-0 ml-2" ref={profileRef}>
             <button 
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-              className="flex items-center gap-3 p-1.5 pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1.5rem] transition-all select-none"
+              className="flex items-center gap-2 md:gap-3 p-1 md:p-1.5 md:pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1rem] md:rounded-[1.5rem] transition-all select-none"
             >
-              <div className="w-10 h-10 rounded-xl overflow-hidden bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-black relative shrink-0">
+              <div className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl overflow-hidden bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-black relative shrink-0">
                 {finalAvatarUrl ? (
                   <img 
                     src={finalAvatarUrl} 
@@ -268,17 +289,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   getInitials(adminProfile?.full_name || '')
                 )}
               </div>
-              <div className="hidden md:block text-left">
-                 <p className="text-sm font-bold text-slate-800 leading-tight">{adminProfile?.full_name || 'Admin'}</p>
-                 <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest">{adminProfile?.role}</p>
+              <div className="hidden sm:block text-left pr-2 md:pr-0">
+                 <p className="text-xs md:text-sm font-bold text-slate-800 leading-tight max-w-[100px] md:max-w-[150px] truncate">{adminProfile?.full_name || 'Admin'}</p>
+                 <p className="text-[8px] md:text-[10px] font-black text-blue-600 uppercase tracking-widest mt-0.5">{adminProfile?.role}</p>
               </div>
             </button>
 
             {/* Dropdown Profil Menu */}
             {isProfileMenuOpen && (
-              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
+              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
                 <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col items-center text-center">
-                   <div className="w-16 h-16 rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
+                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1rem] md:rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
                     {finalAvatarUrl ? (
                       <img 
                         src={finalAvatarUrl} 
@@ -296,25 +317,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       getInitials(adminProfile?.full_name || '')
                     )}
                    </div>
-                   <p className="text-base font-black text-slate-800 line-clamp-1 w-full" title={adminProfile?.full_name}>{adminProfile?.full_name}</p>
+                   <p className="text-sm md:text-base font-black text-slate-800 line-clamp-1 w-full" title={adminProfile?.full_name}>{adminProfile?.full_name}</p>
                    
-                   {/* PERBAIKAN: adminProfile.email dipanggil dengan aman */}
-                   <p className="text-xs font-medium text-slate-500 line-clamp-1 w-full mt-0.5">{adminProfile?.email}</p>
+                   <p className="text-[11px] md:text-xs font-medium text-slate-500 line-clamp-1 w-full mt-0.5">{adminProfile?.email}</p>
                    
-                   <span className="mt-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                   <span className="mt-2.5 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                      {adminProfile?.role}
                    </span>
                 </div>
                 <div className="p-2">
-                   <Link href="/admin/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-sm text-slate-700 transition-colors">
-                     <UserCircle2 className="w-5 h-5 text-slate-400" /> Profil Akun
+                   <Link href="/admin/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-xs md:text-sm text-slate-700 transition-colors">
+                     <UserCircle2 className="w-4 h-4 md:w-5 md:h-5 text-slate-400" /> Profil Akun
                    </Link>
-                   <Link href="/admin/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-sm text-slate-700 transition-colors">
-                     <Settings className="w-5 h-5 text-slate-400" /> Pengaturan Sistem
+                   <Link href="/admin/settings" onClick={() => setIsProfileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 font-bold text-xs md:text-sm text-slate-700 transition-colors">
+                     <Settings className="w-4 h-4 md:w-5 md:h-5 text-slate-400" /> Pengaturan Sistem
                    </Link>
                 </div>
                 <div className="p-2 border-t border-slate-100">
-                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-50 text-red-600 font-black text-sm hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95">
+                   <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 md:py-3 rounded-xl bg-red-50 text-red-600 font-black text-xs md:text-sm hover:bg-red-600 hover:text-white border border-red-100 transition-all active:scale-95">
                      <LogOut className="w-4 h-4" /> Keluar
                    </button>
                 </div>
@@ -333,8 +353,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* INJEKSI CSS CUSTOM SCROLLBAR GLOBAL UNTUK ADMIN */}
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
+          width: 6px;
+          height: 6px;
+        }
+        @media (min-width: 768px) {
+           .custom-scrollbar::-webkit-scrollbar {
+             width: 8px;
+             height: 8px;
+           }
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent; 

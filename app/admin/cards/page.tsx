@@ -245,27 +245,27 @@ export default function ExamCardsPage() {
         /* MENGHILANGKAN HEADER & FOOTER BAWAAN BROWSER */
         @page { size: A4 portrait; margin: 0; } 
         body { 
-           font-family: 'Arial', sans-serif; 
-           color: #000; 
-           margin: 0; 
-           padding: 10mm; /* Margin dikembalikan melalui body agar isi tidak terpotong */
-           -webkit-print-color-adjust: exact !important; 
-           print-color-adjust: exact !important; 
-           background-color: white;
+            font-family: 'Arial', sans-serif; 
+            color: #000; 
+            margin: 0; 
+            padding: 10mm; /* Margin dikembalikan melalui body agar isi tidak terpotong */
+            -webkit-print-color-adjust: exact !important; 
+            print-color-adjust: exact !important; 
+            background-color: white;
         }
         
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
         
         .card { 
-           border: 1px solid #000; 
-           padding: 6px 10px; 
-           border-radius: 0px; 
-           page-break-inside: avoid; 
-           box-sizing: border-box;
-           display: flex;
-           flex-direction: column;
-           background-color: #fff;
-           min-height: 6.6cm; /* Pas 8 Kartu Per A4 */
+            border: 1px solid #000; 
+            padding: 6px 10px; 
+            border-radius: 0px; 
+            page-break-inside: avoid; 
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            min-height: 6.6cm; /* Pas 8 Kartu Per A4 */
         }
         
         .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 4px; margin-bottom: 6px; }
@@ -334,210 +334,216 @@ export default function ExamCardsPage() {
 
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative">
+    <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24">
       
       {/* ================= TOAST NOTIFICATION ELEGAN ================= */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 border ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[150] w-[90%] sm:w-auto animate-in slide-in-from-top-10">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-2xl shadow-2xl flex items-center gap-2 md:gap-3 border ${
              toast.type === 'success' ? 'bg-emerald-500 border-emerald-400 text-white' : 
              toast.type === 'warning' ? 'bg-amber-500 border-amber-400 text-white' : 'bg-rose-500 border-rose-400 text-white'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertTriangle className="w-5 h-5" />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 shrink-0" /> : <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 shrink-0" />}
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
 
       {/* HEADER UTAMA & TOMBOL CETAK KARTU */}
-      <div className="bg-white border border-slate-200 p-6 rounded-[1.5rem] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-            <IdCard className="w-8 h-8 text-blue-600" /> Cetak Kartu Ujian
+      <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[1.5rem] shadow-sm flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+        <div className="text-center md:text-left w-full md:w-auto">
+          <h1 className="text-xl md:text-3xl font-black text-slate-800 flex items-center justify-center md:justify-start gap-2 md:gap-3">
+            <IdCard className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Cetak Kartu Ujian
           </h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium ml-11">Desain biodata tergabung dengan foto 3x4 di kiri, lengkap dengan kustomisasi 2 Logo.</p>
+          <p className="text-slate-500 text-[10px] md:text-sm mt-1 font-medium md:ml-11 leading-snug">Desain biodata tergabung dengan foto 3x4 di kiri, lengkap dengan kustomisasi 2 Logo.</p>
         </div>
         
-        <button onClick={handlePrintPDF} disabled={isGeneratingPdf || loading} className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-6 py-3 rounded-2xl font-bold text-sm transition-all shadow-sm active:scale-95 whitespace-nowrap">
-          {isGeneratingPdf ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <Printer className="w-5 h-5" />} 
+        <button onClick={handlePrintPDF} disabled={isGeneratingPdf || loading} className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 hover:text-blue-700 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-bold text-xs md:text-sm transition-all shadow-sm active:scale-95 whitespace-nowrap w-full md:w-auto shrink-0">
+          {isGeneratingPdf ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Printer className="w-4 h-4 md:w-5 md:h-5" />} 
           {isGeneratingPdf ? 'Menyiapkan Data...' : 'Cetak / Simpan PDF'}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6 items-start">
          
          {/* PANEL KIRI: PENGATURAN KARTU (SETTINGS) */}
-         <div className="xl:col-span-1 space-y-6">
-            <div className="bg-white border border-slate-200 rounded-[1.5rem] p-6 shadow-sm">
-               <div className="flex items-center gap-2 mb-6 border-b border-slate-100 pb-4">
-                  <LayoutTemplate className="w-5 h-5 text-indigo-500"/>
-                  <h2 className="text-lg font-black text-slate-800">Desain Kartu Ujian</h2>
+         <div className="xl:col-span-1 space-y-4 md:space-y-6">
+            <div className="bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] p-4 md:p-6 shadow-sm">
+               <div className="flex items-center gap-2 mb-4 md:mb-6 border-b border-slate-100 pb-3 md:pb-4">
+                  <LayoutTemplate className="w-4 h-4 md:w-5 md:h-5 text-indigo-500"/>
+                  <h2 className="text-base md:text-lg font-black text-slate-800">Desain Kartu Ujian</h2>
                </div>
                
-               <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
+               <div className="space-y-4 overflow-y-auto max-h-[50vh] md:max-h-[60vh] pr-2 custom-scrollbar">
                   
                   {/* --- KELOMPOK LOGO --- */}
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 border-b border-slate-200 pb-1">Pengaturan Logo</p>
+                  <div className="p-3 md:p-4 bg-slate-50 rounded-lg md:rounded-xl border border-slate-200 space-y-3 md:space-y-4">
+                      <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 border-b border-slate-200 pb-1">Pengaturan Logo</p>
                       
                       {/* LOGO 1 (KIRI) */}
                       <div className="space-y-1.5">
-                         <label className="text-xs font-black text-slate-600 flex items-center justify-between">
-                            <span>Logo 1 (Kiri)</span><span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">Link / URL</span>
+                         <label className="text-[10px] md:text-xs font-black text-slate-600 flex flex-wrap items-center justify-between gap-1">
+                            <span>Logo 1 (Kiri)</span><span className="text-[8px] md:text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded whitespace-nowrap">Link / URL</span>
                          </label>
                          <div className="relative">
-                            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                            <input type="url" name="logoUrl" value={cardSettings.logoUrl} onChange={handleSettingChange} placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <ImageIcon className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/>
+                            <input type="url" name="logoUrl" value={cardSettings.logoUrl} onChange={handleSettingChange} placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-8 md:pl-9 pr-3 md:pr-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                          </div>
                          {cardSettings.logoUrl && (
-                            <div className="pt-2 space-y-2">
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Ukuran</span><input type="range" name="logoWidth" min="10" max="80" value={cardSettings.logoWidth} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logoWidth}</span></div>
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser X</span><input type="range" name="logoOffsetX" min="-50" max="50" value={cardSettings.logoOffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logoOffsetX}</span></div>
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser Y</span><input type="range" name="logoOffsetY" min="-50" max="50" value={cardSettings.logoOffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logoOffsetY}</span></div>
+                            <div className="pt-1.5 md:pt-2 space-y-1.5 md:space-y-2">
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Ukuran</span><input type="range" name="logoWidth" min="10" max="80" value={cardSettings.logoWidth} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logoWidth}</span></div>
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser X</span><input type="range" name="logoOffsetX" min="-50" max="50" value={cardSettings.logoOffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logoOffsetX}</span></div>
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser Y</span><input type="range" name="logoOffsetY" min="-50" max="50" value={cardSettings.logoOffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logoOffsetY}</span></div>
                             </div>
                          )}
                       </div>
 
                       {/* LOGO 2 (KANAN) */}
-                      <div className="space-y-1.5 pt-3 border-t border-slate-200">
-                         <label className="text-xs font-black text-slate-600 flex items-center justify-between">
-                            <span>Logo 2 (Kanan)</span><span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">Link / URL</span>
+                      <div className="space-y-1.5 pt-2.5 md:pt-3 border-t border-slate-200">
+                         <label className="text-[10px] md:text-xs font-black text-slate-600 flex flex-wrap items-center justify-between gap-1">
+                            <span>Logo 2 (Kanan)</span><span className="text-[8px] md:text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded whitespace-nowrap">Link / URL</span>
                          </label>
                          <div className="relative">
-                            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                            <input type="url" name="logo2Url" value={cardSettings.logo2Url} onChange={handleSettingChange} placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                            <ImageIcon className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/>
+                            <input type="url" name="logo2Url" value={cardSettings.logo2Url} onChange={handleSettingChange} placeholder="https://..." className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-8 md:pl-9 pr-3 md:pr-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                          </div>
                          {cardSettings.logo2Url && (
-                            <div className="pt-2 space-y-2">
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Ukuran</span><input type="range" name="logo2Width" min="10" max="80" value={cardSettings.logo2Width} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logo2Width}</span></div>
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser X</span><input type="range" name="logo2OffsetX" min="-50" max="50" value={cardSettings.logo2OffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logo2OffsetX}</span></div>
-                               <div className="flex items-center gap-3"><span className="text-[10px] font-bold text-slate-500 w-10">Geser Y</span><input type="range" name="logo2OffsetY" min="-50" max="50" value={cardSettings.logo2OffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[10px] font-bold text-slate-400 w-4 text-right">{cardSettings.logo2OffsetY}</span></div>
+                            <div className="pt-1.5 md:pt-2 space-y-1.5 md:space-y-2">
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Ukuran</span><input type="range" name="logo2Width" min="10" max="80" value={cardSettings.logo2Width} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logo2Width}</span></div>
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser X</span><input type="range" name="logo2OffsetX" min="-50" max="50" value={cardSettings.logo2OffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logo2OffsetX}</span></div>
+                               <div className="flex items-center gap-2 md:gap-3"><span className="text-[9px] md:text-[10px] font-bold text-slate-500 w-8 md:w-10">Geser Y</span><input type="range" name="logo2OffsetY" min="-50" max="50" value={cardSettings.logo2OffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500 h-1.5" /><span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-4 text-right">{cardSettings.logo2OffsetY}</span></div>
                             </div>
                          )}
                       </div>
                   </div>
 
                   <div className="space-y-1.5">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Judul Kartu</label>
-                     <input type="text" name="headerText" value={cardSettings.headerText} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Judul Kartu</label>
+                     <input type="text" name="headerText" value={cardSettings.headerText} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Nama Instansi / Sekolah</label>
-                     <input type="text" name="schoolName" value={cardSettings.schoolName} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Nama Instansi / Sekolah</label>
+                     <input type="text" name="schoolName" value={cardSettings.schoolName} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                   </div>
                   <div className="space-y-1.5">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Tahun / Periode</label>
-                     <input type="text" name="schoolYear" value={cardSettings.schoolYear} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Tahun / Periode</label>
+                     <input type="text" name="schoolYear" value={cardSettings.schoolYear} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                   </div>
                   
-                  <div className="pt-4 border-t border-slate-100 space-y-4">
+                  <div className="pt-3 md:pt-4 border-t border-slate-100 space-y-3 md:space-y-4">
                      <div className="space-y-1.5">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Tempat & Tanggal</label>
-                        <input type="text" name="locationDate" value={cardSettings.locationDate} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Tempat & Tanggal</label>
+                        <input type="text" name="locationDate" value={cardSettings.locationDate} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center justify-between">
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest flex flex-wrap items-center justify-between gap-1">
                            <span>TTD Digital</span>
-                           <span className="text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">Link / URL</span>
+                           <span className="text-[8px] md:text-[9px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded whitespace-nowrap">Link / URL</span>
                         </label>
                         <div className="relative">
-                           <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                           <input type="url" name="signatureUrl" value={cardSettings.signatureUrl} onChange={handleSettingChange} placeholder="Kosongkan jika TTD Manual..." className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                           <ImageIcon className="absolute left-2.5 md:left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400"/>
+                           <input type="url" name="signatureUrl" value={cardSettings.signatureUrl} onChange={handleSettingChange} placeholder="Kosongkan jika TTD Manual..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl pl-8 md:pl-9 pr-3 md:pr-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                         </div>
                      </div>
                      
                      {/* SLIDER KONTROL TTD */}
                      {cardSettings.signatureUrl && (
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                           <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 mb-2"><Sliders className="w-3.5 h-3.5"/> Atur Posisi TTD</p>
+                        <div className="bg-slate-50 p-3 md:p-4 rounded-lg md:rounded-xl border border-slate-200 space-y-2 md:space-y-3">
+                           <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 mb-1 md:mb-2"><Sliders className="w-3 h-3 md:w-3.5 md:h-3.5"/> Atur Posisi TTD</p>
                            
-                           <div className="flex items-center gap-3">
-                              <span className="text-[10px] font-bold text-slate-600 w-12">Ukuran</span>
+                           <div className="flex items-center gap-2 md:gap-3">
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-600 w-10 md:w-12">Ukuran</span>
                               <input type="range" name="sigWidth" min="20" max="150" value={cardSettings.sigWidth} onChange={handleSettingChange} className="flex-1 accent-blue-500" />
-                              <span className="text-[10px] font-bold text-slate-400 w-6 text-right">{cardSettings.sigWidth}</span>
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-6 text-right">{cardSettings.sigWidth}</span>
                            </div>
-                           <div className="flex items-center gap-3">
-                              <span className="text-[10px] font-bold text-slate-600 w-12">Geser X</span>
+                           <div className="flex items-center gap-2 md:gap-3">
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-600 w-10 md:w-12">Geser X</span>
                               <input type="range" name="sigOffsetX" min="-50" max="50" value={cardSettings.sigOffsetX} onChange={handleSettingChange} className="flex-1 accent-blue-500" />
-                              <span className="text-[10px] font-bold text-slate-400 w-6 text-right">{cardSettings.sigOffsetX}</span>
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-6 text-right">{cardSettings.sigOffsetX}</span>
                            </div>
-                           <div className="flex items-center gap-3">
-                              <span className="text-[10px] font-bold text-slate-600 w-12">Geser Y</span>
+                           <div className="flex items-center gap-2 md:gap-3">
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-600 w-10 md:w-12">Geser Y</span>
                               <input type="range" name="sigOffsetY" min="-50" max="50" value={cardSettings.sigOffsetY} onChange={handleSettingChange} className="flex-1 accent-blue-500" />
-                              <span className="text-[10px] font-bold text-slate-400 w-6 text-right">{cardSettings.sigOffsetY}</span>
+                              <span className="text-[9px] md:text-[10px] font-bold text-slate-400 w-5 md:w-6 text-right">{cardSettings.sigOffsetY}</span>
                            </div>
                         </div>
                      )}
 
                      <div className="space-y-1.5">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Jabatan TTD</label>
-                        <input type="text" name="signatureRole" value={cardSettings.signatureRole} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Jabatan TTD</label>
+                        <input type="text" name="signatureRole" value={cardSettings.signatureRole} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Nama Pejabat</label>
-                        <input type="text" name="signatureName" value={cardSettings.signatureName} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Nama Pejabat</label>
+                        <input type="text" name="signatureName" value={cardSettings.signatureName} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                      </div>
                      <div className="space-y-1.5">
-                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest">NIP (Opsional)</label>
-                        <input type="text" name="signatureNip" value={cardSettings.signatureNip} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none" />
+                        <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">NIP (Opsional)</label>
+                        <input type="text" name="signatureNip" value={cardSettings.signatureNip} onChange={handleSettingChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm" />
                      </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 space-y-1.5">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest">Catatan / Tata Tertib</label>
-                     <textarea name="notes" value={cardSettings.notes} onChange={handleSettingChange} rows={3} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none resize-none leading-relaxed" />
+                  <div className="pt-3 md:pt-4 border-t border-slate-100 space-y-1.5">
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">Catatan / Tata Tertib</label>
+                     <textarea name="notes" value={cardSettings.notes} onChange={handleSettingChange} rows={3} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2 md:py-2.5 text-xs md:text-sm font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none resize-none leading-relaxed shadow-sm" />
                   </div>
                </div>
             </div>
          </div>
 
          {/* PANEL KANAN: LIVE PREVIEW & FILTER */}
-         <div className="xl:col-span-2 space-y-6">
+         <div className="xl:col-span-2 space-y-4 md:space-y-6">
             
             {/* FILTER BAR */}
-            <div className="bg-white border border-slate-200 p-4 rounded-[1.5rem] shadow-sm flex flex-col sm:flex-row items-center gap-4">
-               <div className="relative w-full sm:w-64 shrink-0">
-                  <Users className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <div className="bg-white border border-slate-200 p-3 sm:p-4 rounded-xl md:rounded-[1.5rem] shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+               <div className="relative w-full sm:w-56 md:w-64 shrink-0">
+                  <Users className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <select 
                      value={selectedClass} 
                      onChange={(e) => setSelectedClass(e.target.value)}
-                     className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer appearance-none"
+                     className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl pl-9 md:pl-10 pr-8 md:pr-4 py-2.5 md:py-3 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer appearance-none shadow-sm truncate"
                   >
                      <option value="Semua Kelas">Semua Kelas ({students.length})</option>
                      {availableClasses.map(c => <option key={c} value={c}>Kelas {c}</option>)}
                   </select>
                </div>
                <div className="relative w-full">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input 
                      type="text" placeholder="Cari nama atau NIS siswa..." 
                      value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} 
-                     className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-3 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all" 
+                     className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl pl-9 md:pl-10 pr-3 md:pr-4 py-2.5 md:py-3 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all shadow-sm placeholder-slate-400" 
                   />
                </div>
             </div>
 
             {/* LIVE PREVIEW CARDS */}
-            <div className="bg-slate-100 border border-slate-200 rounded-[1.5rem] p-6 shadow-inner h-[800px] overflow-y-auto">
-               <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-2"><Eye className="w-4 h-4"/> Live Preview Kartu (Kompak)</h2>
-                  <span className="bg-white px-3 py-1 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 shadow-sm">{filteredStudents.length} Siswa Ditemukan</span>
+            <div className="bg-slate-100 border border-slate-200 rounded-xl md:rounded-[1.5rem] p-3 sm:p-4 md:p-6 shadow-inner h-[60vh] sm:h-[70vh] md:h-[800px] overflow-y-auto custom-scrollbar relative">
+               
+               {/* Notifikasi geser di layar kecil jika konten kurang lebar */}
+               <div className="md:hidden text-center text-[10px] text-slate-400 font-bold mb-2">
+                 <span className="bg-slate-200/70 px-2 py-1 rounded">Geser konten jika kartu terpotong</span>
+               </div>
+
+               <div className="flex items-center justify-between mb-4 md:mb-6 sticky left-0 right-0">
+                  <h2 className="text-[10px] md:text-sm font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 md:gap-2"><Eye className="w-3.5 h-3.5 md:w-4 h-4"/> Preview Kartu (Kompak)</h2>
+                  <span className="bg-white px-2 md:px-3 py-1 rounded-md md:rounded-lg border border-slate-200 text-[10px] md:text-xs font-bold text-slate-600 shadow-sm whitespace-nowrap">{filteredStudents.length} Siswa</span>
                </div>
 
                {loading ? (
-                  <div className="flex justify-center py-20"><LoaderCircle className="w-8 h-8 text-blue-500 animate-spin"/></div>
+                  <div className="flex justify-center py-20 w-full"><LoaderCircle className="w-6 h-6 md:w-8 h-8 text-blue-500 animate-spin"/></div>
                ) : filteredStudents.length === 0 ? (
-                  <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
-                     <Users className="w-10 h-10 text-slate-300 mx-auto mb-3"/>
-                     <p className="font-bold text-slate-500">Tidak ada siswa yang sesuai dengan filter.</p>
+                  <div className="text-center py-16 md:py-20 bg-white rounded-xl md:rounded-2xl border border-dashed border-slate-300 mx-1 md:mx-0 sticky left-0 right-0">
+                     <Users className="w-8 h-8 md:w-10 h-10 text-slate-300 mx-auto mb-2 md:mb-3"/>
+                     <p className="font-bold text-slate-500 text-xs md:text-sm px-4">Tidak ada siswa yang sesuai dengan filter.</p>
                   </div>
                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 overflow-x-auto pb-2 min-w-min" style={{ minWidth: 'min-content' }}>
                      {filteredStudents.slice(0, 20).map((s, idx) => {
                         const parsedName = formatName(s.full_name);
                         
                         return (
-                        <div key={idx} className="bg-white border border-slate-800 shadow-sm relative flex flex-col group hover:border-blue-500 transition-colors" style={{ padding: '6px 10px', minHeight: '6.6cm' }}>
+                        <div key={idx} className="bg-white border border-slate-800 shadow-sm relative flex flex-col group hover:border-blue-500 transition-colors w-[85mm] sm:w-[auto]" style={{ padding: '6px 10px', minHeight: '6.6cm' }}>
                            
                            {/* HEADER KARTU (KOP) */}
                            <div className="flex justify-between items-center border-b-[2px] border-slate-800" style={{ paddingBottom: '4px', marginBottom: '6px' }}>
@@ -631,13 +637,13 @@ export default function ExamCardsPage() {
                               </div>
                            </div>
                         </div>
-                     )})}
+                        )})}
                   </div>
                )}
                
                {filteredStudents.length > 20 && (
-                  <div className="text-center py-6">
-                     <p className="text-sm font-bold text-slate-400">Menampilkan 20 kartu pertama di Pratinjau.<br/>({filteredStudents.length - 20} kartu lainnya akan disertakan saat dicetak).</p>
+                  <div className="text-center py-4 md:py-6 sticky left-0 right-0">
+                     <p className="text-xs md:text-sm font-bold text-slate-400">Menampilkan 20 kartu pertama di Pratinjau.<br/>({filteredStudents.length - 20} kartu lainnya akan disertakan saat dicetak).</p>
                   </div>
                )}
             </div>

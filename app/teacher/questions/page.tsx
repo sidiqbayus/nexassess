@@ -11,7 +11,7 @@ import {
   FileSpreadsheet, AlertCircle, CheckCircle2, Save, Award, Info, FileText,
   Package, Layers, KeyRound, HelpCircle, AlertTriangle, ChevronDown, UserCircle2, 
   Globe, Lock, ShieldCheck, Headphones,
-  Settings, Sparkles, ChevronRight, Download as DownloadIcon // PERBAIKAN: Menggunakan alias agar tidak bentrok dengan DOM
+  Settings, Sparkles, ChevronRight, Download as DownloadIcon
 } from 'lucide-react';
 
 // --- INJEKSI KATEX & MHCHEM UNTUK MATEMATIKA, FISIKA, DAN KIMIA ---
@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false, 
-  loading: () => <div className="h-20 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 font-medium">Memuat Editor...</div> 
+  loading: () => <div className="h-20 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 font-medium text-xs md:text-sm">Memuat Editor...</div> 
 });
 
 const quillModulesFull = {
@@ -101,7 +101,7 @@ export default function TeacherQuestionsBankPage() {
 
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [myProfile, setMyProfile] = useState<TeacherProfile | null>(null); // Profil Guru Login
+  const [myProfile, setMyProfile] = useState<TeacherProfile | null>(null);
 
   const [globalLoading, setGlobalLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(''); 
@@ -186,15 +186,12 @@ export default function TeacherQuestionsBankPage() {
     } catch (error) { console.error(error); } finally { setGlobalLoading(false); }
   };
 
-  // HELPER PENTING: Mengecek apakah guru ini pengampu mapel tersebut
   const checkIsMySubject = (subjectId: string | undefined) => {
       if (!subjectId || !myProfile?.taught_subjects) return false;
       return myProfile.taught_subjects.includes(subjectId);
   };
-  // Ambil state kepemilikan untuk folder yang sedang dibuka
   const isMyActiveSubject = checkIsMySubject(activeSubject?.id);
 
-  // Daftar mapel yang KHUSUS DIMILIKI GURU INI (untuk dropdown modal)
   const myOwnedSubjects = subjects.filter(s => checkIsMySubject(s.id));
 
   const goToPackagesView = (subject: Subject) => {
@@ -387,7 +384,6 @@ export default function TeacherQuestionsBankPage() {
         finalOptions = null; finalCorrectAnswer = null; 
       }
 
-      // Ambil subjectId dari activeSubject jika edit dari dalam mapel. Atau dari import dropdown.
       const targetSubjectId = activeSubject?.id || importSelectedSubject; 
       if(!targetSubjectId) throw new Error("Target Mata Pelajaran tidak ditemukan.");
 
@@ -579,12 +575,12 @@ export default function TeacherQuestionsBankPage() {
   }, [questions, searchQuery]);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24">
+    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24">
       
       {/* TOAST NOTIFIKASI */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[200] animate-in slide-in-from-top-10 fade-in duration-300">
-          <div className={`px-6 py-3.5 rounded-[1.5rem] shadow-2xl border flex items-center gap-3 backdrop-blur-md ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm sm:w-auto animate-in slide-in-from-top-10 fade-in duration-300">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-2xl border flex items-center gap-2 md:gap-3 backdrop-blur-md ${
             toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
             toast.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-700' : 
             toast.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700' :
@@ -594,7 +590,7 @@ export default function TeacherQuestionsBankPage() {
             {toast.type === 'error' && <AlertCircle className="w-5 h-5 shrink-0 text-rose-500" />}
             {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 shrink-0 text-amber-500" />}
             {toast.type === 'info' && <Info className="w-5 h-5 shrink-0 text-blue-500" />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
@@ -602,24 +598,24 @@ export default function TeacherQuestionsBankPage() {
       {/* CUSTOM DIALOG MODAL (TEMA LIGHT) */}
       {dialogConfig.isOpen && (
         <div className="fixed inset-0 z-[9999] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-white/50">
-            <div className="p-8 flex flex-col items-center text-center">
-               <div className={`w-20 h-20 rounded-[1.5rem] flex items-center justify-center mb-6 shadow-inner border 
+          <div className="bg-white w-full max-w-md rounded-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-white/50">
+            <div className="p-6 md:p-8 flex flex-col items-center text-center">
+               <div className={`w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center mb-4 md:mb-6 shadow-inner border 
                   ${dialogConfig.type === 'confirm' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
                     dialogConfig.type === 'success' ? 'bg-emerald-50 text-emerald-500 border-emerald-100' : 
                     'bg-rose-50 text-rose-600 border-rose-100'}`}>
-                  {dialogConfig.type === 'confirm' ? <HelpCircle className="w-10 h-10" /> : 
-                   dialogConfig.type === 'success' ? <CheckCircle2 className="w-10 h-10" /> :
-                   <AlertTriangle className="w-10 h-10" />}
+                  {dialogConfig.type === 'confirm' ? <HelpCircle className="w-8 h-8 md:w-10 md:h-10" /> : 
+                   dialogConfig.type === 'success' ? <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10" /> :
+                   <AlertTriangle className="w-8 h-8 md:w-10 md:h-10" />}
                </div>
-               <h3 className="text-2xl font-black text-slate-800 mb-3">{dialogConfig.title}</h3>
-               <p className="text-slate-500 font-medium text-sm leading-relaxed whitespace-pre-wrap">{dialogConfig.message}</p>
+               <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2 md:mb-3">{dialogConfig.title}</h3>
+               <p className="text-slate-500 font-medium text-xs md:text-sm leading-relaxed whitespace-pre-wrap max-h-[40vh] md:max-h-[60vh] overflow-y-auto custom-scrollbar">{dialogConfig.message}</p>
             </div>
-            <div className="p-4 bg-slate-50/80 border-t border-slate-100 flex gap-3 justify-center">
+            <div className="p-3 md:p-4 bg-slate-50/80 border-t border-slate-100 flex gap-2 md:gap-3 justify-center">
                {dialogConfig.type === 'confirm' && (
-                 <button onClick={() => { closeDialog(); if(dialogConfig.onCancel) dialogConfig.onCancel(); }} className="px-6 py-3.5 rounded-xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors w-full shadow-sm">Batal</button>
+                 <button onClick={() => { closeDialog(); if(dialogConfig.onCancel) dialogConfig.onCancel(); }} className="px-4 md:px-6 py-3 md:py-3.5 rounded-xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors w-full shadow-sm text-sm">Batal</button>
                )}
-               <button onClick={() => { closeDialog(); if(dialogConfig.onConfirm) dialogConfig.onConfirm(); }} className={`px-6 py-3.5 rounded-xl font-bold text-white transition-all shadow-md active:scale-95 w-full ${dialogConfig.type === 'alert' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : dialogConfig.type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'}`}>Mengerti</button>
+               <button onClick={() => { closeDialog(); if(dialogConfig.onConfirm) dialogConfig.onConfirm(); }} className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl font-bold text-white transition-all shadow-md active:scale-95 w-full text-sm ${dialogConfig.type === 'alert' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : dialogConfig.type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'}`}>Mengerti</button>
             </div>
           </div>
         </div>
@@ -628,61 +624,61 @@ export default function TeacherQuestionsBankPage() {
       {/* ================= VIEW 1: DAFTAR MAPEL / FOLDER ================= */}
       {activeView === 'folders' && (
         <>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[2rem] border border-blue-100 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[1.5rem] md:rounded-[2rem] border border-blue-100 shadow-sm">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3"><Database className="w-8 h-8 text-blue-600" /> Bank Soal</h1>
-              <p className="text-slate-500 text-sm mt-1 font-medium ml-11">Pilih Folder Mapel. Anda hanya bisa mengelola mapel yang Anda ampu.</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal</h1>
+              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Pilih Folder Mapel. Anda hanya bisa mengelola mapel yang Anda ampu.</p>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full md:w-auto">
               {myOwnedSubjects.length > 0 && (
-                 <button onClick={openImportModal} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-6 py-3 rounded-xl font-bold text-sm shadow-sm transition-colors w-full md:w-auto"><FileUp className="w-5 h-5 text-emerald-500" /> Import Massal</button>
+                 <button onClick={openImportModal} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full md:w-auto"><FileUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> Import Massal</button>
               )}
               {myOwnedSubjects.length > 0 && (
-                 <button onClick={() => setIsSelectMapelModalOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-md active:scale-95 transition-all w-full md:w-auto"><Plus className="w-5 h-5" /> Buat Soal Baru</button>
+                 <button onClick={() => setIsSelectMapelModalOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-3 rounded-xl font-bold text-xs md:text-sm shadow-md active:scale-95 transition-all w-full md:w-auto"><Plus className="w-4 h-4 md:w-5 md:h-5" /> Buat Soal Baru</button>
               )}
             </div>
           </div>
 
           <div className="relative max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-            <input type="text" placeholder="Cari berdasarkan nama mata pelajaran..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.5rem] pl-12 pr-4 py-3.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all placeholder-slate-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+            <input type="text" placeholder="Cari berdasarkan nama mata pelajaran..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.2rem] md:rounded-[1.5rem] pl-11 md:pl-12 pr-4 py-3 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all placeholder-slate-400" />
           </div>
 
           {globalLoading ? (
-            <div className="py-20 flex justify-center"><LoaderCircle className="w-10 h-10 text-blue-500 animate-spin" /></div>
+            <div className="py-20 flex justify-center"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-blue-500 animate-spin" /></div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {subjects.filter(subj => subj.name.toLowerCase().includes(searchQuery.toLowerCase())).map((subject) => {
                 const isMine = checkIsMySubject(subject.id);
                 return (
-                  <div key={subject.id} onClick={() => goToPackagesView(subject)} className={`bg-white border ${isMine ? 'border-blue-300' : 'border-slate-200'} rounded-[2rem] p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 ${isMine ? 'hover:border-blue-500' : 'hover:border-slate-300'} transition-all duration-300 cursor-pointer group flex flex-col justify-between relative overflow-hidden`}>
+                  <div key={subject.id} onClick={() => goToPackagesView(subject)} className={`bg-white border ${isMine ? 'border-blue-300' : 'border-slate-200'} rounded-2xl md:rounded-[2rem] p-5 md:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 ${isMine ? 'hover:border-blue-500' : 'hover:border-slate-300'} transition-all duration-300 cursor-pointer group flex flex-col justify-between relative overflow-hidden`}>
                     
                     {/* BAGIAN ATAS: BADGE KEPEMILIKAN MAPEL */}
-                    <div className="absolute top-0 right-0 rounded-bl-[1.5rem] px-4 py-1.5 font-bold text-[10px] uppercase tracking-widest border-b border-l shadow-sm">
+                    <div className="absolute top-0 right-0 rounded-bl-[1.2rem] md:rounded-bl-[1.5rem] px-3 py-1 md:px-4 md:py-1.5 font-bold text-[8px] md:text-[10px] uppercase tracking-widest border-b border-l shadow-sm">
                         {isMine ? (
-                            <span className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 border-emerald-100"><ShieldCheck className="w-3.5 h-3.5" /> Mapel Anda</span>
+                            <span className="flex items-center gap-1 md:gap-1.5 text-emerald-700 bg-emerald-50 border-emerald-100"><ShieldCheck className="w-3 h-3 md:w-3.5 md:h-3.5" /> Mapel Anda</span>
                         ) : (
-                            <span className="flex items-center gap-1.5 text-slate-400 bg-slate-50 border-slate-100"><Lock className="w-3 h-3" /> Hanya Lihat</span>
+                            <span className="flex items-center gap-1 md:gap-1.5 text-slate-400 bg-slate-50 border-slate-100"><Lock className="w-3 h-3" /> Hanya Lihat</span>
                         )}
                     </div>
 
                     <div>
-                      <div className={`w-14 h-14 ${isMine ? 'bg-blue-50 border-blue-100 group-hover:bg-blue-600' : 'bg-slate-50 border-slate-200 group-hover:bg-slate-200'} rounded-[1.2rem] flex items-center justify-center mb-5 group-hover:scale-110 transition-all duration-300 shadow-inner`}>
-                         <FolderOpen className={`w-7 h-7 ${isMine ? 'text-blue-600 group-hover:text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                      <div className={`w-12 h-12 md:w-14 md:h-14 ${isMine ? 'bg-blue-50 border-blue-100 group-hover:bg-blue-600' : 'bg-slate-50 border-slate-200 group-hover:bg-slate-200'} rounded-xl md:rounded-[1.2rem] flex items-center justify-center mb-4 md:mb-5 group-hover:scale-110 transition-all duration-300 shadow-inner`}>
+                         <FolderOpen className={`w-6 h-6 md:w-7 md:h-7 ${isMine ? 'text-blue-600 group-hover:text-white' : 'text-slate-400 group-hover:text-slate-600'}`} />
                       </div>
-                      <h3 className={`font-black text-2xl text-slate-800 line-clamp-1 ${isMine ? 'group-hover:text-blue-700' : 'group-hover:text-slate-600'} transition-colors`} title={subject.name}>{subject.name}</h3>
+                      <h3 className={`font-black text-lg md:text-2xl text-slate-800 line-clamp-1 ${isMine ? 'group-hover:text-blue-700' : 'group-hover:text-slate-600'} transition-colors`} title={subject.name}>{subject.name}</h3>
                     </div>
-                    <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col gap-2.5">
-                      <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase">
-                        {subject.grade_level && <span className="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100">{subject.grade_level}</span>}
-                        <span className="bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 flex items-center gap-1 truncate max-w-[150px]"><Users className="w-3 h-3 text-amber-500" /> {subject.teacherNames}</span>
+                    <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-slate-100 flex flex-col gap-2 md:gap-2.5">
+                      <div className="flex flex-wrap items-center gap-1.5 text-[9px] md:text-[10px] font-bold text-slate-500 uppercase">
+                        {subject.grade_level && <span className="bg-indigo-50 text-indigo-600 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-indigo-100">{subject.grade_level}</span>}
+                        <span className="bg-slate-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200 flex items-center gap-1 truncate max-w-[120px] md:max-w-[150px]"><Users className="w-3 h-3 text-amber-500" /> {subject.teacherNames}</span>
                       </div>
                     </div>
                   </div>
                 );
               })}
               {subjects.filter(subj => subj.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
-                 <div className="col-span-full py-10 text-center text-slate-400 font-bold">Mata Pelajaran tidak ditemukan.</div>
+                 <div className="col-span-full py-10 text-center text-slate-400 font-bold text-sm">Mata Pelajaran tidak ditemukan.</div>
               )}
             </div>
           )}
@@ -691,40 +687,40 @@ export default function TeacherQuestionsBankPage() {
 
       {/* ================= VIEW 1.5: DAFTAR PAKET SOAL DALAM MAPEL ================= */}
       {activeView === 'packages' && activeSubject && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-          <button onClick={goToFolders} className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-5 py-2.5 rounded-xl transition-all shadow-sm w-fit">
-            <ArrowLeft className="w-4 h-4" /> Kembali ke Daftar Mapel
+        <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+          <button onClick={goToFolders} className="flex items-center gap-2 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl transition-all shadow-sm w-fit">
+            <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> Kembali ke Daftar Mapel
           </button>
 
           {/* HEADER MAPEL */}
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 border border-blue-800 rounded-[2.5rem] p-8 md:p-10 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-white relative overflow-hidden">
-             <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 border border-blue-800 rounded-2xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-10 shadow-lg flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6 text-white relative overflow-hidden">
+             <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 md:w-40 md:h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
 
-             <div className="flex items-start gap-5 relative z-10 w-full md:w-auto">
-              <div className="p-4 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20 shrink-0"><BookOpen className="w-8 h-8" /></div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="bg-blue-500/50 border border-blue-400/50 text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg">
+             <div className="flex items-start gap-3 md:gap-5 relative z-10 w-full lg:w-auto">
+              <div className="p-3 md:p-4 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/20 shrink-0"><BookOpen className="w-6 h-6 md:w-8 md:h-8" /></div>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
+                  <span className="bg-blue-500/50 border border-blue-400/50 text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest px-2 md:px-2.5 py-0.5 md:py-1 rounded-md md:rounded-lg whitespace-nowrap">
                     {activeSubject.grade_level || 'UMUM'}
                   </span>
-                  <span className="bg-amber-500/50 border border-amber-400/50 text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg flex items-center gap-1">
-                    <UserCircle2 className="w-3 h-3"/> {activeSubject.teacherNames || 'Guru Pengampu'}
+                  <span className="bg-amber-500/50 border border-amber-400/50 text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest px-2 md:px-2.5 py-0.5 md:py-1 rounded-md md:rounded-lg flex items-center gap-1 truncate max-w-[150px] md:max-w-none">
+                    <UserCircle2 className="w-2.5 h-2.5 md:w-3 md:h-3 shrink-0"/> <span className="truncate">{activeSubject.teacherNames || 'Guru Pengampu'}</span>
                   </span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-1">{activeSubject.name}</h1>
-                <p className="text-sm font-medium text-blue-100 flex items-center gap-1.5">
-                  <Database className="w-4 h-4"/> Folder Bank Soal Master
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight mb-1 truncate leading-tight">{activeSubject.name}</h1>
+                <p className="text-xs md:text-sm font-medium text-blue-100 flex items-center gap-1.5">
+                  <Database className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bank Soal Master
                 </p>
               </div>
             </div>
             {/* HANYA TAMPILKAN TOMBOL JIKA GURU INI MENGAMPU MAPEL INI */}
             {isMyActiveSubject && (
-                <div className="flex flex-col sm:flex-row gap-3 relative z-10 w-full md:w-auto shrink-0">
-                   <button onClick={openImportModal} className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-sm transition-all w-full md:w-auto backdrop-blur-md">
-                     <FileUp className="w-5 h-5" /> Import Excel
+                <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 relative z-10 w-full lg:w-auto shrink-0 mt-2 lg:mt-0">
+                   <button onClick={openImportModal} className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm transition-all w-full sm:w-auto backdrop-blur-md">
+                     <FileUp className="w-4 h-4 md:w-5 md:h-5" /> Import Excel
                    </button>
-                   <button onClick={() => openCreateForm(activeSubject, 'Paket 1')} className="flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-xl font-bold text-sm shadow-md active:scale-95 transition-all w-full md:w-auto">
-                     <Plus className="w-5 h-5" /> Buat Paket / Soal
+                   <button onClick={() => openCreateForm(activeSubject, 'Paket 1')} className="flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-md active:scale-95 transition-all w-full sm:w-auto">
+                     <Plus className="w-4 h-4 md:w-5 md:h-5" /> Buat Paket / Soal
                    </button>
                 </div>
             )}
@@ -732,51 +728,51 @@ export default function TeacherQuestionsBankPage() {
 
           {/* DAFTAR PAKET (LIST STYLE) */}
           {globalLoading ? (
-            <div className="py-20 flex justify-center"><LoaderCircle className="w-10 h-10 text-blue-500 animate-spin" /></div>
+            <div className="py-20 flex justify-center"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-blue-500 animate-spin" /></div>
           ) : (
-            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/80 flex items-center justify-between">
-                <h2 className="font-black text-slate-800 text-xl flex items-center gap-2"><Layers className="w-6 h-6 text-blue-500"/> Daftar Paket Soal</h2>
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">{uniquePackages.length} Paket Ditemukan</span>
+            <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden">
+              <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 bg-slate-50/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <h2 className="font-black text-slate-800 text-lg md:text-xl flex items-center gap-2"><Layers className="w-5 h-5 md:w-6 md:h-6 text-blue-500"/> Daftar Paket Soal</h2>
+                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 bg-white border border-slate-200 px-2.5 md:px-3 py-1 md:py-1.5 rounded-lg shadow-sm w-fit">{uniquePackages.length} Paket Ditemukan</span>
               </div>
 
-              <div className="p-6 flex flex-col gap-4 bg-slate-50/30">
+              <div className="p-4 sm:p-5 md:p-6 flex flex-col gap-3 md:gap-4 bg-slate-50/30">
                 {uniquePackages.length === 0 ? (
                   isMyActiveSubject ? (
-                      <div onClick={() => openCreateForm(activeSubject, 'Paket 1')} className="border-2 border-dashed border-slate-300 rounded-[1.5rem] p-10 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all bg-white group">
-                        <Package className="w-12 h-12 text-slate-300 mb-3 group-hover:scale-110 transition-transform duration-300" />
-                        <p className="font-black text-slate-600 text-xl">Belum ada paket soal</p>
-                        <p className="text-sm font-medium text-slate-500 mt-1">Klik di sini untuk mulai menyusun Paket 1</p>
+                      <div onClick={() => openCreateForm(activeSubject, 'Paket 1')} className="border-2 border-dashed border-slate-300 rounded-2xl md:rounded-[1.5rem] p-8 md:p-10 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-blue-50 hover:border-blue-400 transition-all bg-white group">
+                        <Package className="w-10 h-10 md:w-12 md:h-12 text-slate-300 mb-2 md:mb-3 group-hover:scale-110 transition-transform duration-300" />
+                        <p className="font-black text-slate-600 text-lg md:text-xl">Belum ada paket soal</p>
+                        <p className="text-xs md:text-sm font-medium text-slate-500 mt-1">Klik di sini untuk mulai menyusun Paket 1</p>
                       </div>
                   ) : (
-                      <div className="border-2 border-dashed border-slate-200 rounded-[1.5rem] p-10 flex flex-col items-center justify-center text-center bg-slate-50">
-                        <Package className="w-12 h-12 text-slate-300 mb-3" />
-                        <p className="font-black text-slate-500 text-lg">Belum ada paket soal di mapel ini.</p>
+                      <div className="border-2 border-dashed border-slate-200 rounded-2xl md:rounded-[1.5rem] p-8 md:p-10 flex flex-col items-center justify-center text-center bg-slate-50">
+                        <Package className="w-10 h-10 md:w-12 md:h-12 text-slate-300 mb-2 md:mb-3" />
+                        <p className="font-black text-slate-500 text-base md:text-lg">Belum ada paket soal di mapel ini.</p>
                       </div>
                   )
                 ) : (
                   uniquePackages.map(pkg => (
-                    <div key={pkg} onClick={() => goToQuestionsView(pkg)} className="group flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white border border-slate-200 p-5 rounded-[1.5rem] hover:border-blue-400 hover:shadow-md hover:bg-blue-50/30 transition-all cursor-pointer gap-4">
-                      <div className="flex items-center gap-5">
-                        <div className="w-14 h-14 bg-slate-50 border border-slate-100 group-hover:bg-blue-100 rounded-xl flex items-center justify-center transition-colors shrink-0 shadow-inner">
-                          <Package className="w-7 h-7 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                    <div key={pkg} onClick={() => goToQuestionsView(pkg)} className="group flex flex-col sm:flex-row items-start sm:items-center justify-between bg-white border border-slate-200 p-4 md:p-5 rounded-xl md:rounded-[1.5rem] hover:border-blue-400 hover:shadow-md hover:bg-blue-50/30 transition-all cursor-pointer gap-3 md:gap-4">
+                      <div className="flex items-center gap-3 md:gap-5 w-full sm:w-auto min-w-0">
+                        <div className="w-12 h-12 md:w-14 md:h-14 bg-slate-50 border border-slate-100 group-hover:bg-blue-100 rounded-xl flex items-center justify-center transition-colors shrink-0 shadow-inner">
+                          <Package className="w-6 h-6 md:w-7 md:h-7 text-slate-400 group-hover:text-blue-600 transition-colors" />
                         </div>
-                        <div>
-                          <h3 className="font-black text-slate-800 text-xl group-hover:text-blue-700 transition-colors">{pkg}</h3>
-                          <div className="flex items-center gap-2 mt-1">
-                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-md">
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-black text-slate-800 text-lg md:text-xl group-hover:text-blue-700 transition-colors truncate">{pkg}</h3>
+                          <div className="flex items-center gap-2 mt-0.5 md:mt-1">
+                             <span className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-md whitespace-nowrap">
                                <FileText className="w-3 h-3"/> Terdiri dari
                              </span>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
-                        <div className="flex items-center gap-1.5 text-xs font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
-                          <LayoutList className="w-4 h-4" /> {questions.filter(q => (q.package_name || 'Paket 1') === pkg).length} Soal
+                      <div className="flex items-center justify-between sm:justify-end gap-3 md:gap-4 w-full sm:w-auto border-t border-slate-100 sm:border-0 pt-3 sm:pt-0">
+                        <div className="flex items-center gap-1.5 text-[11px] md:text-xs font-black text-blue-600 bg-blue-50 px-2.5 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-blue-100">
+                          <LayoutList className="w-3.5 h-3.5 md:w-4 md:h-4" /> {questions.filter(q => (q.package_name || 'Paket 1') === pkg).length} Soal
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-slate-50 border border-slate-100 group-hover:bg-blue-100 flex items-center justify-center transition-colors">
-                          <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-50 border border-slate-100 group-hover:bg-blue-100 flex items-center justify-center transition-colors shrink-0">
+                          <ChevronRight className="w-4 h-4 md:w-5 h-5 text-slate-400 group-hover:text-blue-600" />
                         </div>
                       </div>
                     </div>
@@ -790,82 +786,83 @@ export default function TeacherQuestionsBankPage() {
 
       {/* ================= VIEW 2: DAFTAR SOAL DALAM PAKET TERTENTU ================= */}
       {activeView === 'questions' && activeSubject && activePackage && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-          <button onClick={() => { setActiveView('packages'); setSearchQuery(''); }} className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-cyan-600 bg-white border border-slate-200 hover:border-cyan-200 px-5 py-2.5 rounded-xl transition-colors shadow-sm w-fit"><ArrowLeft className="w-4 h-4" /> Kembali ke Daftar Paket</button>
+        <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+          <button onClick={() => { setActiveView('packages'); setSearchQuery(''); }} className="flex items-center gap-2 text-xs md:text-sm font-bold text-slate-500 hover:text-cyan-600 bg-white border border-slate-200 hover:border-cyan-200 px-4 md:px-5 py-2 md:py-2.5 rounded-lg md:rounded-xl transition-colors shadow-sm w-fit"><ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4" /> Kembali ke Daftar Paket</button>
 
-          <div className="bg-gradient-to-br from-cyan-600 to-blue-700 border border-cyan-800 rounded-[2.5rem] p-8 md:p-10 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
+          <div className="bg-gradient-to-br from-cyan-600 to-blue-700 border border-cyan-800 rounded-2xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-10 shadow-lg flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 md:w-40 md:h-40 bg-white opacity-10 rounded-full blur-3xl"></div>
             
-            <div className="flex items-center gap-5 relative z-10">
-              <div className="p-4 bg-white/20 backdrop-blur-md rounded-2xl border border-white/20"><Package className="w-8 h-8" /></div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-black tracking-tight">{activePackage}</h1>
-                <div className="flex flex-wrap gap-2 mt-2 text-sm font-bold text-cyan-100">
-                  <span className="bg-white/20 px-3 py-1 rounded-lg border border-white/10 flex items-center gap-1.5"><BookOpen className="w-4 h-4" /> {activeSubject.name}</span>
+            <div className="flex items-center gap-3 md:gap-5 relative z-10 min-w-0">
+              <div className="p-3 md:p-4 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/20 shrink-0"><Package className="w-6 h-6 md:w-8 md:h-8" /></div>
+              <div className="min-w-0">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight truncate leading-tight mb-1">{activePackage}</h1>
+                <div className="flex flex-wrap gap-2 mt-1 md:mt-2 text-xs md:text-sm font-bold text-cyan-100">
+                  <span className="bg-white/20 px-2 md:px-3 py-0.5 md:py-1 rounded-md md:rounded-lg border border-white/10 flex items-center gap-1.5 truncate max-w-[200px] md:max-w-none"><BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" /> <span className="truncate">{activeSubject.name}</span></span>
                 </div>
               </div>
             </div>
             
-            <div className="flex gap-4 relative z-10 w-full md:w-auto">
-               <div className="flex-1 md:w-32 text-center bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-sm flex flex-col justify-center items-center">
-                 <p className="text-3xl font-black text-white">{questions.filter(q => (q.package_name || 'Paket 1') === activePackage).length}</p>
-                 <p className="text-[10px] font-bold text-cyan-100 uppercase tracking-widest mt-1">Total Soal</p>
+            <div className="flex gap-3 md:gap-4 relative z-10 w-full lg:w-auto mt-2 lg:mt-0">
+               <div className="flex-1 lg:w-32 text-center bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/20 shadow-sm flex flex-col justify-center items-center">
+                 <p className="text-2xl md:text-3xl font-black text-white leading-none">{questions.filter(q => (q.package_name || 'Paket 1') === activePackage).length}</p>
+                 <p className="text-[9px] md:text-[10px] font-bold text-cyan-100 uppercase tracking-widest mt-1 md:mt-1.5 leading-none">Total Soal</p>
                </div>
                
-               <div className="flex-1 md:w-32 text-center bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 shadow-sm flex flex-col justify-center items-center relative">
-                 <p className="text-3xl font-black text-white">
+               <div className="flex-1 lg:w-32 text-center bg-white/10 backdrop-blur-md rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/20 shadow-sm flex flex-col justify-center items-center relative">
+                 <p className="text-2xl md:text-3xl font-black text-white leading-none">
                     {questions.filter(q => (q.package_name || 'Paket 1') === activePackage).reduce((s, q) => s + (Number(q.points)||0), 0)}
                  </p>
-                 <p className="text-[10px] font-bold text-cyan-100 uppercase tracking-widest mt-1 flex items-center justify-center gap-1">
-                    <Award className="w-3 h-3 text-amber-300" /> Poin Maks
+                 <p className="text-[9px] md:text-[10px] font-bold text-cyan-100 uppercase tracking-widest mt-1 md:mt-1.5 flex items-center justify-center gap-1 leading-none">
+                    <Award className="w-2.5 h-2.5 md:w-3 md:h-3 text-amber-300" /> Poin Maks
                  </p>
                  {questions.some(q => q.question_type === 'essay' && (q.package_name || 'Paket 1') === activePackage) && (
-                    <span className="absolute -bottom-3 whitespace-nowrap text-[9px] text-amber-100 font-bold bg-amber-600 border border-amber-500 px-2 py-0.5 rounded-md shadow-md z-20">
-                       *Termasuk Esai
+                    <span className="absolute -bottom-2 md:-bottom-3 whitespace-nowrap text-[8px] md:text-[9px] text-amber-100 font-bold bg-amber-600 border border-amber-500 px-1.5 md:px-2 py-0.5 rounded shadow-md z-20">
+                       *Trmsk Esai
                     </span>
                  )}
                </div>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-3 md:gap-4">
             <div className="relative w-full max-w-xl">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <input type="text" placeholder={`Cari soal di ${activePackage}...`} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.5rem] pl-12 pr-4 py-3.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm transition-all placeholder-slate-400" />
+              <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+              <input type="text" placeholder={`Cari soal di ${activePackage}...`} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] pl-10 md:pl-12 pr-4 py-3 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 shadow-sm transition-all placeholder-slate-400" />
             </div>
             {/* TOMBOL HANYA MUNCUL JIKA GURU MEMILIKI AKSES */}
             {isMyActiveSubject && (
-               <button onClick={() => openCreateForm(activeSubject, activePackage)} className="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3.5 rounded-[1.5rem] font-bold text-sm shadow-md active:scale-95 transition-all shrink-0"><Plus className="w-5 h-5" /> Tambah Soal Manual</button>
+               <button onClick={() => openCreateForm(activeSubject, activePackage)} className="flex items-center justify-center gap-2 bg-cyan-600 hover:bg-cyan-700 text-white px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] font-bold text-xs md:text-sm shadow-md active:scale-95 transition-all shrink-0 w-full sm:w-auto"><Plus className="w-4 h-4 md:w-5 md:h-5" /> Tambah Soal Manual</button>
             )}
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden z-0">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
+          <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden z-0">
+            <div className="overflow-x-auto custom-scrollbar">
+              {/* Gunakan class hidden md:table untuk menyembunyikan table asli di layar kecil */}
+              <table className="w-full text-sm text-left hidden md:table">
                 <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
-                  <tr><th className="px-8 py-5 w-12 text-center">No</th><th className="px-8 py-5">Pertanyaan</th><th className="px-8 py-5 text-center">Tipe</th><th className="px-8 py-5 text-center">Bobot</th><th className="px-8 py-5 text-center">Status</th>{isMyActiveSubject && <th className="px-8 py-5 text-right">Aksi</th>}</tr>
+                  <tr><th className="px-6 lg:px-8 py-4 md:py-5 w-12 text-center">No</th><th className="px-6 lg:px-8 py-4 md:py-5">Pertanyaan</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Tipe</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Bobot</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Status</th>{isMyActiveSubject && <th className="px-6 lg:px-8 py-4 md:py-5 text-right">Aksi</th>}</tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {globalLoading ? (
-                    <tr><td colSpan={isMyActiveSubject ? 6 : 5} className="text-center py-24"><LoaderCircle className="w-10 h-10 text-cyan-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Memuat butir soal...</p></td></tr>
+                    <tr><td colSpan={isMyActiveSubject ? 6 : 5} className="text-center py-20 md:py-24"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-cyan-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">Memuat butir soal...</p></td></tr>
                   ) : questions.filter(q => (q.package_name || 'Paket 1') === activePackage).length === 0 ? (
-                    <tr><td colSpan={isMyActiveSubject ? 6 : 5} className="text-center py-24 px-4"><div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-200"><AlertCircle className="w-10 h-10 text-slate-400" /></div><p className="text-slate-700 font-bold text-xl mb-1">Belum ada soal</p><p className="text-slate-500 font-medium text-sm">{isMyActiveSubject ? 'Klik tombol "Tambah Soal Manual" untuk menyusun paket ini.' : 'Paket ini masih kosong.'}</p></td></tr>
+                    <tr><td colSpan={isMyActiveSubject ? 6 : 5} className="text-center py-20 md:py-24 px-4"><div className="bg-slate-50 w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-200"><AlertCircle className="w-8 h-8 md:w-10 md:h-10 text-slate-400" /></div><p className="text-slate-700 font-bold text-lg md:text-xl mb-1">Belum ada soal</p><p className="text-slate-500 font-medium text-xs md:text-sm">{isMyActiveSubject ? 'Klik tombol "Tambah Soal Manual" untuk menyusun paket ini.' : 'Paket ini masih kosong.'}</p></td></tr>
                   ) : (
                     questions
                       .filter(q => (q.package_name || 'Paket 1') === activePackage)
                       .filter(q => q.question_text.toLowerCase().includes(searchQuery.toLowerCase()))
                       .map((q, index) => (
                       <tr key={q.id} className="hover:bg-cyan-50/30 transition-colors group">
-                        <td className="px-8 py-5 text-center font-black text-slate-400">{index + 1}</td>
-                        <td className="px-8 py-5"><div className="text-slate-800 font-medium line-clamp-2 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: q.question_text }} /></td>
-                        <td className="px-8 py-5 text-center"><span className={`border px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${getTypeColorBadge(q.question_type)}`}>{getQuestionTypeLabel(q.question_type)}</span></td>
-                        <td className="px-8 py-5 text-center"><span className="font-black text-slate-700">{q.points} Poin</span></td>
-                        <td className="px-8 py-5 text-center">{q.is_active ? <span className="inline-flex items-center gap-1.5 text-emerald-600 text-[10px] font-black uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100"><CheckCircle2 className="w-3.5 h-3.5" /> Aktif</span> : <span className="inline-flex items-center gap-1.5 text-slate-500 text-[10px] font-black uppercase tracking-widest bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200"><AlertCircle className="w-3.5 h-3.5" /> Draft</span>}</td>
+                        <td className="px-6 lg:px-8 py-4 md:py-5 text-center font-black text-slate-400">{index + 1}</td>
+                        <td className="px-6 lg:px-8 py-4 md:py-5"><div className="text-slate-800 font-medium line-clamp-2 prose prose-sm max-w-none break-words" dangerouslySetInnerHTML={{ __html: q.question_text }} /></td>
+                        <td className="px-6 lg:px-8 py-4 md:py-5 text-center"><span className={`border px-2 md:px-2.5 py-1 rounded-md text-[9px] md:text-[10px] font-black uppercase tracking-widest whitespace-nowrap ${getTypeColorBadge(q.question_type)}`}>{getQuestionTypeLabel(q.question_type)}</span></td>
+                        <td className="px-6 lg:px-8 py-4 md:py-5 text-center"><span className="font-black text-slate-700 whitespace-nowrap">{q.points} Poin</span></td>
+                        <td className="px-6 lg:px-8 py-4 md:py-5 text-center">{q.is_active ? <span className="inline-flex items-center gap-1 md:gap-1.5 text-emerald-600 text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-emerald-50 px-2 md:px-2.5 py-1 rounded-md md:rounded-lg border border-emerald-100 whitespace-nowrap"><CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5" /> Aktif</span> : <span className="inline-flex items-center gap-1 md:gap-1.5 text-slate-500 text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-slate-100 px-2 md:px-2.5 py-1 rounded-md md:rounded-lg border border-slate-200 whitespace-nowrap"><AlertCircle className="w-3 h-3 md:w-3.5 md:h-3.5" /> Draft</span>}</td>
                         {isMyActiveSubject && (
-                            <td className="px-8 py-5 text-right">
-                              <div className="flex items-center justify-end gap-2 transition-opacity">
-                                <button onClick={() => openEditForm(q)} className="flex items-center justify-center p-2.5 bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-full transition-all shadow-sm" title="Edit Soal"><Edit3 className="w-4 h-4" /></button>
-                                <button onClick={() => handleQuestionDelete(q.id)} className="flex items-center justify-center p-2.5 bg-white text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-full transition-all shadow-sm" title="Hapus Soal"><Trash2 className="w-4 h-4" /></button>
+                            <td className="px-6 lg:px-8 py-4 md:py-5 text-right">
+                              <div className="flex items-center justify-end gap-1.5 md:gap-2 transition-opacity">
+                                <button onClick={() => openEditForm(q)} className="flex items-center justify-center p-2 md:p-2.5 bg-white text-slate-400 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-full transition-all shadow-sm shrink-0" title="Edit Soal"><Edit3 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                                <button onClick={() => handleQuestionDelete(q.id)} className="flex items-center justify-center p-2 md:p-2.5 bg-white text-slate-400 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-full transition-all shadow-sm shrink-0" title="Hapus Soal"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
                               </div>
                             </td>
                         )}
@@ -874,6 +871,50 @@ export default function TeacherQuestionsBankPage() {
                   )}
                 </tbody>
               </table>
+
+              {/* CARD VIEW UNTUK MOBILE */}
+              <div className="md:hidden flex flex-col divide-y divide-slate-100">
+                 {globalLoading ? (
+                    <div className="text-center py-16 px-4">
+                       <LoaderCircle className="w-8 h-8 text-cyan-500 animate-spin mx-auto mb-3" />
+                       <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Memuat butir soal...</p>
+                    </div>
+                 ) : questions.filter(q => (q.package_name || 'Paket 1') === activePackage).length === 0 ? (
+                    <div className="text-center py-16 px-4">
+                       <div className="bg-slate-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-200"><AlertCircle className="w-8 h-8 text-slate-400" /></div>
+                       <p className="text-slate-700 font-bold text-lg mb-1">Belum ada soal</p>
+                       <p className="text-slate-500 font-medium text-xs">{isMyActiveSubject ? 'Klik tombol "Tambah Soal Manual" untuk menyusun paket ini.' : 'Paket ini masih kosong.'}</p>
+                    </div>
+                 ) : (
+                    questions
+                      .filter(q => (q.package_name || 'Paket 1') === activePackage)
+                      .filter(q => q.question_text.toLowerCase().includes(searchQuery.toLowerCase()))
+                      .map((q, index) => (
+                         <div key={q.id} className="p-4 hover:bg-cyan-50/30 transition-colors flex flex-col gap-3">
+                            <div className="flex items-start gap-3">
+                               <span className="w-6 h-6 rounded-md bg-slate-100 border border-slate-200 text-slate-500 font-black text-xs flex items-center justify-center shrink-0">{index + 1}</span>
+                               <div className="min-w-0 flex-1">
+                                  <div className="text-slate-800 font-medium line-clamp-3 prose prose-sm max-w-none break-words text-sm leading-snug" dangerouslySetInnerHTML={{ __html: q.question_text }} />
+                               </div>
+                            </div>
+                            
+                            <div className="flex flex-wrap items-center gap-2 mt-1 pl-9">
+                               <span className={`border px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest whitespace-nowrap ${getTypeColorBadge(q.question_type)}`}>{getQuestionTypeLabel(q.question_type)}</span>
+                               <span className="font-black text-slate-600 text-[10px] whitespace-nowrap bg-slate-50 px-2 py-0.5 rounded border border-slate-200">{q.points} Poin</span>
+                               {q.is_active ? <span className="inline-flex items-center gap-1 text-emerald-600 text-[8px] font-black uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 whitespace-nowrap"><CheckCircle2 className="w-3 h-3" /> Aktif</span> : <span className="inline-flex items-center gap-1 text-slate-500 text-[8px] font-black uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap"><AlertCircle className="w-3 h-3" /> Draft</span>}
+                            </div>
+
+                            {isMyActiveSubject && (
+                               <div className="flex justify-end gap-2 mt-2 pt-3 border-t border-slate-100/60">
+                                 <button onClick={() => openEditForm(q)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Edit3 className="w-3.5 h-3.5" /> Edit</button>
+                                 <button onClick={() => handleQuestionDelete(q.id)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-rose-500 hover:bg-rose-50 hover:text-rose-600 border border-rose-200 hover:border-rose-300 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Trash2 className="w-3.5 h-3.5" /> Hapus</button>
+                               </div>
+                            )}
+                         </div>
+                      ))
+                 )}
+              </div>
+
             </div>
           </div>
         </div>
@@ -882,50 +923,50 @@ export default function TeacherQuestionsBankPage() {
       {/* ================= VIEW 4: MODAL FULLSCREEN (CREATE / EDIT FORM) ================= */}
       {isFormModalOpen && (
         <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
-          <div className="min-h-screen p-4 md:p-8 flex items-center justify-center">
-            <div className="bg-white w-full max-w-6xl rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[95vh] my-auto border border-slate-200">
+          <div className="min-h-screen p-2 sm:p-4 md:p-8 flex items-center justify-center">
+            <div className="bg-white w-[95%] md:w-full max-w-6xl rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[95vh] my-auto border border-slate-200">
               
               {/* HEADER FORM */}
-              <div className="bg-slate-50 border-b border-slate-100 p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0 z-10 sticky top-0">
+              <div className="bg-slate-50 border-b border-slate-100 p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shrink-0 z-10 sticky top-0">
                 <div>
-                  <button onClick={() => setIsFormModalOpen(false)} className="text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 flex items-center gap-2 mb-2 transition-colors"><ArrowLeft className="w-4 h-4"/> Batal & Tutup</button>
-                  <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-                     {editingId ? <Edit3 className="w-7 h-7 text-blue-600"/> : <Plus className="w-7 h-7 text-blue-600"/>}
+                  <button onClick={() => setIsFormModalOpen(false)} className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 flex items-center gap-1.5 md:gap-2 mb-1 md:mb-2 transition-colors"><ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4"/> Batal & Tutup</button>
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3 leading-tight">
+                     {editingId ? <Edit3 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-600"/> : <Plus className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-600"/>}
                      {editingId ? 'Edit Soal HOTS' : 'Menyusun Soal HOTS'}
                   </h1>
                 </div>
-                <div className="flex gap-3">
-                   <button onClick={() => setIsFormModalOpen(false)} className="flex items-center justify-center p-3.5 bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-500 text-slate-400 rounded-full transition-all shadow-sm"><X className="w-5 h-5"/></button>
-                   <button onClick={handleFormSubmit} disabled={isSubmittingForm} className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-8 py-3.5 rounded-2xl font-bold flex items-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all text-sm hidden sm:flex">
-                     {isSubmittingForm ? <LoaderCircle className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5"/>} Simpan ke Database
+                <div className="flex gap-2.5 md:gap-3 self-end md:self-auto w-full md:w-auto mt-2 md:mt-0">
+                   <button onClick={() => setIsFormModalOpen(false)} className="flex items-center justify-center p-3 sm:p-3.5 bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-500 text-slate-400 rounded-xl md:rounded-full transition-all shadow-sm shrink-0"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
+                   <button onClick={handleFormSubmit} disabled={isSubmittingForm} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 md:px-8 py-3 sm:py-3.5 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all text-xs md:text-sm">
+                     {isSubmittingForm ? <LoaderCircle className="animate-spin w-4 h-4 md:w-5 md:h-5" /> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} <span className="hidden sm:inline">Simpan ke Database</span><span className="sm:hidden">Simpan</span>
                    </button>
                 </div>
               </div>
 
               {/* AREA KONTEN FORM */}
-              <div className="p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 custom-scrollbar">
-                {formError && <div className="bg-rose-50 border border-rose-200 text-rose-700 p-5 rounded-2xl mb-6 font-bold flex items-start gap-3 shadow-sm"><AlertCircle className="w-5 h-5 shrink-0 mt-0.5"/>{formError}</div>}
+              <div className="p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 custom-scrollbar">
+                {formError && <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 md:p-5 rounded-xl md:rounded-2xl mb-4 md:mb-6 font-bold flex items-start gap-2.5 md:gap-3 shadow-sm text-xs md:text-sm"><AlertCircle className="w-4 h-4 md:w-5 md:h-5 shrink-0 mt-0.5"/>{formError}</div>}
 
-                <form className="space-y-6 pb-20">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-1 bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm space-y-5 h-fit">
+                <form className="space-y-4 md:space-y-6 pb-20">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+                    <div className="lg:col-span-1 bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm space-y-4 md:space-y-5 h-fit">
                       
-                      <div className="p-5 bg-cyan-50/50 border border-cyan-100 rounded-2xl mb-6 shadow-sm">
-                        <label className="text-xs font-black text-cyan-700 uppercase tracking-widest flex items-center gap-2 mb-2"><Package className="w-4 h-4" /> Grup Paket Soal</label>
-                        <p className="text-[10px] font-bold text-slate-500 mb-3 leading-tight">Gunakan nama yang sama untuk menggabungkan soal dalam 1 paket.</p>
+                      <div className="p-4 md:p-5 bg-cyan-50/50 border border-cyan-100 rounded-xl md:rounded-2xl mb-4 md:mb-6 shadow-sm">
+                        <label className="text-[10px] md:text-xs font-black text-cyan-700 uppercase tracking-widest flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2"><Package className="w-3.5 h-3.5 md:w-4 md:h-4" /> Grup Paket Soal</label>
+                        <p className="text-[9px] md:text-[10px] font-bold text-slate-500 mb-2 md:mb-3 leading-tight">Gunakan nama yang sama untuk menggabungkan soal dalam 1 paket.</p>
                         <input 
                           type="text" 
                           name="package_name" 
                           value={formData.package_name} 
                           onChange={handleFormChange} 
                           placeholder="Paket 1" 
-                          className="w-full bg-white border border-cyan-200 rounded-xl px-4 py-3 text-sm font-bold text-cyan-800 outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-sm"
+                          className="w-full bg-white border border-cyan-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm font-bold text-cyan-800 outline-none focus:ring-2 focus:ring-cyan-500 transition-all shadow-sm"
                         />
                       </div>
 
-                      <div className="space-y-2">
-                         <label className="text-xs font-black text-slate-500 uppercase tracking-widest block">Tipe Soal *</label>
-                         <select disabled={!!editingId} name="question_type" value={formData.question_type} onChange={handleFormChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold text-blue-700 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer disabled:opacity-60 shadow-sm">
+                      <div className="space-y-1.5 md:space-y-2">
+                         <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block">Tipe Soal *</label>
+                         <select disabled={!!editingId} name="question_type" value={formData.question_type} onChange={handleFormChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-bold text-blue-700 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer disabled:opacity-60 shadow-sm">
                            <option value="multiple_choice">Pilihan Ganda Tunggal</option><option value="complex_multiple_choice">PG Kompleks (Banyak Jawaban)</option>
                            <option value="matching">Menjodohkan (Matching)</option><option value="true_false">Benar / Salah</option>
                            <option value="short_answer">Isian Singkat</option><option value="essay">Esai / Uraian</option>
@@ -934,111 +975,112 @@ export default function TeacherQuestionsBankPage() {
 
                       {/* --- FITUR IZIN MEDIA UNTUK ESAI --- */}
                       {formData.question_type === 'essay' && (
-                         <div className="mt-4 p-4 bg-blue-50/50 border border-blue-200 rounded-2xl shadow-sm">
-                            <label className="flex items-center gap-4 cursor-pointer">
+                         <div className="mt-3 md:mt-4 p-3 md:p-4 bg-blue-50/50 border border-blue-200 rounded-xl md:rounded-2xl shadow-sm">
+                            <label className="flex items-center gap-3 md:gap-4 cursor-pointer">
                                <input 
                                   type="checkbox" 
                                   checked={formData.allow_media_upload || false} 
                                   onChange={(e) => setFormData({ ...formData, allow_media_upload: e.target.checked })}
-                                  className="w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shadow-sm"
+                                  className="w-4 h-4 md:w-5 md:h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shadow-sm shrink-0"
                                />
                                <div>
-                                  <span className="font-black text-sm text-blue-900 block mb-0.5 flex items-center gap-1.5"><Globe className="w-4 h-4"/> Izinkan Media/Link Jawaban</span>
-                                  <span className="text-[10px] font-bold text-blue-700/80 leading-tight block">Siswa dapat mengunggah gambar/link di jawaban.</span>
+                                  <span className="font-black text-xs md:text-sm text-blue-900 block mb-0.5 flex items-center gap-1.5"><Globe className="w-3.5 h-3.5 md:w-4 md:h-4"/> Izinkan Media/Link Jawaban</span>
+                                  <span className="text-[9px] md:text-[10px] font-bold text-blue-700/80 leading-tight block">Siswa dapat mengunggah gambar/link di jawaban.</span>
                                </div>
                             </label>
                          </div>
                       )}
                     </div>
                     
-                    <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm grid grid-cols-2 gap-5 h-fit">
-                       <div className="space-y-2"><label className="text-xs font-black text-slate-500 flex items-center gap-2 uppercase tracking-widest"><ImageIcon className="w-4 h-4 text-emerald-500"/> URL Gambar Utama</label><input type="url" name="image_url" value={formData.image_url} onChange={handleFormChange} placeholder="Masukkan link/URL gambar (Opsional)..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
-                       <div className="space-y-2"><label className="text-xs font-black text-slate-500 flex items-center gap-2 uppercase tracking-widest"><Video className="w-4 h-4 text-rose-500"/> URL Video Utama</label><input type="url" name="video_url" value={formData.video_url} onChange={handleFormChange} placeholder="Masukkan link/URL video MP4 (Opsional)..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
+                    <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 h-fit">
+                       <div className="space-y-1.5 md:space-y-2"><label className="text-[10px] md:text-xs font-black text-slate-500 flex items-center gap-1.5 md:gap-2 uppercase tracking-widest"><ImageIcon className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500"/> URL Gambar Utama</label><input type="url" name="image_url" value={formData.image_url} onChange={handleFormChange} placeholder="Masukkan link/URL gambar (Opsional)..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
+                       <div className="space-y-1.5 md:space-y-2"><label className="text-[10px] md:text-xs font-black text-slate-500 flex items-center gap-1.5 md:gap-2 uppercase tracking-widest"><Video className="w-3.5 h-3.5 md:w-4 md:h-4 text-rose-500"/> URL Video Utama</label><input type="url" name="video_url" value={formData.video_url} onChange={handleFormChange} placeholder="Masukkan link/URL video MP4 (Opsional)..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
                        
-                       <div className="space-y-2 col-span-2 md:col-span-1">
-                          <label className="text-xs font-black text-slate-500 flex items-center gap-2 uppercase tracking-widest"><Headphones className="w-4 h-4 text-blue-500"/> URL Audio Utama</label>
+                       <div className="space-y-1.5 md:space-y-2 col-span-1 sm:col-span-2 md:col-span-1">
+                          <label className="text-[10px] md:text-xs font-black text-slate-500 flex items-center gap-1.5 md:gap-2 uppercase tracking-widest"><Headphones className="w-3.5 h-3.5 md:w-4 md:h-4 text-blue-500"/> URL Audio Utama</label>
                           <div className="flex gap-2">
-                             <input type="url" name="audio_url" value={formData.audio_url} onChange={handleFormChange} placeholder="Masukkan link/URL audio MP3..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" />
-                             <label className={`shrink-0 flex items-center justify-center px-4 rounded-xl cursor-pointer transition-all shadow-sm ${isUploadingMedia ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-100'}`} title="Upload Audio Langsung ke Supabase">
-                                {isUploadingMedia ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
+                             <input type="url" name="audio_url" value={formData.audio_url} onChange={handleFormChange} placeholder="Masukkan link/URL audio MP3..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" />
+                             <label className={`shrink-0 flex items-center justify-center px-3 md:px-4 rounded-lg md:rounded-xl cursor-pointer transition-all shadow-sm ${isUploadingMedia ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-100'}`} title="Upload Audio Langsung ke Supabase">
+                                {isUploadingMedia ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <UploadCloud className="w-4 h-4 md:w-5 md:h-5" />}
                                 <input type="file" accept="audio/*" className="hidden" onChange={(e) => handleDirectMediaUpload(e, 'audio_url')} disabled={isUploadingMedia} />
                              </label>
                           </div>
                        </div>
-                       <div className="space-y-2"><label className="text-xs font-black text-slate-500 uppercase tracking-widest block">Limit Putar Audio</label><input type="number" name="audio_play_limit" value={formData.audio_play_limit} onChange={handleFormChange} placeholder="0 = Putar Tak Terbatas" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
+                       <div className="space-y-1.5 md:space-y-2"><label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block">Limit Putar Audio</label><input type="number" name="audio_play_limit" value={formData.audio_play_limit} onChange={handleFormChange} placeholder="0 = Putar Tak Terbatas" className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
                     </div>
                   </div>
 
-                  <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-10 shadow-sm">
-                    <div className="flex justify-between items-center mb-6 pb-6 border-b border-slate-100">
-                      <h2 className="text-xl font-black text-slate-800 flex items-center gap-2"><FileText className="text-blue-500 w-6 h-6"/> Teks Pertanyaan Utama</h2>
-                      <button type="button" onClick={() => setShowMathGuide(!showMathGuide)} className="text-xs font-black uppercase tracking-widest bg-amber-50 text-amber-600 px-4 py-2.5 rounded-xl flex items-center gap-2 border border-amber-200 hover:bg-amber-100 transition-colors shadow-sm"><Calculator className="w-4 h-4"/> Bantuan Simbol Eksakta</button>
+                  <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-10 shadow-sm">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4 md:mb-6 pb-4 md:pb-6 border-b border-slate-100">
+                      <h2 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2"><FileText className="text-blue-500 w-5 h-5 md:w-6 md:h-6"/> Teks Pertanyaan Utama</h2>
+                      <button type="button" onClick={() => setShowMathGuide(!showMathGuide)} className="text-[10px] md:text-xs font-black uppercase tracking-widest bg-amber-50 text-amber-600 px-3 md:px-4 py-2 md:py-2.5 rounded-lg md:rounded-xl flex items-center justify-center gap-1.5 md:gap-2 border border-amber-200 hover:bg-amber-100 transition-colors shadow-sm w-full sm:w-auto"><Calculator className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bantuan Simbol</button>
                     </div>
                     {showMathGuide && (
-                      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-5 p-6 bg-amber-50/50 rounded-[1.5rem] border border-amber-200 animate-in slide-in-from-top-2">
+                      <div className="mb-4 md:mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5 p-4 md:p-6 bg-amber-50/50 rounded-xl md:rounded-[1.5rem] border border-amber-200 animate-in slide-in-from-top-2">
                         {[{ group: 'Matematika Dasar', items: [{ label: 'Pecahan', code: '\\frac{a}{b}' }, { label: 'Pangkat', code: 'x^2' }, { label: 'Akar', code: '\\sqrt{x}' }]}, { group: 'Fisika & Kalkulus', items: [{ label: 'Derajat (°)', code: '^\\circ' }, { label: 'Delta', code: '\\Delta' }, { label: 'Vektor', code: '\\vec{v}' }]}, { group: 'Kimia Reaksi', items: [{ label: 'Rumus Senyawa', code: '\\ce{H2O}' }, { label: 'Panah Reaksi', code: '\\ce{->}' }, { label: 'Isotop/Massa', code: '\\ce{^{227}_{90}Th}' }]}].map(g => (
                           <div key={g.group}>
-                            <p className="text-[10px] font-black text-amber-700 uppercase mb-3 tracking-widest flex items-center gap-2"><div className="w-1 h-1 bg-amber-400 rounded-full"></div>{g.group}</p>
-                            <div className="flex flex-col gap-2">
-                              {g.items.map(i => <button key={i.label} type="button" onClick={() => copyToClipboard(i.code)} className="text-xs bg-white border border-amber-200 p-2.5 rounded-xl hover:bg-amber-100 font-bold text-left flex justify-between items-center transition-colors shadow-sm"><span>{i.label}</span> {copiedSnippet === i.code ? <span className="text-[10px] font-black text-emerald-600 flex items-center gap-1"><Check className="w-3 h-3"/> Disalin</span> : <code className="text-slate-500 font-mono bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">{i.code}</code>}</button>)}
+                            <p className="text-[9px] md:text-[10px] font-black text-amber-700 uppercase mb-2 md:mb-3 tracking-widest flex items-center gap-1.5 md:gap-2"><div className="w-1 h-1 bg-amber-400 rounded-full"></div>{g.group}</p>
+                            <div className="flex flex-col gap-1.5 md:gap-2">
+                              {g.items.map(i => <button key={i.label} type="button" onClick={() => copyToClipboard(i.code)} className="text-[10px] md:text-xs bg-white border border-amber-200 p-2 md:p-2.5 rounded-lg md:rounded-xl hover:bg-amber-100 font-bold text-left flex justify-between items-center transition-colors shadow-sm"><span>{i.label}</span> {copiedSnippet === i.code ? <span className="text-[9px] md:text-[10px] font-black text-emerald-600 flex items-center gap-1"><Check className="w-2.5 h-2.5 md:w-3 md:h-3"/> Disalin</span> : <code className="text-slate-500 font-mono bg-slate-50 px-1 md:px-1.5 py-0.5 rounded border border-slate-100">{i.code}</code>}</button>)}
                             </div>
                           </div>
                         ))}
                       </div>
                     )}
-                    <div className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-                      <OptimizedQuillEditor modules={quillModulesFull} value={formData.question_text} onChange={handleQuillChange} placeholder="Ketik teks pertanyaan atau sisipkan rumus/media di sini..." className="h-72 mb-12 text-slate-900" />
+                    <div className="bg-white rounded-xl md:rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                      <OptimizedQuillEditor modules={quillModulesFull} value={formData.question_text} onChange={handleQuillChange} placeholder="Ketik teks pertanyaan atau sisipkan rumus/media di sini..." className="h-48 md:h-72 mb-10 md:mb-12 text-slate-900" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2 bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-                      <h2 className="text-xl font-black text-slate-800 mb-6 flex items-center gap-2"><Sparkles className="text-amber-500 w-6 h-6"/> Respons & Jawaban</h2>
+                  {/* BAGIAN BAWAH: RESPONS / OPSI JAWABAN */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 flex-col-reverse lg:flex-row">
+                    <div className="lg:col-span-2 bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+                      <h2 className="text-lg md:text-xl font-black text-slate-800 mb-4 md:mb-6 flex items-center gap-2"><Sparkles className="text-amber-500 w-5 h-5 md:w-6 md:h-6"/> Respons & Jawaban</h2>
 
                       {/* FORMAT MENJODOHKAN */}
                       {formData.question_type === 'matching' && (
-                        <div className="space-y-6">
-                          <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100 shadow-sm flex items-start gap-4">
-                             <Info className="w-6 h-6 text-blue-500 shrink-0 mt-0.5" />
+                        <div className="space-y-4 md:space-y-6">
+                          <div className="bg-blue-50/50 p-4 md:p-5 rounded-xl md:rounded-2xl border border-blue-100 shadow-sm flex items-start gap-3 md:gap-4">
+                             <Info className="w-5 h-5 md:w-6 md:h-6 text-blue-500 shrink-0 mt-0.5" />
                              <div>
-                               <p className="text-sm font-bold text-blue-900">Format Menjodohkan Tingkat Lanjut</p>
-                               <p className="text-xs text-blue-800/80 mt-1 font-medium leading-relaxed">Anda dapat membuat jumlah Respons Kanan lebih banyak sebagai Opsi Pengecoh.</p>
+                               <p className="text-xs md:text-sm font-bold text-blue-900">Format Menjodohkan Tingkat Lanjut</p>
+                               <p className="text-[10px] md:text-xs text-blue-800/80 mt-1 font-medium leading-relaxed">Anda dapat membuat jumlah Respons Kanan lebih banyak sebagai Opsi Pengecoh.</p>
                              </div>
                           </div>
 
-                          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 relative z-10">
+                          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8 relative z-10">
                             
                             {/* KOLOM PREMIS KIRI */}
-                            <div className="space-y-4">
-                               <h3 className="font-black text-blue-600 uppercase tracking-widest text-xs flex items-center gap-2 mb-4"><LayoutList className="w-4 h-4"/> Daftar Premis (Kiri)</h3>
+                            <div className="space-y-3 md:space-y-4">
+                               <h3 className="font-black text-blue-600 uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-1.5 md:gap-2 mb-3 md:mb-4"><LayoutList className="w-3.5 h-3.5 md:w-4 md:h-4"/> Daftar Premis (Kiri)</h3>
                                {matchingPremises.map((p, idx) => (
-                                  <div key={p.id} className="bg-slate-50 border border-blue-200 rounded-[1.5rem] p-5 shadow-sm flex items-start gap-4 transition-all">
-                                     <div className="flex flex-col items-center gap-3 mt-1 shrink-0">
-                                         <div className="w-8 h-8 bg-blue-600 text-white font-black rounded-xl flex items-center justify-center text-sm shadow-md">{idx + 1}</div>
+                                  <div key={p.id} className="bg-slate-50 border border-blue-200 rounded-xl md:rounded-[1.5rem] p-3 sm:p-4 md:p-5 shadow-sm flex flex-col sm:flex-row items-start gap-3 md:gap-4 transition-all">
+                                     <div className="flex sm:flex-col items-center gap-2 md:gap-3 mt-0 sm:mt-1 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+                                         <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-600 text-white font-black rounded-lg md:rounded-xl flex items-center justify-center text-xs md:text-sm shadow-md">{idx + 1}</div>
                                          {matchingPremises.length > 1 && (
                                             <button type="button" onClick={() => {
                                                setMatchingPremises(prev => prev.filter(x => x.id !== p.id));
                                                setMatchingKeys(prev => { const n = {...prev}; delete n[p.id]; return n; });
-                                            }} className="text-rose-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition-colors" title="Hapus Premis"><Trash2 className="w-4 h-4"/></button>
+                                            }} className="text-rose-400 hover:text-rose-600 hover:bg-rose-50 p-1.5 md:p-2 rounded-lg transition-colors border border-transparent hover:border-rose-100" title="Hapus Premis"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
                                          )}
                                      </div>
-                                     <div className="flex-1 w-full overflow-hidden bg-white rounded-xl border border-slate-200">
+                                     <div className="flex-1 w-full overflow-hidden bg-white rounded-lg md:rounded-xl border border-slate-200">
                                         <OptimizedQuillEditor modules={quillModulesFull} value={p.text} onChange={(val:string) => {
                                            setMatchingPremises(prev => prev.map(x => x.id === p.id ? {...x, text: val} : x));
-                                        }} placeholder={`Ketik premis ke-${idx+1}...`} className="h-32 mb-12" />
+                                        }} placeholder={`Ketik premis ke-${idx+1}...`} className="h-24 md:h-32 mb-10 md:mb-12 text-xs md:text-sm" />
                                      </div>
                                   </div>
                                ))}
-                               <button type="button" onClick={() => setMatchingPremises(prev => [...prev, {id: `p${Date.now()}`, text: ''}])} className="w-full py-4 bg-white text-blue-600 font-bold text-sm rounded-xl border-2 border-blue-200 border-dashed hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"><Plus className="w-5 h-5"/> Tambah Premis Kiri</button>
+                               <button type="button" onClick={() => setMatchingPremises(prev => [...prev, {id: `p${Date.now()}`, text: ''}])} className="w-full py-3 md:py-4 bg-white text-blue-600 font-bold text-xs md:text-sm rounded-xl border-2 border-blue-200 border-dashed hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"><Plus className="w-4 h-4 md:w-5 md:h-5"/> Tambah Premis Kiri</button>
                             </div>
 
                             {/* KOLOM RESPONS KANAN (BISA JADI PENGECOH) */}
-                            <div className="space-y-4">
-                               <h3 className="font-black text-amber-600 uppercase tracking-widest text-xs flex items-center gap-2 mb-4"><LayoutList className="w-4 h-4"/> Daftar Respons (Kanan)</h3>
+                            <div className="space-y-3 md:space-y-4">
+                               <h3 className="font-black text-amber-600 uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-1.5 md:gap-2 mb-3 md:mb-4"><LayoutList className="w-3.5 h-3.5 md:w-4 md:h-4"/> Daftar Respons (Kanan)</h3>
                                {matchingResponses.map((r, idx) => (
-                                  <div key={r.id} className="bg-slate-50 border border-amber-200 rounded-[1.5rem] p-5 shadow-sm flex items-start gap-4 transition-all">
-                                     <div className="flex flex-col items-center gap-3 mt-1 shrink-0">
-                                         <div className="w-8 h-8 bg-amber-500 text-white font-black rounded-xl flex items-center justify-center text-sm shadow-md">{String.fromCharCode(65 + idx)}</div>
+                                  <div key={r.id} className="bg-slate-50 border border-amber-200 rounded-xl md:rounded-[1.5rem] p-3 sm:p-4 md:p-5 shadow-sm flex flex-col sm:flex-row items-start gap-3 md:gap-4 transition-all">
+                                     <div className="flex sm:flex-col items-center gap-2 md:gap-3 mt-0 sm:mt-1 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+                                         <div className="w-6 h-6 md:w-8 md:h-8 bg-amber-500 text-white font-black rounded-lg md:rounded-xl flex items-center justify-center text-xs md:text-sm shadow-md">{String.fromCharCode(65 + idx)}</div>
                                          {matchingResponses.length > 1 && (
                                             <button type="button" onClick={() => {
                                                setMatchingResponses(prev => prev.filter(x => x.id !== r.id));
@@ -1047,17 +1089,17 @@ export default function TeacherQuestionsBankPage() {
                                                    Object.keys(n).forEach(k => { if(n[k] === r.id) delete n[k]; }); 
                                                    return n; 
                                                });
-                                            }} className="text-rose-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-lg transition-colors" title="Hapus Respons"><Trash2 className="w-4 h-4"/></button>
+                                            }} className="text-rose-400 hover:text-rose-600 hover:bg-rose-50 p-1.5 md:p-2 rounded-lg transition-colors border border-transparent hover:border-rose-100" title="Hapus Respons"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
                                          )}
                                      </div>
-                                     <div className="flex-1 w-full overflow-hidden bg-white rounded-xl border border-slate-200">
+                                     <div className="flex-1 w-full overflow-hidden bg-white rounded-lg md:rounded-xl border border-slate-200">
                                         <OptimizedQuillEditor modules={quillModulesFull} value={r.text} onChange={(val:string) => {
                                            setMatchingResponses(prev => prev.map(x => x.id === r.id ? {...x, text: val} : x));
-                                        }} placeholder={`Ketik respons ke-${String.fromCharCode(65 + idx)}...`} className="h-32 mb-12" />
+                                        }} placeholder={`Ketik respons ke-${String.fromCharCode(65 + idx)}...`} className="h-24 md:h-32 mb-10 md:mb-12 text-xs md:text-sm" />
                                      </div>
                                   </div>
                                ))}
-                               <button type="button" onClick={() => setMatchingResponses(prev => [...prev, {id: `r${Date.now()}`, text: ''}])} className="w-full py-4 bg-white text-amber-600 font-bold text-sm rounded-xl border-2 border-amber-200 border-dashed hover:bg-amber-50 transition-colors flex items-center justify-center gap-2"><Plus className="w-5 h-5"/> Tambah Respons Pengecoh</button>
+                               <button type="button" onClick={() => setMatchingResponses(prev => [...prev, {id: `r${Date.now()}`, text: ''}])} className="w-full py-3 md:py-4 bg-white text-amber-600 font-bold text-xs md:text-sm rounded-xl border-2 border-amber-200 border-dashed hover:bg-amber-50 transition-colors flex items-center justify-center gap-2"><Plus className="w-4 h-4 md:w-5 md:h-5"/> Tambah Respons Pengecoh</button>
                             </div>
 
                           </div>
@@ -1065,38 +1107,45 @@ export default function TeacherQuestionsBankPage() {
                       )}
 
                       {(formData.question_type === 'multiple_choice' || formData.question_type === 'complex_multiple_choice') && (
-                        <div className="space-y-5">
+                        <div className="space-y-4 md:space-y-5">
                           {options.map((item, index) => (
-                            <div key={item.key} className={`flex flex-col p-5 rounded-[1.5rem] border shadow-sm transition-all gap-4 ${formData.question_type === 'complex_multiple_choice' && complexAnswers.includes(item.key) ? 'bg-emerald-50/30 border-emerald-300' : 'bg-slate-50 border-slate-200'}`}>
-                              <div className="flex items-start gap-4">
-                                {formData.question_type === 'complex_multiple_choice' && (
-                                   <div className="mt-4">
-                                     <input type="checkbox" checked={complexAnswers.includes(item.key)} onChange={() => handleComplexAnswerToggle(item.key)} className="w-6 h-6 rounded border-slate-300 text-emerald-500 cursor-pointer focus:ring-emerald-500 shadow-sm" title="Tandai sebagai jawaban benar" />
-                                   </div>
-                                )}
-                                <div className={`w-12 h-12 mt-1 shrink-0 font-black text-lg rounded-2xl flex items-center justify-center shadow-inner border ${formData.question_type === 'complex_multiple_choice' && complexAnswers.includes(item.key) ? 'bg-emerald-500 text-white border-emerald-600' : 'bg-white text-slate-500 border-slate-200'}`}>{item.key}</div>
-                                <div className="flex-1 bg-white rounded-[1.2rem] border border-slate-200 overflow-hidden flex gap-2 shadow-sm">
-                                  <div className="flex-1"><OptimizedQuillEditor modules={quillModulesFull} value={item.text} onChange={(content: string) => handleOptionChange(index, 'text', content)} placeholder={`Ketik teks opsi jawaban ${item.key} di sini...`} className="h-32 mb-12 text-slate-900" /></div>
-                                  {options.length > 2 && <button type="button" onClick={() => removeOption(index)} className="mt-3 mr-3 p-2.5 h-fit text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors" title="Hapus Opsi"><MinusCircle className="w-5 h-5"/></button>}
+                            <div key={item.key} className={`flex flex-col p-3 sm:p-4 md:p-5 rounded-xl md:rounded-[1.5rem] border shadow-sm transition-all gap-3 md:gap-4 ${formData.question_type === 'complex_multiple_choice' && complexAnswers.includes(item.key) ? 'bg-emerald-50/30 border-emerald-300' : 'bg-slate-50 border-slate-200'}`}>
+                              <div className="flex flex-col sm:flex-row items-start gap-3 md:gap-4">
+                                <div className="flex items-center gap-2 w-full sm:w-auto">
+                                    {formData.question_type === 'complex_multiple_choice' && (
+                                       <div>
+                                         <input type="checkbox" checked={complexAnswers.includes(item.key)} onChange={() => handleComplexAnswerToggle(item.key)} className="w-5 h-5 md:w-6 md:h-6 rounded border-slate-300 text-emerald-500 cursor-pointer focus:ring-emerald-500 shadow-sm" title="Tandai sebagai jawaban benar" />
+                                       </div>
+                                    )}
+                                    <div className={`w-8 h-8 md:w-12 md:h-12 shrink-0 font-black text-sm md:text-lg rounded-lg md:rounded-2xl flex items-center justify-center shadow-inner border ${formData.question_type === 'complex_multiple_choice' && complexAnswers.includes(item.key) ? 'bg-emerald-500 text-white border-emerald-600' : 'bg-white text-slate-500 border-slate-200'}`}>{item.key}</div>
+                                    
+                                    {/* Tombol Hapus Opsi di HP pindah ke atas dekat huruf */}
+                                    {options.length > 2 && <button type="button" onClick={() => removeOption(index)} className="ml-auto sm:hidden p-1.5 bg-white border border-rose-100 text-rose-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Hapus Opsi"><Trash2 className="w-4 h-4"/></button>}
+                                </div>
+                                <div className="flex-1 w-full bg-white rounded-lg md:rounded-[1.2rem] border border-slate-200 overflow-hidden flex gap-2 shadow-sm">
+                                  <div className="flex-1 min-w-0"><OptimizedQuillEditor modules={quillModulesFull} value={item.text} onChange={(content: string) => handleOptionChange(index, 'text', content)} placeholder={`Ketik teks opsi jawaban ${item.key} di sini...`} className="h-24 md:h-32 mb-10 md:mb-12 text-slate-900 text-xs md:text-sm" /></div>
+                                  
+                                  {/* Tombol Hapus Opsi di Desktop tetap di samping Editor */}
+                                  {options.length > 2 && <button type="button" onClick={() => removeOption(index)} className="hidden sm:block mt-2 mr-2 p-2 h-fit text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors" title="Hapus Opsi"><MinusCircle className="w-4 h-4 md:w-5 md:h-5"/></button>}
                                 </div>
                               </div>
                               
-                              <div className="flex items-center justify-between mt-2 pt-4 border-t border-slate-200/60">
-                                 <button type="button" onClick={() => handleOptionChange(index, 'showMedia', !item.showMedia)} className={`flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-sm ${item.showMedia ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}><LayoutTemplate className="w-4 h-4"/> Lampirkan Media Tambahan</button>
+                              <div className="flex items-center justify-between mt-1 md:mt-2 pt-3 md:pt-4 border-t border-slate-200/60">
+                                 <button type="button" onClick={() => handleOptionChange(index, 'showMedia', !item.showMedia)} className={`flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-bold px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl transition-all shadow-sm ${item.showMedia ? 'bg-blue-100 text-blue-700 border border-blue-200' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}><LayoutTemplate className="w-3.5 h-3.5 md:w-4 md:h-4"/> Lampirkan Media Tambahan</button>
                               </div>
                               
                               {item.showMedia && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-white border border-slate-200 rounded-[1.2rem] mt-2 animate-in fade-in slide-in-from-top-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 p-3 md:p-5 bg-white border border-slate-200 rounded-lg md:rounded-[1.2rem] mt-1 md:mt-2 animate-in fade-in slide-in-from-top-2">
                                   <div>
-                                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">URL Gambar Opsi</label>
-                                     <input type="url" value={item.image_url} onChange={(e) => handleOptionChange(index, 'image_url', e.target.value)} placeholder="Masukkan link/URL gambar..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
+                                     <label className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5 md:mb-2 block">URL Gambar Opsi</label>
+                                     <input type="url" value={item.image_url} onChange={(e) => handleOptionChange(index, 'image_url', e.target.value)} placeholder="Masukkan link/URL gambar..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
                                   </div>
                                   <div>
-                                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">URL Audio Opsi</label>
+                                     <label className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5 md:mb-2 block">URL Audio Opsi</label>
                                      <div className="flex gap-2">
-                                        <input type="url" value={item.audio_url} onChange={(e) => handleOptionChange(index, 'audio_url', e.target.value)} placeholder="Masukkan link/URL audio..." className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
-                                        <label className={`shrink-0 flex items-center justify-center px-3.5 rounded-xl cursor-pointer transition-all shadow-sm ${isUploadingMedia ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-100'}`} title="Upload Audio Opsi">
-                                           {isUploadingMedia ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <UploadCloud className="w-5 h-5" />}
+                                        <input type="url" value={item.audio_url} onChange={(e) => handleOptionChange(index, 'audio_url', e.target.value)} placeholder="Masukkan link/URL audio..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-medium text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
+                                        <label className={`shrink-0 flex items-center justify-center px-3 md:px-3.5 rounded-lg md:rounded-xl cursor-pointer transition-all shadow-sm ${isUploadingMedia ? 'bg-slate-100 text-slate-400' : 'bg-blue-50 border border-blue-100 text-blue-600 hover:bg-blue-100'}`} title="Upload Audio Opsi">
+                                           {isUploadingMedia ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <UploadCloud className="w-4 h-4 md:w-5 md:h-5" />}
                                            <input type="file" accept="audio/*" className="hidden" onChange={(e) => handleDirectMediaUpload(e, 'audio_url', index)} disabled={isUploadingMedia} />
                                         </label>
                                      </div>
@@ -1105,102 +1154,102 @@ export default function TeacherQuestionsBankPage() {
                               )}
                             </div>
                           ))}
-                          <button type="button" onClick={addOption} className="mt-6 flex items-center gap-2 text-sm font-bold text-slate-500 bg-slate-50 px-4 py-4 rounded-2xl border-2 border-dashed border-slate-300 w-full justify-center hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-all"><Plus className="w-5 h-5"/> Tambah Opsi Baru</button>
+                          <button type="button" onClick={addOption} className="mt-4 md:mt-6 flex items-center gap-1.5 md:gap-2 text-xs md:text-sm font-bold text-slate-500 bg-slate-50 px-4 py-3 md:py-4 rounded-xl md:rounded-2xl border-2 border-dashed border-slate-300 w-full justify-center hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300 transition-all"><Plus className="w-4 h-4 md:w-5 md:h-5"/> Tambah Opsi Baru</button>
                         </div>
                       )}
 
                       {formData.question_type === 'short_answer' && (
-                        <div className="space-y-3"><label className="text-sm font-bold text-slate-700">Kunci Jawaban Eksak *</label><input type="text" required name="correct_answer" value={formData.correct_answer} onChange={handleFormChange} placeholder="Ketik teks jawaban eksak yang benar di sini..." className="w-full p-5 bg-emerald-50 border-2 border-emerald-200 rounded-[1.2rem] text-emerald-900 font-black outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all shadow-sm text-lg" /></div>
+                        <div className="space-y-2 md:space-y-3"><label className="text-xs md:text-sm font-bold text-slate-700">Kunci Jawaban Eksak *</label><input type="text" required name="correct_answer" value={formData.correct_answer} onChange={handleFormChange} placeholder="Ketik teks jawaban eksak yang benar di sini..." className="w-full p-4 md:p-5 bg-emerald-50 border-2 border-emerald-200 rounded-xl md:rounded-[1.2rem] text-emerald-900 font-black outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all shadow-sm text-base md:text-lg" /></div>
                       )}
 
                       {(formData.question_type === 'true_false' || formData.question_type === 'essay') && (
-                        <div className="p-10 bg-slate-50 border border-slate-200 rounded-[2rem] text-center text-slate-500 font-bold shadow-inner">
+                        <div className="p-6 md:p-10 bg-slate-50 border border-slate-200 rounded-2xl md:rounded-[2rem] text-center text-slate-500 font-bold shadow-inner">
                            {formData.question_type === 'essay' ? 
-                             <><FileText className="w-16 h-16 text-blue-300 mx-auto mb-4" /><p className="text-blue-900 font-black text-2xl">Format Esai Terbuka</p><p className="text-sm mt-2 font-medium text-slate-600">Siswa akan diberikan area teks yang luas untuk menyusun jawaban mereka secara bebas.</p></> : 
-                             <><CheckCircle2 className="w-16 h-16 text-emerald-300 mx-auto mb-4" /><p className="text-emerald-900 font-black text-2xl">Sistem Benar/Salah</p><p className="text-sm mt-2 font-medium text-slate-600">Pilih kunci jawaban (Pernyataan Benar atau Salah) di panel atribut sebelah kanan.</p></>
+                             <><FileText className="w-12 h-12 md:w-16 md:h-16 text-blue-300 mx-auto mb-3 md:mb-4" /><p className="text-blue-900 font-black text-xl md:text-2xl">Format Esai Terbuka</p><p className="text-xs md:text-sm mt-1.5 md:mt-2 font-medium text-slate-600">Siswa akan diberikan area teks yang luas untuk menyusun jawaban mereka secara bebas.</p></> : 
+                             <><CheckCircle2 className="w-12 h-12 md:w-16 md:h-16 text-emerald-300 mx-auto mb-3 md:mb-4" /><p className="text-emerald-900 font-black text-xl md:text-2xl">Sistem Benar/Salah</p><p className="text-xs md:text-sm mt-1.5 md:mt-2 font-medium text-slate-600">Pilih kunci jawaban (Pernyataan Benar atau Salah) di panel atribut di bawah/samping.</p></>
                            }
                         </div>
                       )}
                     </div>
 
-                    {/* PANEL KANAN ATRIBUT */}
-                    <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm space-y-6 h-fit relative z-30">
-                      <h2 className="text-xl font-black text-slate-800 border-b border-slate-100 pb-4 flex items-center gap-2"><Settings className="w-6 h-6 text-slate-400"/> Atribut Penilaian</h2>
+                    {/* PANEL KANAN ATRIBUT (Pindah ke bawah pada Mobile) */}
+                    <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm space-y-4 md:space-y-6 h-fit relative z-30">
+                      <h2 className="text-lg md:text-xl font-black text-slate-800 border-b border-slate-100 pb-3 md:pb-4 flex items-center gap-2"><Settings className="w-5 h-5 md:w-6 md:h-6 text-slate-400"/> Atribut Penilaian</h2>
 
                       {(formData.question_type === 'multiple_choice' || formData.question_type === 'true_false') && (
-                        <div className="space-y-3"><label className="text-xs font-black text-emerald-600 uppercase tracking-widest block">Kunci Jawaban Benar *</label>
+                        <div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-black text-emerald-600 uppercase tracking-widest block">Kunci Jawaban Benar *</label>
                           <div className="relative">
-                             <select name="correct_answer" value={formData.correct_answer} onChange={handleFormChange} className="w-full p-4 bg-emerald-50 border-2 border-emerald-200 text-emerald-800 font-black rounded-xl outline-none focus:ring-2 focus:ring-emerald-50 cursor-pointer appearance-none shadow-sm text-base">
+                             <select name="correct_answer" value={formData.correct_answer} onChange={handleFormChange} className="w-full p-3 md:p-4 bg-emerald-50 border-2 border-emerald-200 text-emerald-800 font-black rounded-lg md:rounded-xl outline-none focus:ring-2 focus:ring-emerald-50 cursor-pointer appearance-none shadow-sm text-sm md:text-base">
                                {formData.question_type === 'multiple_choice' ? options.map(o => <option key={o.key} value={o.key}>Opsi {o.key}</option>) : <><option value="True">Pernyataan Benar</option><option value="False">Pernyataan Salah</option></>}
                              </select>
-                             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600 pointer-events-none"/>
+                             <ChevronDown className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-emerald-600 pointer-events-none"/>
                           </div>
                         </div>
                       )}
 
                       {formData.question_type === 'complex_multiple_choice' && (
-                        <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl shadow-sm"><p className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Kunci Jawaban Kompleks:</p><p className="text-2xl font-black text-emerald-600 mt-1">{complexAnswers.length > 0 ? complexAnswers.sort().join(', ') : 'Belum Dipilih'}</p></div>
+                        <div className="p-4 md:p-5 bg-emerald-50 border border-emerald-200 rounded-xl md:rounded-2xl shadow-sm"><p className="text-[9px] md:text-[10px] font-black text-emerald-700 uppercase tracking-widest">Kunci Jawaban Kompleks:</p><p className="text-xl md:text-2xl font-black text-emerald-600 mt-1">{complexAnswers.length > 0 ? complexAnswers.sort().join(', ') : 'Belum Dipilih'}</p></div>
                       )}
 
                       {/* Kunci Jawaban Menjodohkan Terstruktur di Atribut Penilaian */}
                       {formData.question_type === 'matching' && (
-                         <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-[1.5rem] space-y-4 relative z-30 shadow-sm">
-                            <p className="text-xs font-black text-emerald-700 uppercase tracking-widest flex items-center gap-2 border-b border-emerald-200/60 pb-3"><KeyRound className="w-4 h-4"/> Kunci Menjodohkan</p>
+                         <div className="p-4 md:p-5 bg-emerald-50 border border-emerald-200 rounded-xl md:rounded-[1.5rem] space-y-3 md:space-y-4 relative z-30 shadow-sm">
+                            <p className="text-[10px] md:text-xs font-black text-emerald-700 uppercase tracking-widest flex items-center gap-1.5 md:gap-2 border-b border-emerald-200/60 pb-2 md:pb-3"><KeyRound className="w-3.5 h-3.5 md:w-4 md:h-4"/> Kunci Menjodohkan</p>
                             {matchingPremises.map((p, idx) => (
-                               <div key={p.id} className="flex items-center gap-3">
-                                  <div className="w-8 h-8 shrink-0 bg-white border border-emerald-200 text-emerald-700 font-black text-xs rounded-xl flex items-center justify-center shadow-sm">{idx + 1}</div>
-                                  <ArrowRight className="w-4 h-4 text-emerald-400 shrink-0"/>
+                               <div key={p.id} className="flex items-center gap-2 md:gap-3">
+                                  <div className="w-6 h-6 md:w-8 md:h-8 shrink-0 bg-white border border-emerald-200 text-emerald-700 font-black text-[10px] md:text-xs rounded-lg md:rounded-xl flex items-center justify-center shadow-sm">{idx + 1}</div>
+                                  <ArrowRight className="w-3 h-3 md:w-4 md:h-4 text-emerald-400 shrink-0"/>
                                   <div className="relative flex-1">
                                      <select 
                                         value={matchingKeys[p.id] || ''} 
                                         onChange={(e) => setMatchingKeys(prev => ({...prev, [p.id]: e.target.value}))} 
-                                        className="w-full bg-white border border-emerald-200 text-emerald-700 text-sm font-bold rounded-xl p-2.5 outline-none cursor-pointer focus:ring-2 focus:ring-emerald-400 appearance-none shadow-sm"
+                                        className="w-full bg-white border border-emerald-200 text-emerald-700 text-xs md:text-sm font-bold rounded-lg md:rounded-xl p-2 md:p-2.5 outline-none cursor-pointer focus:ring-2 focus:ring-emerald-400 appearance-none shadow-sm truncate pr-8"
                                      >
                                         <option value="" disabled>Pilih Pasangan Kanan...</option>
                                         {matchingResponses.map((r, rIdx) => (
                                            <option key={r.id} value={r.id}>Kanan {String.fromCharCode(65 + rIdx)}</option>
                                         ))}
                                      </select>
-                                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-500 pointer-events-none"/>
+                                     <ChevronDown className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500 pointer-events-none"/>
                                   </div>
                                </div>
                             ))}
                          </div>
                       )}
 
-                      <div className="space-y-3"><label className="text-xs font-black text-slate-500 uppercase tracking-widest block">Bobot Poin Soal</label><input type="number" step="0.1" name="points" value={formData.points} onChange={handleFormChange} placeholder="Misal: 1.5" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-base font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
+                      <div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block">Bobot Poin Soal</label><input type="number" step="0.1" name="points" value={formData.points} onChange={handleFormChange} placeholder="Misal: 1.5" className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-3 md:p-4 text-sm md:text-base font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" /></div>
                       
                       {(formData.question_type === 'complex_multiple_choice' || formData.question_type === 'matching') && (
-                        <div className="space-y-3 pt-5 border-t border-slate-100">
-                           <label className="text-xs font-black text-indigo-600 uppercase tracking-widest block">Sistem Penilaian *</label>
+                        <div className="space-y-2 md:space-y-3 pt-4 md:pt-5 border-t border-slate-100">
+                           <label className="text-[10px] md:text-xs font-black text-indigo-600 uppercase tracking-widest block">Sistem Penilaian *</label>
                            <div className="relative">
-                              <select name="scoring_type" value={formData.scoring_type} onChange={handleFormChange} className="w-full p-4 bg-indigo-50 border border-indigo-200 text-indigo-900 font-bold rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-sm cursor-pointer appearance-none shadow-sm">
+                              <select name="scoring_type" value={formData.scoring_type} onChange={handleFormChange} className="w-full p-3 md:p-4 bg-indigo-50 border border-indigo-200 text-indigo-900 font-bold rounded-lg md:rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 text-xs md:text-sm cursor-pointer appearance-none shadow-sm">
                                 <option value="all_or_nothing">Mutlak (1 Salah = Poin 0)</option>
                                 <option value="partial">Proporsional (Dihitung per opsi benar)</option>
                               </select>
-                              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-600 pointer-events-none"/>
+                              <ChevronDown className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-indigo-600 pointer-events-none"/>
                            </div>
                         </div>
                       )}
 
-                      <div className="space-y-3"><label className="text-xs font-black text-slate-500 uppercase tracking-widest block">Tingkat Kesulitan Soal</label>
+                      <div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block">Tingkat Kesulitan Soal</label>
                          <div className="relative">
-                           <select name="difficulty" value={formData.difficulty} onChange={handleFormChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer appearance-none shadow-sm">
+                           <select name="difficulty" value={formData.difficulty} onChange={handleFormChange} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-3 md:p-4 text-xs md:text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer appearance-none shadow-sm">
                              <option value={1}>1 - Sangat Mudah (C1)</option><option value={2}>2 - Mudah (C2)</option><option value={3}>3 - Sedang (C3)</option><option value={4}>4 - Sulit (C4)</option><option value={5}>5 - Sangat Sulit (HOTS/C5-C6)</option>
                            </select>
-                           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none"/>
+                           <ChevronDown className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-500 pointer-events-none"/>
                          </div>
                       </div>
                       
-                      <div className="pt-6 border-t border-slate-100">
-                         <label className="flex items-center gap-4 cursor-pointer p-4 border border-slate-200 rounded-2xl bg-slate-50 hover:bg-blue-50 transition-colors shadow-sm">
-                            <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleFormChange} className="w-6 h-6 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer shadow-sm" />
-                            <span className="text-sm font-black text-slate-800 select-none">Aktifkan Soal Ini</span>
+                      <div className="pt-4 md:pt-6 border-t border-slate-100">
+                         <label className="flex items-center gap-3 md:gap-4 cursor-pointer p-3 md:p-4 border border-slate-200 rounded-xl md:rounded-2xl bg-slate-50 hover:bg-blue-50 transition-colors shadow-sm">
+                            <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleFormChange} className="w-5 h-5 md:w-6 md:h-6 text-blue-600 rounded border-slate-300 focus:ring-blue-500 cursor-pointer shadow-sm shrink-0" />
+                            <span className="text-xs md:text-sm font-black text-slate-800 select-none">Aktifkan Soal Ini</span>
                          </label>
                       </div>
                       
-                      <button onClick={handleFormSubmit} disabled={isSubmittingForm} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all w-full mt-6 sm:hidden">
-                        {isSubmittingForm ? <LoaderCircle className="animate-spin w-5 h-5" /> : <Save className="w-5 h-5"/>} Simpan Soal
+                      <button type="button" onClick={handleFormSubmit} disabled={isSubmittingForm} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all w-full mt-4 sm:hidden text-sm">
+                        {isSubmittingForm ? <LoaderCircle className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4"/>} Simpan Soal
                       </button>
                     </div>
                   </div>
@@ -1214,29 +1263,29 @@ export default function TeacherQuestionsBankPage() {
       {/* MODAL MINI: MUNCUL JIKA KLIK 'BUAT SOAL' DARI HALAMAN DEPAN */}
       {isSelectMapelModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 z-[90] flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 border border-slate-100 flex flex-col">
-            <div className="p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-               <h2 className="text-xl font-black text-slate-800">Pilih Target Mapel</h2>
-               <button onClick={() => setIsSelectMapelModalOpen(false)} className="p-2 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 rounded-full shadow-sm transition-colors"><X className="w-5 h-5" /></button>
+          <div className="bg-white w-full max-w-sm md:max-w-md rounded-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 border border-slate-100 flex flex-col">
+            <div className="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+               <h2 className="text-lg md:text-xl font-black text-slate-800">Pilih Target Mapel</h2>
+               <button onClick={() => setIsSelectMapelModalOpen(false)} className="p-1.5 md:p-2 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 rounded-full shadow-sm transition-colors"><X className="w-4 h-4 md:w-5 md:h-5" /></button>
             </div>
-            <div className="p-8 space-y-4">
-              <label className="text-xs font-black text-slate-500 uppercase tracking-widest block mb-2">Mata Pelajaran (Hanya yang Diampu)</label>
+            <div className="p-6 md:p-8 space-y-3 md:space-y-4">
+              <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2">Mata Pelajaran (Hanya yang Diampu)</label>
               <div className="relative">
                  {myOwnedSubjects.length > 0 ? (
-                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none shadow-sm">
+                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-3 md:py-4 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none shadow-sm truncate pr-10">
                         <option value="" disabled>-- Pilih Mapel --</option>
                         {myOwnedSubjects.map(subj => <option key={subj.id} value={subj.id}>{subj.name} - {subj.grade_level}</option>)}
                      </select>
                  ) : (
-                     <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl text-sm font-bold text-center">Anda belum ditetapkan sebagai pengampu mata pelajaran apapun.</div>
+                     <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 md:p-4 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-center">Anda belum ditetapkan sebagai pengampu mata pelajaran apapun.</div>
                  )}
-                 <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                 <ChevronDown className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400 pointer-events-none" />
               </div>
             </div>
-            <div className="p-8 border-t border-slate-100 bg-slate-50 flex gap-3 shrink-0">
-               <button onClick={() => setIsSelectMapelModalOpen(false)} className="flex-1 py-3.5 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-100 shadow-sm transition-colors">Batal</button>
+            <div className="p-4 md:p-8 border-t border-slate-100 bg-slate-50 flex gap-2 md:gap-3 shrink-0">
+               <button onClick={() => setIsSelectMapelModalOpen(false)} className="flex-1 py-3 md:py-3.5 bg-white border border-slate-200 text-slate-600 rounded-lg md:rounded-xl font-bold hover:bg-slate-100 shadow-sm transition-colors text-xs md:text-sm">Batal</button>
                {myOwnedSubjects.length > 0 && (
-                 <button onClick={() => { if(!importSelectedSubject) { showToast("Pilih Mapel dulu!", "warning"); return; } setIsSelectMapelModalOpen(false); openCreateForm(subjects.find(s => s.id === importSelectedSubject)); }} className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 shadow-md active:scale-95 transition-all flex items-center justify-center gap-2">Lanjut <ArrowRight className="w-4 h-4"/></button>
+                 <button onClick={() => { if(!importSelectedSubject) { showToast("Pilih Mapel dulu!", "warning"); return; } setIsSelectMapelModalOpen(false); openCreateForm(subjects.find(s => s.id === importSelectedSubject)); }} className="flex-1 py-3 md:py-3.5 bg-blue-600 text-white rounded-lg md:rounded-xl font-bold hover:bg-blue-700 shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 md:gap-2 text-xs md:text-sm">Lanjut <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
                )}
             </div>
           </div>
@@ -1245,86 +1294,86 @@ export default function TeacherQuestionsBankPage() {
 
       {/* MODAL: IMPORT EXCEL (POPUP STYLE) */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm overflow-y-auto flex items-center justify-center p-4 md:p-8">
-          <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-300 overflow-hidden border border-slate-200">
+        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm overflow-y-auto flex items-center justify-center p-2 sm:p-4 md:p-8">
+          <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-300 overflow-hidden border border-slate-200">
             
             {/* HEADER MODAL */}
-            <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 sticky top-0 z-20">
+            <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 flex items-start sm:items-center justify-between bg-slate-50 sticky top-0 z-20 gap-3">
               <div>
-                <h2 className="text-2xl font-black text-slate-800 flex items-center gap-3">
-                  <FileUp className="w-7 h-7 text-emerald-500"/> Import Massal Soal
+                <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+                  <FileUp className="w-5 h-5 md:w-7 md:h-7 text-emerald-500 shrink-0"/> <span className="truncate">Import Massal Soal</span>
                 </h2>
-                <p className="text-sm text-slate-500 font-medium mt-1">Unggah file Excel untuk menambahkan soal ke dalam Bank Soal secara cepat.</p>
+                <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5 md:mt-1 hidden sm:block">Unggah file Excel untuk menambahkan soal ke dalam Bank Soal secara cepat.</p>
               </div>
-              <button onClick={() => setIsImportModalOpen(false)} className="p-3 bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 rounded-full transition-all shadow-sm">
-                <X className="w-5 h-5"/>
+              <button onClick={() => setIsImportModalOpen(false)} className="p-2 md:p-3 bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 rounded-full transition-all shadow-sm shrink-0">
+                <X className="w-4 h-4 md:w-5 md:h-5"/>
               </button>
             </div>
 
             {/* AREA KONTEN MODAL */}
-            <div className="p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 space-y-8">
-              {importError && <div className="bg-rose-50 border border-rose-200 text-rose-700 px-6 py-5 rounded-2xl flex items-start gap-4 shadow-sm"><div className="p-2 bg-rose-100 rounded-full shrink-0"><AlertCircle className="w-6 h-6" /></div><p className="text-sm font-bold mt-1.5">{importError}</p></div>}
-              {importSuccess && <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-5 rounded-3xl flex items-start gap-4 shadow-sm"><div className="p-3 bg-emerald-100 rounded-full shrink-0"><CheckCircle2 className="w-6 h-6 text-emerald-600" /></div><div><p className="font-black text-lg mb-1">{importSuccess}</p><p className="text-sm font-medium text-emerald-700/80">Semua soal beserta medianya telah berhasil masuk ke database dan siap digunakan.</p></div></div>}
+            <div className="p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 space-y-4 md:space-y-8 custom-scrollbar">
+              {importError && <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 md:px-6 py-4 md:py-5 rounded-xl md:rounded-2xl flex items-start gap-3 md:gap-4 shadow-sm text-xs md:text-sm"><div className="p-1.5 md:p-2 bg-rose-100 rounded-full shrink-0"><AlertCircle className="w-4 h-4 md:w-6 md:h-6" /></div><p className="font-bold mt-0.5 md:mt-1.5">{importError}</p></div>}
+              {importSuccess && <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 md:px-6 py-4 md:py-5 rounded-2xl md:rounded-3xl flex items-start gap-3 md:gap-4 shadow-sm"><div className="p-2 md:p-3 bg-emerald-100 rounded-full shrink-0"><CheckCircle2 className="w-4 h-4 md:w-6 md:h-6 text-emerald-600" /></div><div><p className="font-black text-base md:text-lg mb-0.5 md:mb-1 leading-tight">{importSuccess}</p><p className="text-xs md:text-sm font-medium text-emerald-700/80">Semua soal beserta medianya telah berhasil masuk ke database dan siap digunakan.</p></div></div>}
 
-              <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-                 <div className="bg-blue-50 border border-blue-100 rounded-[1.5rem] p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    <div className="flex items-start gap-4">
-                       <div className="p-2 bg-blue-100 text-blue-600 rounded-full shrink-0 mt-1"><Info className="w-6 h-6" /></div>
+              <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+                 <div className="bg-blue-50 border border-blue-100 rounded-xl md:rounded-[1.5rem] p-4 sm:p-5 md:p-6 mb-6 md:mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+                    <div className="flex items-start gap-3 md:gap-4">
+                       <div className="p-1.5 md:p-2 bg-blue-100 text-blue-600 rounded-full shrink-0 mt-0.5 md:mt-1"><Info className="w-4 h-4 md:w-6 md:h-6" /></div>
                        <div>
-                          <h3 className="font-bold text-blue-900 text-lg mb-1">Panduan Import & Validasi</h3>
-                          <p className="text-sm text-blue-700/80 font-medium">Unduh template, isi soal sesuai panduan pada baris pertama, lalu unggah kembali file Excel tersebut ke dalam kotak di bawah ini.</p>
+                          <h3 className="font-bold text-blue-900 text-base md:text-lg mb-0.5 md:mb-1">Panduan Import & Validasi</h3>
+                          <p className="text-xs md:text-sm text-blue-700/80 font-medium leading-relaxed">Unduh template, isi soal sesuai panduan pada baris pertama, lalu unggah kembali file Excel tersebut ke dalam kotak di bawah ini.</p>
                        </div>
                     </div>
-                    <button type="button" onClick={downloadTemplate} className="shrink-0 bg-white border border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 font-bold px-6 py-3 rounded-xl shadow-sm transition-all flex items-center gap-2">
-                       <DownloadIcon className="w-4 h-4"/> Unduh Template Excel
+                    <button type="button" onClick={downloadTemplate} className="shrink-0 bg-white border border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 font-bold px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 w-full md:w-auto text-xs md:text-sm">
+                       <DownloadIcon className="w-3.5 h-3.5 md:w-4 md:h-4"/> <span className="hidden sm:inline">Unduh Template Excel</span><span className="sm:hidden">Unduh Template</span>
                     </button>
                  </div>
 
                  {/* PILIH TARGET MATA PELAJARAN (HANYA YANG DIAMPU) */}
-                 <div className="mb-8">
-                   <label className="font-black text-slate-800 mb-3 block text-lg flex items-center gap-2"><BookOpen className="w-5 h-5 text-slate-400"/> Pilih Target Mata Pelajaran</label>
+                 <div className="mb-6 md:mb-8">
+                   <label className="font-black text-slate-800 mb-2 md:mb-3 block text-base md:text-lg flex items-center gap-1.5 md:gap-2"><BookOpen className="w-4 h-4 md:w-5 md:h-5 text-slate-400"/> Pilih Target Mata Pelajaran</label>
                    <div className="relative max-w-2xl">
-                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-base font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm appearance-none">
+                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-3 md:py-4 text-sm md:text-base font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm appearance-none truncate pr-10">
                        <option value="" disabled>-- Klik untuk memilih mata pelajaran --</option>
                        {myOwnedSubjects.map(subj => <option key={subj.id} value={subj.id}>{subj.name} - {subj.grade_level}</option>)}
                      </select>
-                     <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                     <ChevronDown className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400 pointer-events-none" />
                    </div>
                  </div>
                  
                  {/* AREA DROP EXCEL */}
-                 <label className={`border-2 border-dashed rounded-[2rem] p-12 md:p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
-                   <div className="p-5 bg-white rounded-full shadow-sm border border-slate-200 mb-4 group-hover:scale-110 transition-all duration-300">
-                      {importFile ? <FileSpreadsheet className="w-10 h-10 text-emerald-500" /> : <FileUp className="w-10 h-10 text-blue-600" />}
+                 <label className={`border-2 border-dashed rounded-xl md:rounded-[2rem] p-8 sm:p-12 md:p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
+                   <div className="p-3 sm:p-4 md:p-5 bg-white rounded-full shadow-sm border border-slate-200 mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                      {importFile ? <FileSpreadsheet className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500" /> : <FileUp className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />}
                    </div>
-                   <span className="text-xl font-black text-slate-700 mb-1">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
-                   {!importFile && <span className="text-sm font-medium text-slate-500">Klik di sini untuk menelusuri file dari komputer Anda</span>}
+                   <span className="text-base sm:text-lg md:text-xl font-black text-slate-700 mb-1 leading-tight break-words max-w-full px-2">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
+                   {!importFile && <span className="text-xs md:text-sm font-medium text-slate-500 px-4">Klik di sini untuk menelusuri file dari komputer Anda</span>}
                    <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleImportFileChange} />
                  </label>
               </div>
               
               {/* TABEL PREVIEW MUNCUL DI BAWAH JIKA ADA DATA */}
               {previewData.length > 0 && (
-                 <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden flex flex-col animate-in slide-in-from-bottom-4">
-                   <div className="px-6 md:px-8 py-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/80">
-                     <h2 className="font-black text-slate-800 flex items-center gap-3 text-lg">Preview Data Soal <span className="bg-emerald-100 text-emerald-700 text-xs px-3 py-1.5 rounded-lg font-black tracking-widest uppercase">{previewData.length} Baris Siap</span></h2>
-                     <button onClick={handleUploadData} disabled={isImporting} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-200 active:scale-95 w-full md:w-auto">
-                        {isImporting ? <LoaderCircle className="w-5 h-5 animate-spin"/> : <Save className="w-5 h-5"/>} 
-                        {isImporting ? 'Menyimpan...' : 'Simpan Semua ke Database'}
+                 <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] shadow-sm overflow-hidden flex flex-col animate-in slide-in-from-bottom-4">
+                   <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-slate-50/80">
+                     <h2 className="font-black text-slate-800 flex items-center gap-2 md:gap-3 text-base md:text-lg">Preview Data Soal <span className="bg-emerald-100 text-emerald-700 text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg font-black tracking-widest uppercase whitespace-nowrap">{previewData.length} Baris Siap</span></h2>
+                     <button onClick={handleUploadData} disabled={isImporting} className="flex items-center justify-center gap-1.5 md:gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white px-4 md:px-8 py-2.5 md:py-3.5 rounded-lg md:rounded-xl font-bold text-xs md:text-sm transition-all shadow-md shadow-blue-200 active:scale-95 w-full md:w-auto">
+                        {isImporting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin"/> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} 
+                        {isImporting ? 'Menyimpan...' : 'Simpan ke Database'}
                      </button>
                    </div>
-                   <div className="overflow-x-auto max-h-[400px] custom-scrollbar">
-                     <table className="w-full text-sm text-left whitespace-nowrap">
-                       <thead className="bg-white text-slate-500 text-xs font-black uppercase tracking-widest border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-                          <tr><th className="px-8 py-4">Paket</th><th className="px-8 py-4">Tipe Soal</th><th className="px-8 py-4">Cuplikan Pertanyaan</th><th className="px-8 py-4 text-center">Bobot</th></tr>
+                   <div className="overflow-x-auto max-h-[300px] md:max-h-[400px] custom-scrollbar">
+                     <table className="w-full text-xs md:text-sm text-left whitespace-nowrap">
+                       <thead className="bg-white text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                         <tr><th className="px-4 md:px-8 py-3 md:py-4">Paket</th><th className="px-4 md:px-8 py-3 md:py-4">Tipe Soal</th><th className="px-4 md:px-8 py-3 md:py-4">Cuplikan Pertanyaan</th><th className="px-4 md:px-8 py-3 md:py-4 text-center">Bobot</th></tr>
                        </thead>
                        <tbody className="divide-y divide-slate-100">
                          {previewData.map((row, idx) => (
                             <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
-                               <td className="px-8 py-5 font-bold text-cyan-600">{row.package_name}</td>
-                               <td className="px-8 py-5"><span className="bg-slate-100 text-slate-600 px-2.5 py-1.5 rounded-md text-[10px] font-black uppercase tracking-widest border border-slate-200">{row.question_type.replace(/_/g, ' ')}</span></td>
-                               <td className="px-8 py-5 text-slate-800 font-medium max-w-[400px] truncate">{row.question_text}</td>
-                               <td className="px-8 py-5 text-center font-black text-emerald-600">{row.points}</td>
+                               <td className="px-4 md:px-8 py-3 md:py-5 font-bold text-cyan-600">{row.package_name}</td>
+                               <td className="px-4 md:px-8 py-3 md:py-5"><span className="bg-slate-100 text-slate-600 px-2 md:px-2.5 py-1 md:py-1.5 rounded-md text-[8px] md:text-[10px] font-black uppercase tracking-widest border border-slate-200">{row.question_type.replace(/_/g, ' ')}</span></td>
+                               <td className="px-4 md:px-8 py-3 md:py-5 text-slate-800 font-medium max-w-[200px] md:max-w-[400px] truncate">{row.question_text}</td>
+                               <td className="px-4 md:px-8 py-3 md:py-5 text-center font-black text-emerald-600">{row.points}</td>
                             </tr>
                          ))}
                        </tbody>

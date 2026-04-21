@@ -15,7 +15,7 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false, 
-  loading: () => <div className="h-20 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 font-medium">Memuat Editor...</div> 
+  loading: () => <div className="h-20 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-slate-400 font-medium text-xs md:text-sm">Memuat Editor...</div> 
 });
 
 // KOMPONEN EDITOR ANTI-LAG
@@ -62,9 +62,9 @@ const getDriveMediaUrl = (url: string | undefined | null) => {
 const SmartMediaRenderer = ({ url, className = "" }: { url?: string, className?: string }) => {
   if (!url || typeof url !== 'string') return null;
   const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
-  if (ytMatch) return (<div className={`relative w-full max-w-xl mx-auto aspect-video rounded-xl overflow-hidden shadow-sm border border-slate-200 mt-4 ${className}`}><iframe src={`https://www.youtube.com/embed/${ytMatch[1]}?modestbranding=1&rel=0`} className="w-full h-full border-0" /></div>);
-  if (url.match(/\.(mp4|webm|ogg)$/i)) return (<div className={`relative w-full max-w-xl mx-auto aspect-video rounded-xl overflow-hidden shadow-sm border border-slate-200 mt-4 bg-black ${className}`}><video src={url} controls className="w-full h-full" /></div>);
-  if (url.match(/\.(mp3|wav|m4a)$/i)) return <audio src={url} controls className={`w-full h-10 outline-none mt-4 ${className}`} />;
+  if (ytMatch) return (<div className={`relative w-full max-w-xl mx-auto aspect-video rounded-xl overflow-hidden shadow-sm border border-slate-200 mt-3 md:mt-4 ${className}`}><iframe src={`https://www.youtube.com/embed/${ytMatch[1]}?modestbranding=1&rel=0`} className="w-full h-full border-0" /></div>);
+  if (url.match(/\.(mp4|webm|ogg)$/i)) return (<div className={`relative w-full max-w-xl mx-auto aspect-video rounded-xl overflow-hidden shadow-sm border border-slate-200 mt-3 md:mt-4 bg-black ${className}`}><video src={url} controls className="w-full h-full" /></div>);
+  if (url.match(/\.(mp3|wav|m4a)$/i)) return <audio src={url} controls className={`w-full h-10 outline-none mt-3 md:mt-4 ${className}`} />;
   return null; 
 };
 
@@ -809,87 +809,87 @@ export default function TeacherReportsAndAnalyticsPage() {
   const easiestQuestion = [...itemAnalysis].sort((a,b) => (b.correct/b.total) - (a.correct/a.total))[0];
 
   return (
-    <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto pb-20 font-sans text-slate-800">
+    <div className="p-4 sm:p-6 md:p-8 space-y-6 max-w-7xl mx-auto pb-24 md:pb-20 font-sans text-slate-800">
       
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[200] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-[1.5rem] shadow-2xl flex items-center gap-3 border ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[200] w-[90%] sm:w-auto animate-in slide-in-from-top-10">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-2xl flex items-center gap-2 md:gap-3 border ${
              toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
              toast.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-rose-50 border-rose-200 text-rose-700'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className={`w-5 h-5 text-emerald-500`} /> : <AlertTriangle className={`w-5 h-5 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className={`w-4 h-4 md:w-5 md:h-5 text-emerald-500 shrink-0`} /> : <AlertTriangle className={`w-4 h-4 md:w-5 md:h-5 shrink-0 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
+            <p className="font-bold text-xs md:text-sm tracking-wide">{toast.message}</p>
           </div>
         </div>
       )}
 
       {activeView === 'list' ? (
-        <div className="space-y-6 animate-in fade-in">
-           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[2rem] border border-blue-100 shadow-sm">
+        <div className="space-y-4 md:space-y-6 animate-in fade-in">
+           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-white p-4 sm:p-5 md:px-8 md:py-6 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
              <div>
-               <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-                 <BarChart3 className="w-8 h-8 text-blue-600" /> Laporan Penilaian Guru
+               <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+                 <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Laporan Penilaian Guru
                </h1>
-               <p className="text-slate-500 text-sm mt-1 font-medium md:ml-11">Akses rekap nilai, esai, dan analisis untuk mapel yang Anda ampu.</p>
+               <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11">Akses rekap nilai, esai, dan analisis untuk mapel yang Anda ampu.</p>
              </div>
-             <button onClick={() => setIsGlobalPrintModalOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl font-bold text-sm shadow-md shadow-blue-200 transition-all shrink-0 w-full md:w-auto active:scale-95">
-                <Printer className="w-4 h-4"/> Cetak Hasil Keseluruhan
+             <button onClick={() => setIsGlobalPrintModalOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm shadow-md shadow-blue-200 transition-all shrink-0 w-full md:w-auto active:scale-95">
+                <Printer className="w-4 h-4 md:w-4 md:h-4"/> Cetak Hasil Keseluruhan
              </button>
            </div>
 
            <div className="relative w-full max-w-xl">
-             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-             <input type="text" placeholder="Cari laporan berdasarkan nama mapel Anda..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.5rem] pl-12 pr-4 py-3.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all placeholder-slate-400" />
+             <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+             <input type="text" placeholder="Cari laporan berdasarkan nama mapel Anda..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] pl-10 md:pl-12 pr-4 py-3 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all placeholder-slate-400" />
            </div>
 
            {loadingExams ? (
-             <div className="py-20 flex justify-center"><LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" /></div>
+             <div className="py-16 md:py-20 flex justify-center"><LoaderCircle className="w-10 h-10 md:w-12 md:h-12 text-blue-500 animate-spin" /></div>
            ) : exams.filter(ex => (ex.subject || '').toLowerCase().includes(searchQuery.toLowerCase())).length === 0 ? (
-             <div className="bg-white border-2 border-dashed border-slate-200 rounded-[2rem] py-20 text-center flex flex-col items-center">
-                 <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><BarChart3 className="w-10 h-10 text-slate-300"/></div>
-                 <h2 className="text-xl font-black text-slate-700">Tidak Ada Laporan Tersedia</h2>
-                 <p className="text-slate-500 font-medium">Belum ada ujian di mata pelajaran yang Anda ampu, atau pencarian Anda tidak cocok.</p>
+             <div className="bg-white border-2 border-dashed border-slate-200 rounded-[1.5rem] md:rounded-[2rem] py-16 md:py-20 text-center flex flex-col items-center px-4">
+                 <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mb-3 md:mb-4 border border-slate-100"><BarChart3 className="w-8 h-8 md:w-10 md:h-10 text-slate-300"/></div>
+                 <h2 className="text-lg md:text-xl font-black text-slate-700 mb-1">Tidak Ada Laporan Tersedia</h2>
+                 <p className="text-slate-500 font-medium text-xs md:text-sm max-w-md">Belum ada ujian di mata pelajaran yang Anda ampu, atau pencarian Anda tidak cocok.</p>
              </div>
            ) : (
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                {exams.filter(ex => (ex.subject || '').toLowerCase().includes(searchQuery.toLowerCase())).map((exam) => (
-                 <div key={exam.id} onClick={() => fetchExamDetails(exam)} className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-blue-300 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
+                 <div key={exam.id} onClick={() => fetchExamDetails(exam)} className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-5 md:p-6 lg:p-8 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-blue-300 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
                    <div>
-                     <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-[1.2rem] flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-colors shadow-inner">
-                           <FileSpreadsheet className="w-7 h-7 text-blue-600 group-hover:text-white" />
+                     <div className="flex items-start gap-3 md:gap-4 min-w-0">
+                        <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-50 border border-blue-100 rounded-xl md:rounded-[1.2rem] flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-colors shadow-inner mt-0.5">
+                           <FileSpreadsheet className="w-6 h-6 md:w-7 md:h-7 text-blue-600 group-hover:text-white" />
                         </div>
-                        <div>
-                           <h3 className="font-black text-xl text-slate-800 leading-tight group-hover:text-blue-700 transition-colors">{exam.subject}</h3>
-                           <span className="inline-block mt-1.5 text-[10px] font-black bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 uppercase tracking-widest">
+                        <div className="min-w-0 flex-1">
+                           <h3 className="font-black text-lg md:text-xl text-slate-800 leading-tight group-hover:text-blue-700 transition-colors truncate">{exam.subject}</h3>
+                           <span className="inline-block mt-1 md:mt-1.5 text-[9px] md:text-[10px] font-black bg-indigo-50 text-indigo-600 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-indigo-100 uppercase tracking-widest truncate max-w-full">
                               {exam.grade_level || 'UMUM'}
                            </span>
                         </div>
                      </div>
                      
-                     <div className="mt-6 space-y-3">
-                        <div className="flex items-start gap-3">
-                           <UserCircle2 className="w-4 h-4 text-slate-400 shrink-0 mt-0.5"/>
-                           <div>
-                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Guru Pengampu</p>
-                             <p className="text-sm font-bold text-slate-700 leading-snug mt-1">{exam.teacherNames}</p>
+                     <div className="mt-4 md:mt-6 space-y-2 md:space-y-3">
+                        <div className="flex items-start gap-2.5 md:gap-3 min-w-0">
+                           <UserCircle2 className="w-4 h-4 text-slate-400 shrink-0 mt-0.5 md:mt-1"/>
+                           <div className="min-w-0 flex-1">
+                             <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Guru Pengampu</p>
+                             <p className="text-xs md:text-sm font-bold text-slate-700 leading-snug mt-1 truncate">{exam.teacherNames}</p>
                            </div>
                         </div>
-                        <div className="flex items-start gap-3 pt-3 border-t border-slate-100">
-                           <BookOpen className="w-4 h-4 text-slate-400 shrink-0 mt-0.5"/>
-                           <div>
-                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Nama Ujian</p>
-                             <p className="text-sm font-bold text-slate-700 leading-snug mt-1">{exam.title || '-'}</p>
+                        <div className="flex items-start gap-2.5 md:gap-3 pt-2 md:pt-3 border-t border-slate-100 min-w-0">
+                           <BookOpen className="w-4 h-4 text-slate-400 shrink-0 mt-0.5 md:mt-1"/>
+                           <div className="min-w-0 flex-1">
+                             <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">Nama Ujian</p>
+                             <p className="text-xs md:text-sm font-bold text-slate-700 leading-snug mt-1 truncate">{exam.title || '-'}</p>
                            </div>
                         </div>
                      </div>
                    </div>
 
-                   <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
-                     <span className="flex items-center gap-1.5 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                        <Users className="w-3.5 h-3.5 text-amber-500" /> {Array.isArray(exam.target_class) ? exam.target_class.join(', ') : exam.target_class}
+                   <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-slate-100 flex items-center justify-between">
+                     <span className="flex items-center gap-1 md:gap-1.5 text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest truncate max-w-[80%]">
+                        <Users className="w-3.5 h-3.5 text-amber-500 shrink-0" /> <span className="truncate">{Array.isArray(exam.target_class) ? exam.target_class.join(', ') : exam.target_class}</span>
                      </span>
-                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-transform group-hover:translate-x-1" />
+                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-blue-500 transition-transform group-hover:translate-x-1 shrink-0" />
                    </div>
                  </div>
                ))}
@@ -897,136 +897,137 @@ export default function TeacherReportsAndAnalyticsPage() {
            )}
         </div>
       ) : (
-        <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="space-y-4 md:space-y-6 animate-in fade-in duration-300">
           
-          <div className="flex items-center justify-between gap-4">
-             <button onClick={() => { setActiveView('list'); setSearchQuery(''); }} className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-5 py-2.5 rounded-xl transition-colors shadow-sm"><ArrowLeft className="w-4 h-4" /> Kembali</button>
-             <button onClick={() => setIsPrintModalOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 hover:border-blue-200 px-6 py-3 rounded-xl font-bold text-sm shadow-sm transition-colors shrink-0">
-                <Printer className="w-5 h-5 text-blue-600"/> Unduh Laporan Detail
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+             <button onClick={() => { setActiveView('list'); setSearchQuery(''); }} className="flex items-center justify-center sm:justify-start gap-1.5 md:gap-2 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 px-4 md:px-5 py-2.5 md:py-2.5 rounded-lg md:rounded-xl transition-colors shadow-sm w-full sm:w-auto"><ArrowLeft className="w-4 h-4 md:w-4 md:h-4" /> Kembali</button>
+             <button onClick={() => setIsPrintModalOpen(true)} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 hover:border-blue-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto shrink-0">
+                <Printer className="w-4 h-4 md:w-5 md:h-5 text-blue-600"/> Unduh Laporan
              </button>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 border border-indigo-800 rounded-[2.5rem] p-8 md:p-10 shadow-lg flex flex-col md:flex-row justify-between items-center gap-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute bottom-0 left-20 w-32 h-32 bg-indigo-400 opacity-20 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 border border-indigo-800 rounded-2xl md:rounded-[2.5rem] p-5 sm:p-6 md:p-10 shadow-lg flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 md:gap-6 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-32 h-32 md:w-40 md:h-40 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
+            <div className="absolute bottom-0 left-10 md:left-20 w-24 h-24 md:w-32 md:h-32 bg-indigo-400 opacity-20 rounded-full blur-2xl pointer-events-none"></div>
 
-            <div className="flex items-center gap-6 relative z-10 w-full md:w-auto">
-              <div className="p-4 bg-white/20 backdrop-blur-md text-white rounded-2xl shadow-inner border border-white/20 shrink-0"><BarChart3 className="w-8 h-8" /></div>
-              <div className="flex-1">
-                <h1 className="text-3xl md:text-4xl font-black tracking-tight">{activeExam?.subject} <span className="text-xl font-medium text-blue-200">- {activeExam?.grade_level || 'Umum'}</span></h1>
-                <p className="text-blue-100 font-bold text-sm mt-1">{activeExam?.title}</p>
-                <div className="flex flex-wrap gap-2 mt-3 text-xs font-bold text-blue-100">
-                  <span className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1.5"><UserCircle2 className="w-4 h-4" /> {activeExam?.teacherNames}</span>
-                  <span className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10 flex items-center gap-1.5"><Target className="w-4 h-4" /> {Array.isArray(activeExam?.target_class) ? activeExam?.target_class.join(', ') : activeExam?.target_class}</span>
+            <div className="flex items-start gap-3 md:gap-6 relative z-10 w-full min-w-0">
+              <div className="p-3 md:p-4 bg-white/20 backdrop-blur-md text-white rounded-xl md:rounded-2xl shadow-inner border border-white/20 shrink-0"><BarChart3 className="w-6 h-6 md:w-8 md:h-8" /></div>
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight leading-tight truncate">{activeExam?.subject} <span className="text-sm sm:text-base md:text-xl font-medium text-blue-200 whitespace-nowrap">- {activeExam?.grade_level || 'Umum'}</span></h1>
+                <p className="text-blue-100 font-bold text-xs md:text-sm mt-1 truncate">{activeExam?.title}</p>
+                <div className="flex flex-wrap gap-1.5 md:gap-2 mt-2 md:mt-3 text-[10px] md:text-xs font-bold text-blue-100">
+                  <span className="bg-white/20 backdrop-blur-sm px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-white/10 flex items-center gap-1 md:gap-1.5 whitespace-nowrap"><UserCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" /> <span className="truncate max-w-[120px] md:max-w-none">{activeExam?.teacherNames}</span></span>
+                  <span className="bg-white/20 backdrop-blur-sm px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-white/10 flex items-center gap-1 md:gap-1.5 whitespace-nowrap"><Target className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" /> <span className="truncate max-w-[100px] md:max-w-none">{Array.isArray(activeExam?.target_class) ? activeExam?.target_class.join(', ') : activeExam?.target_class}</span></span>
                 </div>
               </div>
             </div>
             
-            <div className="flex flex-wrap gap-3 relative z-10 w-full md:w-auto bg-black/20 p-5 rounded-2xl border border-white/10 backdrop-blur-sm shadow-inner">
-               <div className="text-center px-4">
-                  <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest leading-none mb-1.5">Max Poin</p>
-                  <p className="text-3xl font-black">{examStats.maxTotal}</p>
+            <div className="flex w-full lg:w-auto relative z-10 bg-black/20 p-3 md:p-5 rounded-xl md:rounded-2xl border border-white/10 backdrop-blur-sm shadow-inner justify-between md:justify-center">
+               <div className="text-center px-2 sm:px-4 flex-1 md:flex-none">
+                  <p className="text-[9px] md:text-[10px] font-black text-blue-200 uppercase tracking-widest leading-none mb-1 md:mb-1.5">Max Poin</p>
+                  <p className="text-xl sm:text-2xl md:text-3xl font-black">{examStats.maxTotal}</p>
                </div>
                <div className="w-px bg-white/20"></div>
-               <div className="text-center px-4">
-                  <p className="text-[10px] font-black text-emerald-200 uppercase tracking-widest leading-none mb-1.5">Objektif</p>
-                  <p className="text-3xl font-black">{examStats.maxObj}</p>
+               <div className="text-center px-2 sm:px-4 flex-1 md:flex-none">
+                  <p className="text-[9px] md:text-[10px] font-black text-emerald-200 uppercase tracking-widest leading-none mb-1 md:mb-1.5">Objektif</p>
+                  <p className="text-xl sm:text-2xl md:text-3xl font-black">{examStats.maxObj}</p>
                </div>
                <div className="w-px bg-white/20"></div>
-               <div className="text-center px-4">
-                  <p className="text-[10px] font-black text-amber-200 uppercase tracking-widest leading-none mb-1.5">Esai</p>
-                  <p className="text-3xl font-black">{examStats.maxEss}</p>
+               <div className="text-center px-2 sm:px-4 flex-1 md:flex-none">
+                  <p className="text-[9px] md:text-[10px] font-black text-amber-200 uppercase tracking-widest leading-none mb-1 md:mb-1.5">Esai</p>
+                  <p className="text-xl sm:text-2xl md:text-3xl font-black">{examStats.maxEss}</p>
                </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 bg-white p-2 rounded-[1.5rem] border border-slate-200 shadow-sm w-fit overflow-hidden">
-            <button onClick={() => {setActiveTab('rekap'); setSearchQuery('');}} className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'rekap' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><FileSpreadsheet className="w-4 h-4"/> Rekap Nilai</button>
-            <button onClick={() => setActiveTab('esai')} className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'esai' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><Edit3 className="w-4 h-4"/> Koreksi Esai ({essayAnswers.length})</button>
-            <button onClick={() => setActiveTab('analisis')} className={`px-6 py-3 rounded-xl font-bold text-sm flex items-center gap-2 transition-all ${activeTab === 'analisis' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><TrendingUp className="w-4 h-4"/> Analisis Soal</button>
+          <div className="flex w-full sm:w-auto overflow-x-auto custom-scrollbar bg-white p-1.5 md:p-2 rounded-xl md:rounded-[1.5rem] border border-slate-200 shadow-sm hide-scroll-mobile">
+            <button onClick={() => {setActiveTab('rekap'); setSearchQuery('');}} className={`flex-1 sm:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-1.5 md:gap-2 transition-all whitespace-nowrap ${activeTab === 'rekap' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><FileSpreadsheet className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"/> Rekap Nilai</button>
+            <button onClick={() => setActiveTab('esai')} className={`flex-1 sm:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-1.5 md:gap-2 transition-all whitespace-nowrap ${activeTab === 'esai' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><Edit3 className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"/> Koreksi Esai <span className="bg-white/20 px-1.5 py-0.5 rounded-md text-[10px]">({essayAnswers.length})</span></button>
+            <button onClick={() => setActiveTab('analisis')} className={`flex-1 sm:flex-none px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm flex items-center justify-center gap-1.5 md:gap-2 transition-all whitespace-nowrap ${activeTab === 'analisis' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600'}`}><TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0"/> Analisis Soal</button>
           </div>
 
           {loadingDetail ? (
-             <div className="py-20 flex justify-center"><LoaderCircle className="w-10 h-10 text-blue-500 animate-spin" /></div>
+             <div className="py-16 md:py-20 flex justify-center"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-blue-500 animate-spin" /></div>
           ) : (
              <>
                {activeTab === 'rekap' && (
-                 <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                       <div className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm flex flex-col justify-center">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><Activity className="w-4 h-4 text-blue-500"/> Rata-Rata Kelas</p>
-                          <p className="text-4xl font-black text-slate-800">{classStats.avg}</p>
+                 <div className="space-y-4 md:space-y-6 animate-in fade-in duration-300">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                       <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[2rem] shadow-sm flex flex-col justify-center text-center sm:text-left">
+                          <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center sm:justify-start gap-1 md:gap-1.5"><Activity className="w-3 h-3 md:w-4 md:h-4 text-blue-500 shrink-0"/> Rata-Rata Kelas</p>
+                          <p className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800">{classStats.avg}</p>
                        </div>
-                       <div className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm flex flex-col justify-center">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><TrendingUp className="w-4 h-4 text-emerald-500"/> Nilai Tertinggi</p>
-                          <p className="text-4xl font-black text-emerald-600">{classStats.high}</p>
+                       <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[2rem] shadow-sm flex flex-col justify-center text-center sm:text-left">
+                          <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center sm:justify-start gap-1 md:gap-1.5"><TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-emerald-500 shrink-0"/> Nilai Tertinggi</p>
+                          <p className="text-2xl sm:text-3xl md:text-4xl font-black text-emerald-600">{classStats.high}</p>
                        </div>
-                       <div className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm flex flex-col justify-center">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><TrendingUp className="w-4 h-4 text-rose-500 rotate-180"/> Nilai Terendah</p>
-                          <p className="text-4xl font-black text-rose-600">{classStats.low}</p>
+                       <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[2rem] shadow-sm flex flex-col justify-center text-center sm:text-left">
+                          <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center sm:justify-start gap-1 md:gap-1.5"><TrendingUp className="w-3 h-3 md:w-4 md:h-4 text-rose-500 rotate-180 shrink-0"/> Nilai Terendah</p>
+                          <p className="text-2xl sm:text-3xl md:text-4xl font-black text-rose-600">{classStats.low}</p>
                        </div>
-                       <div className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm flex flex-col justify-center">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-indigo-500"/> Kelulusan (KKM)</p>
-                          <p className="text-3xl font-black text-indigo-600">{classStats.passPercentage}% <span className="text-xs font-bold text-slate-500 block mt-1">({classStats.passedCount} Siswa Lulus)</span></p>
+                       <div className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[2rem] shadow-sm flex flex-col justify-center text-center sm:text-left">
+                          <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center justify-center sm:justify-start gap-1 md:gap-1.5"><CheckCircle2 className="w-3 h-3 md:w-4 md:h-4 text-indigo-500 shrink-0"/> Kelulusan (KKM)</p>
+                          <p className="text-xl sm:text-2xl md:text-3xl font-black text-indigo-600 leading-none">{classStats.passPercentage}% <span className="text-[10px] md:text-xs font-bold text-slate-500 block mt-1 md:mt-1.5">({classStats.passedCount} Lulus)</span></p>
                        </div>
                     </div>
 
-                    <div className="bg-white border border-slate-200 rounded-[2rem] overflow-hidden shadow-sm z-0">
-                      <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-50/50">
+                    <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] overflow-hidden shadow-sm z-0">
+                      <div className="p-3 md:p-5 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4 bg-slate-50/50">
                          <div className="relative w-full md:w-80">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
-                            <input type="text" placeholder="Cari nama siswa..." value={searchQuery} onChange={e => {setSearchQuery(e.target.value); setCurrentPage(1);}} className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"/>
+                            <input type="text" placeholder="Cari nama siswa..." value={searchQuery} onChange={e => {setSearchQuery(e.target.value); setCurrentPage(1);}} className="w-full pl-9 pr-3 md:pl-10 md:pr-4 py-2 md:py-2.5 rounded-lg md:rounded-xl border border-slate-200 text-xs md:text-sm outline-none focus:ring-2 focus:ring-blue-500 font-bold text-slate-700"/>
                          </div>
-                         <div className="flex items-center gap-4 w-full md:w-auto justify-between">
-                            <div className="relative">
-                              <select value={printConfig.filterClass} onChange={(e) => {setPrintConfig(p => ({...p, filterClass: e.target.value})); setCurrentPage(1);}} className="bg-white border border-slate-200 rounded-xl pl-4 pr-8 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer shadow-sm appearance-none transition-colors">
+                         <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4 w-full md:w-auto justify-between sm:justify-end">
+                            <div className="relative w-full sm:w-auto">
+                              <select value={printConfig.filterClass} onChange={(e) => {setPrintConfig(p => ({...p, filterClass: e.target.value})); setCurrentPage(1);}} className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl pl-3 pr-8 md:pl-4 md:pr-8 py-2 md:py-2.5 text-[10px] md:text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer shadow-sm appearance-none transition-colors">
                                  <option value="Semua Kelas">Semua Kelas</option>
                                  {extractUniqueClasses().map(c => <option key={c} value={c}>Kelas {c}</option>)}
                               </select>
-                              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"/>
+                              <ChevronDown className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 md:w-4 md:h-4 text-slate-400 pointer-events-none"/>
                             </div>
-                            <div className="flex items-center gap-2">
-                               <span className="text-xs font-bold text-slate-400 hidden sm:inline">Hal {currentPage} / {paginatedData.total || 1}</span>
+                            <div className="flex items-center gap-2 self-end sm:self-auto">
+                               <span className="text-[10px] md:text-xs font-bold text-slate-400 hidden sm:inline">Hal {currentPage} / {paginatedData.total || 1}</span>
                                <div className="flex gap-1">
-                                 <button onClick={() => setCurrentPage(p => Math.max(1, p-1))} disabled={currentPage === 1} className="p-2 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 rounded-lg shadow-sm"><ChevronLeft className="w-4 h-4"/></button>
-                                 <button onClick={() => setCurrentPage(p => Math.min(paginatedData.total, p+1))} disabled={currentPage === paginatedData.total || paginatedData.total === 0} className="p-2 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 rounded-lg shadow-sm"><ChevronRight className="w-4 h-4"/></button>
+                                 <button onClick={() => setCurrentPage(p => Math.max(1, p-1))} disabled={currentPage === 1} className="p-1.5 md:p-2 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 rounded-md md:rounded-lg shadow-sm"><ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
+                                 <span className="text-[10px] font-bold text-slate-400 px-2 flex items-center sm:hidden">{currentPage}/{paginatedData.total || 1}</span>
+                                 <button onClick={() => setCurrentPage(p => Math.min(paginatedData.total, p+1))} disabled={currentPage === paginatedData.total || paginatedData.total === 0} className="p-1.5 md:p-2 bg-white border border-slate-200 hover:bg-slate-50 disabled:opacity-50 rounded-md md:rounded-lg shadow-sm"><ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
                                </div>
                             </div>
                          </div>
                       </div>
 
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm">
-                          <thead className="bg-slate-50 text-slate-500 font-black uppercase text-[10px] tracking-widest border-b">
+                      <div className="overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left text-xs md:text-sm whitespace-nowrap md:whitespace-normal min-w-[700px]">
+                          <thead className="bg-slate-50 text-slate-500 font-black uppercase text-[9px] md:text-[10px] tracking-widest border-b">
                             <tr>
-                              <th className="p-5 text-center w-12">No</th>
-                              <th className="p-5">Nama Peserta</th>
-                              <th className="p-5 text-center">Kelas</th>
-                              <th className="p-5 text-center">Percobaan</th>
-                              <th className="p-5 text-center text-blue-600">Objektif</th>
-                              <th className="p-5 text-center text-amber-600">Esai</th>
-                              <th className="p-5 text-center bg-emerald-50 text-emerald-700">Skala 100 (Tertinggi)</th>
-                              <th className="p-5 text-center">Status</th>
+                              <th className="p-3 md:p-5 text-center w-10 md:w-12">No</th>
+                              <th className="p-3 md:p-5">Nama Peserta</th>
+                              <th className="p-3 md:p-5 text-center">Kelas</th>
+                              <th className="p-3 md:p-5 text-center">Coba</th>
+                              <th className="p-3 md:p-5 text-center text-blue-600">Objektif</th>
+                              <th className="p-3 md:p-5 text-center text-amber-600">Esai</th>
+                              <th className="p-3 md:p-5 text-center bg-emerald-50 text-emerald-700">Skala 100 (Max)</th>
+                              <th className="p-3 md:p-5 text-center">Status</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y">
-                            {paginatedData.data.length === 0 ? <tr><td colSpan={8} className="py-16 text-center text-slate-400 font-bold text-lg bg-slate-50">Data tidak ditemukan.</td></tr> : 
+                          <tbody className="divide-y divide-slate-100">
+                            {paginatedData.data.length === 0 ? <tr><td colSpan={8} className="py-10 md:py-16 text-center text-slate-400 font-bold text-sm md:text-lg bg-slate-50">Data tidak ditemukan.</td></tr> : 
                             paginatedData.data.map((group, idx) => {
                                const highestAttempt = group.attempts.find(a => a.is_highest) || group.attempts[0];
                                return (
                                   <tr key={group.student_id} onClick={() => openReviewModal(group)} className="hover:bg-blue-50/50 cursor-pointer transition-colors group">
-                                    <td className="p-5 text-center font-black text-slate-400 group-hover:text-blue-500">{(currentPage - 1) * itemsPerPage + idx + 1}</td>
-                                    <td className="p-5">
-                                       <p className="font-bold text-slate-800 group-hover:text-blue-700 flex items-center gap-2">{group.users?.full_name || 'Tanpa Nama'} <Eye className="w-4 h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity"/></p>
-                                       <p className="text-[10px] text-slate-400 mt-0.5">{group.users?.student_number || '-'}</p>
+                                    <td className="p-3 md:p-5 text-center font-black text-slate-400 group-hover:text-blue-500">{(currentPage - 1) * itemsPerPage + idx + 1}</td>
+                                    <td className="p-3 md:p-5">
+                                       <p className="font-bold text-slate-800 group-hover:text-blue-700 flex items-center gap-1.5 md:gap-2 truncate max-w-[150px] md:max-w-[250px]">{group.users?.full_name || 'Tanpa Nama'} <Eye className="w-3.5 h-3.5 md:w-4 md:h-4 text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"/></p>
+                                       <p className="text-[9px] md:text-[10px] text-slate-400 mt-0.5">{group.users?.student_number || '-'}</p>
                                     </td>
-                                    <td className="p-5 text-center font-medium">{group.users?.class_group || '-'}</td>
-                                    <td className="p-5 text-center"><span className="bg-slate-100 px-2 py-1 rounded border font-bold text-slate-500 text-xs">{group.attempts.length}x</span></td>
-                                    <td className="p-5 text-center font-black text-blue-600">{highestAttempt.obj_score}</td>
-                                    <td className="p-5 text-center font-black text-amber-600">{highestAttempt.essay_score}</td>
-                                    <td className="p-5 text-center font-black text-emerald-600 text-base bg-emerald-50/30">{Number(group.highest_percentage).toFixed(2)}</td>
-                                    <td className="p-5 text-center">
-                                      <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase border ${highestAttempt.is_passed ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`}>
+                                    <td className="p-3 md:p-5 text-center font-medium">{group.users?.class_group || '-'}</td>
+                                    <td className="p-3 md:p-5 text-center"><span className="bg-slate-100 px-1.5 md:px-2 py-0.5 md:py-1 rounded border font-bold text-slate-500 text-[10px] md:text-xs">{group.attempts.length}x</span></td>
+                                    <td className="p-3 md:p-5 text-center font-black text-blue-600">{highestAttempt.obj_score}</td>
+                                    <td className="p-3 md:p-5 text-center font-black text-amber-600">{highestAttempt.essay_score}</td>
+                                    <td className="p-3 md:p-5 text-center font-black text-emerald-600 text-sm md:text-base bg-emerald-50/30">{Number(group.highest_percentage).toFixed(2)}</td>
+                                    <td className="p-3 md:p-5 text-center">
+                                      <span className={`px-2 md:px-3 py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase border ${highestAttempt.is_passed ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`}>
                                         {highestAttempt.is_passed ? 'LULUS' : 'GAGAL'}
                                       </span>
                                     </td>
@@ -1041,27 +1042,27 @@ export default function TeacherReportsAndAnalyticsPage() {
                )}
 
                {activeTab === 'esai' && (
-                  <div className="space-y-6 animate-in fade-in duration-500">
-                     <div className="bg-amber-50 border border-amber-200 rounded-[2rem] p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
-                       <div className="flex items-start gap-4">
-                          <div className="p-3 bg-white rounded-xl shadow-sm border border-amber-100"><FileEdit className="w-8 h-8 text-amber-600 shrink-0"/></div>
+                  <div className="space-y-4 md:space-y-6 animate-in fade-in duration-500">
+                     <div className="bg-amber-50 border border-amber-200 rounded-xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 shadow-sm">
+                       <div className="flex items-start gap-3 md:gap-4">
+                          <div className="p-2 md:p-3 bg-white rounded-lg md:rounded-xl shadow-sm border border-amber-100 shrink-0"><FileEdit className="w-6 h-6 md:w-8 md:h-8 text-amber-600"/></div>
                           <div>
-                            <h2 className="text-xl font-black text-amber-900">Koreksi Jawaban Esai Siswa</h2>
-                            <p className="text-sm font-medium text-amber-800 mt-1">Pilih nama siswa di bawah untuk mulai memberikan poin dan feedback.</p>
+                            <h2 className="text-lg md:text-xl font-black text-amber-900 leading-tight">Koreksi Jawaban Esai Siswa</h2>
+                            <p className="text-xs md:text-sm font-medium text-amber-800 mt-1 leading-snug">Pilih nama siswa di bawah untuk mulai memberikan poin dan feedback.</p>
                           </div>
                        </div>
-                       <div className="relative w-full md:w-72">
-                          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600/50" />
+                       <div className="relative w-full md:w-72 mt-2 md:mt-0">
+                          <Search className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-amber-600/50" />
                           <input 
                             type="text" placeholder="Cari nama atau kelas..." 
                             value={essaySearchQuery} onChange={e => setEssaySearchQuery(e.target.value)}
-                            className="w-full bg-white border border-amber-200 rounded-xl pl-11 pr-4 py-3.5 text-sm font-bold text-amber-900 placeholder-amber-600/50 focus:ring-2 focus:ring-amber-500 outline-none shadow-sm transition-all"
+                            className="w-full bg-white border border-amber-200 rounded-lg md:rounded-xl pl-9 md:pl-11 pr-3 md:pr-4 py-2.5 md:py-3.5 text-xs md:text-sm font-bold text-amber-900 placeholder-amber-600/50 focus:ring-2 focus:ring-amber-500 outline-none shadow-sm transition-all"
                           />
                        </div>
                      </div>
 
-                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {essayStudentsGrouped.length === 0 ? <div className="col-span-full p-24 text-center bg-white border border-slate-200 rounded-[2.5rem] text-slate-400 font-bold text-xl shadow-sm">Tidak ada jawaban esai ditemukan.</div> : 
+                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                        {essayStudentsGrouped.length === 0 ? <div className="col-span-full p-16 md:p-24 text-center bg-white border border-slate-200 rounded-2xl md:rounded-[2.5rem] text-slate-400 font-bold text-sm md:text-xl shadow-sm">Tidak ada jawaban esai ditemukan.</div> : 
                         essayStudentsGrouped.map((s, i) => {
                            const isFullyGraded = s.attempts.every(a => a.is_graded);
                            const totalGraded = s.attempts.reduce((acc, curr) => acc + curr.graded, 0);
@@ -1071,27 +1072,27 @@ export default function TeacherReportsAndAnalyticsPage() {
                               <div key={i} onClick={() => { 
                                  setSelectedStudentForEssay(s.student_id); 
                                  setActiveEssaySessionId(s.attempts[0]?.session_id); 
-                              }} className="bg-white border border-slate-200 p-6 rounded-[2rem] shadow-sm hover:border-amber-400 hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between">
+                              }} className="bg-white border border-slate-200 p-4 md:p-6 rounded-xl md:rounded-[2rem] shadow-sm hover:border-amber-400 hover:shadow-lg transition-all cursor-pointer group flex flex-col justify-between">
                                  <div>
-                                    <div className="flex items-start justify-between mb-4">
-                                       <div className="w-12 h-12 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center font-black text-lg shadow-inner border border-amber-200 group-hover:scale-110 transition-transform">
+                                    <div className="flex items-start justify-between mb-3 md:mb-4 gap-2">
+                                       <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 text-amber-600 rounded-lg md:rounded-2xl flex items-center justify-center font-black text-base md:text-lg shadow-inner border border-amber-200 group-hover:scale-110 transition-transform shrink-0">
                                           {s.name.charAt(0).toUpperCase()}
                                        </div>
-                                       <div className="flex flex-col items-end gap-2">
-                                          <span className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${isFullyGraded ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse'}`}>
-                                             {isFullyGraded ? 'Semua Dinilai' : `Belum Dinilai (${totalEssays - totalGraded})`}
+                                       <div className="flex flex-col items-end gap-1.5 md:gap-2">
+                                          <span className={`px-2 py-0.5 md:px-2.5 md:py-1 rounded-md text-[8px] md:text-[10px] font-black uppercase tracking-widest border text-right ${isFullyGraded ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse'}`}>
+                                             {isFullyGraded ? 'Semua Dinilai' : `Belum (${totalEssays - totalGraded})`}
                                           </span>
                                        </div>
                                     </div>
-                                    <h3 className="font-black text-slate-800 text-lg leading-tight group-hover:text-amber-700 transition-colors">{s.name}</h3>
-                                    <div className="flex items-center gap-2 mt-2">
-                                       <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded border border-slate-200">{s.nis || '-'}</span>
-                                       <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-50 px-2 py-0.5 rounded border border-slate-200">{s.class_group || '-'}</span>
+                                    <h3 className="font-black text-slate-800 text-base md:text-lg leading-tight group-hover:text-amber-700 transition-colors line-clamp-2">{s.name}</h3>
+                                    <div className="flex items-center gap-1.5 md:gap-2 mt-1.5 md:mt-2">
+                                       <span className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-50 px-1.5 md:px-2 py-0.5 rounded border border-slate-200 truncate max-w-[80px] md:max-w-none">{s.nis || '-'}</span>
+                                       <span className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-50 px-1.5 md:px-2 py-0.5 rounded border border-slate-200 truncate max-w-[80px] md:max-w-none">{s.class_group || '-'}</span>
                                     </div>
                                  </div>
-                                 <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-400 group-hover:text-amber-600 transition-colors">
+                                 <div className="mt-4 md:mt-6 pt-3 md:pt-4 border-t border-slate-100 flex items-center justify-between text-[10px] md:text-xs font-bold text-slate-400 group-hover:text-amber-600 transition-colors">
                                     <span>{s.attempts.length} Percobaan</span>
-                                    <ChevronRight className="w-5 h-5"/>
+                                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 shrink-0"/>
                                  </div>
                               </div>
                            )
@@ -1101,74 +1102,74 @@ export default function TeacherReportsAndAnalyticsPage() {
                )}
 
                {activeTab === 'analisis' && (
-                  <div className="space-y-6 animate-in fade-in duration-500">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4 md:space-y-6 animate-in fade-in duration-500">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         {hardestQuestion && (
-                           <div className="bg-rose-50 border border-rose-200 p-6 md:p-8 rounded-[2rem] shadow-sm flex items-start gap-5">
-                              <div className="p-4 bg-white rounded-2xl shadow-sm border border-rose-100 shrink-0"><AlertTriangle className="w-8 h-8 text-rose-500"/></div>
-                              <div>
-                                 <p className="text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1.5">Soal Paling Sulit (HOTS)</p>
-                                 <div className="text-base font-bold text-slate-800 line-clamp-2 prose prose-sm mb-3" dangerouslySetInnerHTML={{ __html: processHtmlMedia(hardestQuestion.text) }} />
-                                 <span className="inline-flex items-center gap-1.5 text-xs font-black text-rose-700 bg-rose-100 px-3 py-1.5 rounded-lg border border-rose-200">
-                                   <Users className="w-3.5 h-3.5"/> Hanya {Math.round((hardestQuestion.correct/hardestQuestion.total)*100)}% siswa benar
+                           <div className="bg-rose-50 border border-rose-200 p-4 md:p-6 lg:p-8 rounded-xl md:rounded-[2rem] shadow-sm flex items-start gap-3 md:gap-5">
+                              <div className="p-3 md:p-4 bg-white rounded-xl md:rounded-2xl shadow-sm border border-rose-100 shrink-0 mt-0.5 md:mt-0"><AlertTriangle className="w-6 h-6 md:w-8 md:h-8 text-rose-500"/></div>
+                              <div className="min-w-0">
+                                 <p className="text-[9px] md:text-[10px] font-black text-rose-500 uppercase tracking-widest mb-1 md:mb-1.5">Soal Paling Sulit (HOTS)</p>
+                                 <div className="text-sm md:text-base font-bold text-slate-800 line-clamp-2 prose prose-sm mb-2.5 md:mb-3 leading-snug break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(hardestQuestion.text) }} />
+                                 <span className="inline-flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs font-black text-rose-700 bg-rose-100 px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-rose-200">
+                                   <Users className="w-3 h-3 md:w-3.5 md:h-3.5"/> Hanya {Math.round((hardestQuestion.correct/hardestQuestion.total)*100)}% siswa benar
                                  </span>
                               </div>
                            </div>
                         )}
                         {easiestQuestion && (
-                           <div className="bg-emerald-50 border border-emerald-200 p-6 md:p-8 rounded-[2rem] shadow-sm flex items-start gap-5">
-                              <div className="p-4 bg-white rounded-2xl shadow-sm border border-emerald-100 shrink-0"><CheckCircle2 className="w-8 h-8 text-emerald-500"/></div>
-                              <div>
-                                 <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1.5">Soal Paling Mudah (LOTS)</p>
-                                 <div className="text-base font-bold text-slate-800 line-clamp-2 prose prose-sm mb-3" dangerouslySetInnerHTML={{ __html: processHtmlMedia(easiestQuestion.text) }} />
-                                 <span className="inline-flex items-center gap-1.5 text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-1.5 rounded-lg border border-emerald-200">
-                                   <Check className="w-3.5 h-3.5"/> {Math.round((easiestQuestion.correct/easiestQuestion.total)*100)}% siswa berhasil menjawab
+                           <div className="bg-emerald-50 border border-emerald-200 p-4 md:p-6 lg:p-8 rounded-xl md:rounded-[2rem] shadow-sm flex items-start gap-3 md:gap-5">
+                              <div className="p-3 md:p-4 bg-white rounded-xl md:rounded-2xl shadow-sm border border-emerald-100 shrink-0 mt-0.5 md:mt-0"><CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-emerald-500"/></div>
+                              <div className="min-w-0">
+                                 <p className="text-[9px] md:text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1 md:mb-1.5">Soal Paling Mudah (LOTS)</p>
+                                 <div className="text-sm md:text-base font-bold text-slate-800 line-clamp-2 prose prose-sm mb-2.5 md:mb-3 leading-snug break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(easiestQuestion.text) }} />
+                                 <span className="inline-flex items-center gap-1 md:gap-1.5 text-[10px] md:text-xs font-black text-emerald-700 bg-emerald-100 px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-emerald-200">
+                                   <Check className="w-3 h-3 md:w-3.5 md:h-3.5"/> {Math.round((easiestQuestion.correct/easiestQuestion.total)*100)}% siswa benar
                                  </span>
                               </div>
                            </div>
                         )}
                      </div>
 
-                     <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-                       <div className="flex items-center gap-3 mb-8 border-b border-slate-100 pb-5"><TrendingUp className="w-6 h-6 text-indigo-500" /><h2 className="text-xl font-black text-slate-800">Analisis Tingkat Kesulitan Objektif</h2></div>
-                       <div className="grid grid-cols-1 gap-6">
-                         {itemAnalysis.length === 0 ? <div className="text-center py-20 font-bold text-slate-400 bg-slate-50 border-2 border-dashed border-slate-200 rounded-[1.5rem]">Tidak ada data jawaban objektif untuk dianalisis.</div> : 
+                     <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] p-4 md:p-6 lg:p-8 shadow-sm">
+                       <div className="flex items-center gap-2 md:gap-3 mb-5 md:mb-8 border-b border-slate-100 pb-3 md:pb-5"><TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-indigo-500" /><h2 className="text-lg md:text-xl font-black text-slate-800">Analisis Tingkat Kesulitan Objektif</h2></div>
+                       <div className="grid grid-cols-1 gap-4 md:gap-6">
+                         {itemAnalysis.length === 0 ? <div className="text-center py-16 md:py-20 font-bold text-slate-400 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl md:rounded-[1.5rem] text-sm md:text-base px-4">Tidak ada data jawaban objektif untuk dianalisis.</div> : 
                          itemAnalysis.map((item, idx) => {
                            const correctPercent = Math.round((item.correct / item.total) * 100);
                            const isHard = correctPercent < 40;
                            return (
-                             <div key={idx} className="border border-slate-200 p-6 md:p-8 rounded-[2rem] hover:shadow-md transition-shadow bg-white shadow-sm flex flex-col justify-between">
-                               <div className="flex flex-col md:flex-row justify-between gap-6 md:gap-10 mb-6">
-                                 <div className="flex-1 overflow-hidden">
-                                   <div className="flex items-center gap-2 mb-3">
-                                     <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md text-[10px] font-black border border-slate-200 uppercase tracking-widest">{item.type.replace('_', ' ')}</span>
-                                     <span className={`px-2.5 py-1 rounded-md text-[10px] font-black border tracking-widest uppercase ${isHard ? 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
-                                       {isHard ? 'TINGKAT SULIT (HOTS)' : 'TINGKAT SEDANG/MUDAH'}
+                             <div key={idx} className="border border-slate-200 p-4 md:p-6 lg:p-8 rounded-xl md:rounded-[2rem] hover:shadow-md transition-shadow bg-white shadow-sm flex flex-col justify-between">
+                               <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-6 lg:gap-10 mb-4 md:mb-6">
+                                 <div className="flex-1 overflow-hidden min-w-0">
+                                   <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-2 md:mb-3">
+                                     <span className="bg-slate-100 text-slate-600 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md text-[8px] md:text-[10px] font-black border border-slate-200 uppercase tracking-widest">{item.type.replace('_', ' ')}</span>
+                                     <span className={`px-2 md:px-2.5 py-0.5 md:py-1 rounded-md text-[8px] md:text-[10px] font-black border tracking-widest uppercase ${isHard ? 'bg-rose-50 text-rose-600 border-rose-200 animate-pulse' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
+                                       {isHard ? 'SULIT (HOTS)' : 'SEDANG/MUDAH'}
                                      </span>
                                    </div>
-                                   <div className="text-lg font-bold text-slate-800 prose prose-slate max-w-none mb-3 leading-relaxed" dangerouslySetInnerHTML={{ __html: processHtmlMedia(item.text) }} />
+                                   <div className="text-sm md:text-lg font-bold text-slate-800 prose prose-sm md:prose-slate max-w-none mb-2 md:mb-3 leading-snug md:leading-relaxed break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(item.text) }} />
                                    
-                                   {item.imageUrl && <div className="mt-4"><img src={getSafeImageUrl(item.imageUrl)} className="rounded-2xl max-h-64 object-contain border border-slate-200 shadow-sm" /></div>}
-                                   {item.audioUrl && <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-2xl max-w-xl shadow-sm"><span className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">🎧 Audio Soal</span><audio src={getDriveMediaUrl(item.audioUrl)} controls className="w-full h-10 outline-none mt-1"/></div>}
+                                   {item.imageUrl && <div className="mt-3 md:mt-4"><img src={getSafeImageUrl(item.imageUrl)} className="rounded-xl md:rounded-2xl max-h-48 md:max-h-64 object-contain border border-slate-200 shadow-sm" /></div>}
+                                   {item.audioUrl && <div className="mt-3 md:mt-4 p-3 md:p-4 bg-blue-50 border border-blue-200 rounded-xl md:rounded-2xl max-w-xl shadow-sm"><span className="text-[9px] md:text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1 md:mb-1.5 flex items-center gap-1.5">🎧 Audio Soal</span><audio src={getDriveMediaUrl(item.audioUrl)} controls className="w-full h-8 md:h-10 outline-none mt-1"/></div>}
                                    {item.videoUrl && <SmartMediaRenderer url={item.videoUrl} />}
                                  </div>
 
-                                 <div className="text-center bg-slate-50 border border-slate-200 p-5 rounded-2xl h-fit shadow-inner shrink-0 w-full md:w-40 flex flex-col justify-center">
-                                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Partisipasi</p>
-                                     <p className="text-3xl font-black text-slate-800 leading-none">{item.total}</p>
-                                     <p className="text-xs font-bold text-slate-500 mt-1">Siswa Menjawab</p>
+                                 <div className="text-center bg-slate-50 border border-slate-200 p-3 md:p-5 rounded-xl md:rounded-2xl h-fit shadow-inner shrink-0 w-full md:w-32 lg:w-40 flex flex-col justify-center">
+                                     <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 md:mb-2">Partisipasi</p>
+                                     <p className="text-2xl md:text-3xl font-black text-slate-800 leading-none">{item.total}</p>
+                                     <p className="text-[10px] md:text-xs font-bold text-slate-500 mt-1">Siswa Menjawab</p>
                                  </div>
                                </div>
 
-                               <div className="w-full bg-rose-50 border border-rose-100 h-6 rounded-full overflow-hidden flex shadow-inner relative">
-                                 <div className="absolute inset-0 flex items-center justify-center z-10 text-[10px] font-black text-slate-700 uppercase tracking-widest mix-blend-overlay opacity-50">Grafik Akurasi Jawaban</div>
+                               <div className="w-full bg-rose-50 border border-rose-100 h-5 md:h-6 rounded-full overflow-hidden flex shadow-inner relative">
+                                 <div className="absolute inset-0 flex items-center justify-center z-10 text-[8px] md:text-[10px] font-black text-slate-700 uppercase tracking-widest mix-blend-overlay opacity-50">Grafik Akurasi Jawaban</div>
                                  <div className="h-full bg-emerald-500 rounded-full relative transition-all duration-1000 shadow-[2px_0_10px_rgba(0,0,0,0.1)]" style={{ width: `${correctPercent}%` }}>
                                      <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent w-full"></div>
                                  </div>
                                </div>
-                               <div className="flex justify-between mt-3 text-xs font-black uppercase tracking-widest">
-                                 <span className="text-emerald-700 flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4"/> {item.correct} Benar ({correctPercent}%)</span>
-                                 <span className="text-rose-600 flex items-center gap-1.5">{item.total - item.correct} Salah ({100 - correctPercent}%) <XCircle className="w-4 h-4"/></span>
+                               <div className="flex justify-between mt-2 md:mt-3 text-[10px] md:text-xs font-black uppercase tracking-widest">
+                                 <span className="text-emerald-700 flex items-center gap-1 md:gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4"/> {item.correct} Benar ({correctPercent}%)</span>
+                                 <span className="text-rose-600 flex items-center gap-1 md:gap-1.5">{item.total - item.correct} Salah ({100 - correctPercent}%) <XCircle className="w-3.5 h-3.5 md:w-4 md:h-4"/></span>
                                </div>
                              </div>
                            );
@@ -1185,23 +1186,23 @@ export default function TeacherReportsAndAnalyticsPage() {
       {/* ================= MODAL GLOBAL PRINT ================= */}
       {isGlobalPrintModalOpen && (
          <div className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-            <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
-               <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div className="bg-white w-full max-w-sm md:max-w-md rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
+               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-6 h-6 text-blue-600"/> Cetak Hasil Keseluruhan</h3>
-                    <p className="text-sm font-medium text-slate-500 mt-1">Hanya mencakup laporan mata pelajaran Anda.</p>
+                    <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-5 h-5 md:w-6 md:h-6 text-blue-600"/> Cetak Hasil Keseluruhan</h3>
+                    <p className="text-xs md:text-sm font-medium text-slate-500 mt-1">Hanya mencakup laporan mata pelajaran Anda.</p>
                   </div>
-                  <button onClick={() => setIsGlobalPrintModalOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm"><X className="w-5 h-5"/></button>
+                  <button onClick={() => setIsGlobalPrintModalOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-1.5 md:p-2 border border-slate-200 shadow-sm transition-colors"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                </div>
-               <div className="p-8 space-y-5">
-                  <div className="space-y-3">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest block">Pilih Format Unduhan</label>
-                     <div className="grid grid-cols-2 gap-3">
-                        <button onClick={() => setGlobalPrintFormat('pdf')} className={`p-4 rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all ${globalPrintFormat === 'pdf' ? 'border-rose-500 bg-rose-50 text-rose-600 shadow-sm' : 'border-slate-200 text-slate-400 hover:bg-slate-50 hover:border-rose-200 hover:text-rose-500'}`}><FileText className="w-8 h-8"/><span className="font-bold text-sm">PDF A4</span></button>
-                        <button onClick={() => setGlobalPrintFormat('excel')} className={`p-4 rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all ${globalPrintFormat === 'excel' ? 'border-emerald-500 bg-emerald-50 text-emerald-600 shadow-sm' : 'border-slate-200 text-slate-400 hover:bg-slate-50 hover:border-emerald-200 hover:text-emerald-500'}`}><FileSpreadsheet className="w-8 h-8"/><span className="font-bold text-sm">Excel (.xlsx)</span></button>
+               <div className="p-5 md:p-8 space-y-4 md:space-y-5">
+                  <div className="space-y-2 md:space-y-3">
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block">Pilih Format Unduhan</label>
+                     <div className="grid grid-cols-2 gap-2 md:gap-3">
+                        <button onClick={() => setGlobalPrintFormat('pdf')} className={`p-3 md:p-4 rounded-xl md:rounded-2xl border-2 flex flex-col items-center justify-center gap-1.5 md:gap-2 transition-all ${globalPrintFormat === 'pdf' ? 'border-rose-500 bg-rose-50 text-rose-600 shadow-sm' : 'border-slate-200 text-slate-400 hover:bg-slate-50 hover:border-rose-200 hover:text-rose-500'}`}><FileText className="w-6 h-6 md:w-8 md:h-8"/><span className="font-bold text-xs md:text-sm">PDF A4</span></button>
+                        <button onClick={() => setGlobalPrintFormat('excel')} className={`p-3 md:p-4 rounded-xl md:rounded-2xl border-2 flex flex-col items-center justify-center gap-1.5 md:gap-2 transition-all ${globalPrintFormat === 'excel' ? 'border-emerald-500 bg-emerald-50 text-emerald-600 shadow-sm' : 'border-slate-200 text-slate-400 hover:bg-slate-50 hover:border-emerald-200 hover:text-emerald-500'}`}><FileSpreadsheet className="w-6 h-6 md:w-8 md:h-8"/><span className="font-bold text-xs md:text-sm">Excel (.xlsx)</span></button>
                      </div>
                   </div>
-                  <button onClick={handleGlobalPrint} disabled={isPrintingGlobal} className="w-full flex items-center justify-center gap-2 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-md disabled:bg-slate-300 mt-4">
+                  <button onClick={handleGlobalPrint} disabled={isPrintingGlobal} className="w-full flex items-center justify-center gap-2 py-3.5 md:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all active:scale-95 shadow-md disabled:bg-slate-300 mt-3 md:mt-4">
                      {isPrintingGlobal ? <LoaderCircle className="w-4 h-4 animate-spin"/> : <Download className="w-4 h-4"/>}
                      {isPrintingGlobal ? 'Memproses...' : 'Unduh Laporan'}
                   </button>
@@ -1213,44 +1214,44 @@ export default function TeacherReportsAndAnalyticsPage() {
       {/* ================= MODAL DETAIL PRINT ================= */}
       {isPrintModalOpen && (
          <div className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-            <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200 max-h-[90vh]">
-               <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
+            <div className="bg-white w-full max-w-lg rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200 max-h-[90vh]">
+               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-6 h-6 text-blue-600"/> Cetak Rekap Ujian</h3>
-                    <p className="text-sm font-medium text-slate-500 mt-1">{activeExam?.subject}</p>
+                    <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-5 h-5 md:w-6 h-6 text-blue-600"/> Cetak Rekap Ujian</h3>
+                    <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 truncate max-w-[200px] sm:max-w-none">{activeExam?.subject}</p>
                   </div>
-                  <button onClick={() => setIsPrintModalOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm"><X className="w-5 h-5"/></button>
+                  <button onClick={() => setIsPrintModalOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-1.5 md:p-2 border border-slate-200 shadow-sm transition-colors"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                </div>
-               <div className="p-6 overflow-y-auto space-y-6">
-                  <div className="space-y-3">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-2"><Users className="w-4 h-4"/> Filter Kelas</label>
-                     <select value={printConfig.filterClass} onChange={(e) => setPrintConfig({...printConfig, filterClass: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
+               <div className="p-4 md:p-6 overflow-y-auto space-y-4 md:space-y-6 custom-scrollbar">
+                  <div className="space-y-2 md:space-y-3">
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-1.5 md:gap-2"><Users className="w-3.5 h-3.5 md:w-4 md:h-4"/> Filter Kelas</label>
+                     <select value={printConfig.filterClass} onChange={(e) => setPrintConfig({...printConfig, filterClass: e.target.value})} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
                         <option value="Semua Kelas">Semua Kelas / Gabungan</option>
                         {extractUniqueClasses().map(c => <option key={c} value={c}>Kelas {c}</option>)}
                      </select>
                   </div>
-                  <div className="space-y-3">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-2"><FileText className="w-4 h-4"/> Format Laporan</label>
-                     <div className="flex gap-3">
-                        <button onClick={() => setPrintConfig({...printConfig, format: 'pdf'})} className={`flex-1 py-3 font-bold text-sm border-2 rounded-xl transition-colors ${printConfig.format === 'pdf' ? 'border-rose-500 bg-rose-50 text-rose-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}>PDF A4</button>
-                        <button onClick={() => setPrintConfig({...printConfig, format: 'excel'})} className={`flex-1 py-3 font-bold text-sm border-2 rounded-xl transition-colors ${printConfig.format === 'excel' ? 'border-emerald-500 bg-emerald-50 text-emerald-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}>Excel (.xlsx)</button>
+                  <div className="space-y-2 md:space-y-3">
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-1.5 md:gap-2"><FileText className="w-3.5 h-3.5 md:w-4 md:h-4"/> Format Laporan</label>
+                     <div className="flex gap-2 md:gap-3">
+                        <button onClick={() => setPrintConfig({...printConfig, format: 'pdf'})} className={`flex-1 py-2.5 md:py-3 font-bold text-xs md:text-sm border-2 rounded-lg md:rounded-xl transition-colors ${printConfig.format === 'pdf' ? 'border-rose-500 bg-rose-50 text-rose-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}>PDF A4</button>
+                        <button onClick={() => setPrintConfig({...printConfig, format: 'excel'})} className={`flex-1 py-2.5 md:py-3 font-bold text-xs md:text-sm border-2 rounded-lg md:rounded-xl transition-colors ${printConfig.format === 'excel' ? 'border-emerald-500 bg-emerald-50 text-emerald-600' : 'border-slate-200 text-slate-500 hover:bg-slate-50'}`}>Excel (.xlsx)</button>
                      </div>
                   </div>
-                  <div className="space-y-3">
-                     <label className="text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-2"><SlidersHorizontal className="w-4 h-4"/> Kolom yang Ditampilkan</label>
-                     <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                  <div className="space-y-2 md:space-y-3">
+                     <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block flex items-center gap-1.5 md:gap-2"><SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4"/> Kolom yang Ditampilkan</label>
+                     <div className="grid grid-cols-2 gap-2 md:gap-3 bg-slate-50 p-3 md:p-4 rounded-lg md:rounded-xl border border-slate-200">
                         {Object.keys(printConfig.cols).map(k => (
-                           <label key={k} className="flex items-center gap-3 cursor-pointer">
-                              <input type="checkbox" checked={(printConfig.cols as any)[k]} onChange={(e) => setPrintConfig({...printConfig, cols: {...printConfig.cols, [k]: e.target.checked}})} className="w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"/>
-                              <span className="text-sm font-bold text-slate-700 capitalize">{k.replace('_', ' ')}</span>
+                           <label key={k} className="flex items-center gap-2 md:gap-3 cursor-pointer">
+                              <input type="checkbox" checked={(printConfig.cols as any)[k]} onChange={(e) => setPrintConfig({...printConfig, cols: {...printConfig.cols, [k]: e.target.checked}})} className="w-4 h-4 md:w-5 md:h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"/>
+                              <span className="text-xs md:text-sm font-bold text-slate-700 capitalize">{k.replace('_', ' ')}</span>
                            </label>
                         ))}
                      </div>
                   </div>
                </div>
-               <div className="p-6 border-t border-slate-100 bg-slate-50 shrink-0">
-                  <button onClick={handlePrintOrExportDetail} disabled={isGeneratingPdf} className="w-full flex items-center justify-center gap-2 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black uppercase tracking-widest text-xs transition-all active:scale-95 shadow-md disabled:bg-slate-300">
-                     {isGeneratingPdf ? <LoaderCircle className="w-4 h-4 animate-spin"/> : <Download className="w-4 h-4"/>}
+               <div className="p-4 md:p-6 border-t border-slate-100 bg-slate-50 shrink-0">
+                  <button onClick={handlePrintOrExportDetail} disabled={isGeneratingPdf} className="w-full flex items-center justify-center gap-2 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg md:rounded-xl font-black uppercase tracking-widest text-[10px] md:text-xs transition-all active:scale-95 shadow-md disabled:bg-slate-300">
+                     {isGeneratingPdf ? <LoaderCircle className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin"/> : <Download className="w-3.5 h-3.5 md:w-4 md:h-4"/>}
                      {isGeneratingPdf ? 'Memproses...' : 'Unduh Laporan'}
                   </button>
                </div>
@@ -1260,54 +1261,59 @@ export default function TeacherReportsAndAnalyticsPage() {
 
       {/* ================= MODAL DETAIL REVIEW JAWABAN SISWA ================= */}
       {selectedStudentGroup && (
-        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-           <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl flex flex-col h-[90vh] overflow-hidden animate-in zoom-in-95">
-              <div className="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-50 gap-4">
-                 <div>
-                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2"><UserCircle2 className="w-6 h-6 text-blue-600"/> {selectedStudentGroup.users.full_name}</h3>
-                    <p className="text-xs font-bold text-slate-500 mt-1 ml-8">Kelas {selectedStudentGroup.users.class_group} • Max: {selectedStudentGroup.highest_percentage.toFixed(2)}</p>
+        <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+           <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl flex flex-col h-[95vh] md:h-[90vh] overflow-hidden animate-in zoom-in-95">
+              <div className="p-4 md:p-6 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50 gap-3 md:gap-4 shrink-0">
+                 <div className="flex items-start gap-3 min-w-0 w-full sm:w-auto">
+                    <UserCircle2 className="w-8 h-8 md:w-10 md:h-10 text-blue-600 shrink-0"/>
+                    <div className="min-w-0">
+                       <h3 className="text-lg md:text-xl font-black text-slate-800 truncate">{selectedStudentGroup.users.full_name}</h3>
+                       <p className="text-[10px] md:text-xs font-bold text-slate-500 mt-0.5 truncate">Kelas {selectedStudentGroup.users.class_group} • Max: {selectedStudentGroup.highest_percentage.toFixed(2)}</p>
+                    </div>
                  </div>
-                 <div className="flex items-center gap-2 ml-8 md:ml-0 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-                    {selectedStudentGroup.attempts.map(a => (
-                      <button key={a.id} onClick={() => switchReviewAttemptTab(a)} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 ${activeAttemptSessionId === a.id ? 'bg-blue-600 text-white border-blue-700 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-100'}`}>
-                         Percobaan {a.attempt_number} {a.is_highest && '⭐'}
-                      </button>
-                    ))}
-                    <button onClick={() => setSelectedStudentGroup(null)} className="p-2 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-full shrink-0 ml-2"><X/></button>
+                 <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 custom-scrollbar hide-scroll-mobile shrink-0">
+                    <div className="flex items-center gap-2">
+                      {selectedStudentGroup.attempts.map(a => (
+                        <button key={a.id} onClick={() => switchReviewAttemptTab(a)} className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold border transition-all shrink-0 ${activeAttemptSessionId === a.id ? 'bg-blue-600 text-white border-blue-700 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-100'}`}>
+                           Coba {a.attempt_number} {a.is_highest && '⭐'}
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={() => setSelectedStudentGroup(null)} className="p-1.5 md:p-2 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-full shrink-0 sm:ml-2 border border-transparent hover:border-rose-200 transition-colors"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                  </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50 relative">
+              <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 bg-slate-50/50 relative custom-scrollbar">
                  {loadingReview ? (
-                   <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-20 flex flex-col items-center justify-center gap-4 text-slate-500 font-bold">
-                      <LoaderCircle className="w-10 h-10 animate-spin text-blue-500" />
-                      Memuat jawaban siswa dari server...
+                   <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-20 flex flex-col items-center justify-center gap-3 md:gap-4 text-slate-500 font-bold px-4 text-center">
+                      <LoaderCircle className="w-8 h-8 md:w-10 md:h-10 animate-spin text-blue-500" />
+                      <span className="text-xs md:text-sm">Memuat jawaban siswa dari server...</span>
                    </div>
                  ) : studentDetailedResponses.length === 0 ? (
-                    <div className="flex items-center justify-center h-full text-slate-400 font-bold">Jawaban kosong pada percobaan ini.</div>
+                    <div className="flex items-center justify-center h-full text-slate-400 font-bold text-sm">Jawaban kosong pada percobaan ini.</div>
                  ) : studentDetailedResponses.map((r, i) => (
-                    <div key={i} className={`bg-white p-6 rounded-3xl border-2 shadow-sm ${r.is_correct ? 'border-emerald-100' : 'border-rose-100'}`}>
-                       <div className="flex justify-between items-center mb-4 border-b border-slate-100 pb-4">
-                         <span className="bg-slate-100 px-3 py-1 rounded-lg text-[10px] font-black uppercase text-slate-500 border">Soal {i+1}</span>
-                         <span className={`px-3 py-1 rounded-lg text-[10px] font-black uppercase border ${r.is_correct ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`}>
+                    <div key={i} className={`bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border-2 shadow-sm ${r.is_correct ? 'border-emerald-100' : 'border-rose-100'}`}>
+                       <div className="flex justify-between items-center mb-3 md:mb-4 border-b border-slate-100 pb-3 md:pb-4">
+                         <span className="bg-slate-100 px-2 md:px-3 py-1 rounded-md md:rounded-lg text-[9px] md:text-[10px] font-black uppercase text-slate-500 border">Soal {i+1}</span>
+                         <span className={`px-2 md:px-3 py-1 rounded-md md:rounded-lg text-[9px] md:text-[10px] font-black uppercase border whitespace-nowrap ${r.is_correct ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-600 border-rose-200'}`}>
                            {r.points_given} / {r.max_points} Poin
                          </span>
                        </div>
-                       <div className="font-bold text-slate-800 prose prose-sm max-w-none mb-6" dangerouslySetInnerHTML={{__html: processHtmlMedia(r.question_text)}} />
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className={`p-4 rounded-2xl border ${r.is_correct ? 'bg-emerald-50/50 border-emerald-100' : 'bg-rose-50/50 border-rose-100'}`}>
-                             <p className={`text-[10px] font-black uppercase mb-2 ${r.is_correct ? 'text-emerald-600' : 'text-rose-600'}`}>Jawaban Siswa:</p>
+                       <div className="font-bold text-slate-800 prose prose-sm max-w-none mb-4 md:mb-6 break-words text-sm leading-relaxed" dangerouslySetInnerHTML={{__html: processHtmlMedia(r.question_text)}} />
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                          <div className={`p-3 md:p-4 rounded-xl md:rounded-2xl border ${r.is_correct ? 'bg-emerald-50/50 border-emerald-100' : 'bg-rose-50/50 border-rose-100'}`}>
+                             <p className={`text-[9px] md:text-[10px] font-black uppercase mb-1.5 md:mb-2 ${r.is_correct ? 'text-emerald-600' : 'text-rose-600'}`}>Jawaban Siswa:</p>
                              {r.question_type === 'matching' ? (
-                               <pre className="text-xs font-mono text-slate-700 bg-white p-3 rounded-xl border">{r.student_answer ? JSON.stringify(JSON.parse(r.student_answer), null, 2) : 'Kosong'}</pre>
+                               <pre className="text-[10px] md:text-xs font-mono text-slate-700 bg-white p-2 md:p-3 rounded-lg md:rounded-xl border overflow-x-auto custom-scrollbar">{r.student_answer ? JSON.stringify(JSON.parse(r.student_answer), null, 2) : 'Kosong'}</pre>
                              ) : (
-                               <div className="font-bold text-slate-700 text-sm" dangerouslySetInnerHTML={{__html: processHtmlMedia(r.student_answer || '<i>Kosong</i>')}} />
+                               <div className="font-bold text-slate-700 text-xs md:text-sm break-words" dangerouslySetInnerHTML={{__html: processHtmlMedia(r.student_answer || '<i>Kosong</i>')}} />
                              )}
                           </div>
-                          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
-                             <p className="text-[10px] font-black text-slate-500 uppercase mb-2">Kunci Sistem:</p>
-                             {r.question_type === 'essay' ? <p className="text-xs text-slate-400 italic font-bold">Esai manual</p> : 
-                              r.question_type === 'matching' ? <pre className="text-xs font-mono text-slate-500">{r.correct_answer ? JSON.stringify(r.correct_answer, null, 2) : '-'}</pre> :
-                              <p className="font-bold text-slate-700 text-sm">{String(r.correct_answer || '-')}</p>
+                          <div className="p-3 md:p-4 bg-slate-50 rounded-xl md:rounded-2xl border border-slate-200">
+                             <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase mb-1.5 md:mb-2">Kunci Sistem:</p>
+                             {r.question_type === 'essay' ? <p className="text-[10px] md:text-xs text-slate-400 italic font-bold">Esai manual</p> : 
+                              r.question_type === 'matching' ? <pre className="text-[10px] md:text-xs font-mono text-slate-500 overflow-x-auto custom-scrollbar">{r.correct_answer ? JSON.stringify(r.correct_answer, null, 2) : '-'}</pre> :
+                              <p className="font-bold text-slate-700 text-xs md:text-sm break-words">{String(r.correct_answer || '-')}</p>
                              }
                           </div>
                        </div>
@@ -1320,49 +1326,51 @@ export default function TeacherReportsAndAnalyticsPage() {
 
       {/* ================= MODAL DETAIL KOREKSI ESAI ================= */}
       {selectedStudentForEssay && selectedStudentMeta && (
-         <div className="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 md:p-8 animate-in fade-in">
-            <div className="bg-white w-full max-w-5xl rounded-[2.5rem] shadow-2xl flex flex-col h-full max-h-[95vh] overflow-hidden animate-in zoom-in-95 border border-amber-200">
-               <div className="bg-amber-50 border-b border-amber-100 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
-                  <div>
-                     <h3 className="text-xl font-black text-amber-900 flex items-center gap-2"><FileEdit className="w-5 h-5 text-amber-600"/> Koreksi Esai</h3>
-                     <p className="text-sm font-bold text-amber-700 mt-1">{selectedStudentMeta.name} <span className="text-xs text-amber-600/70 ml-2">• {selectedStudentMeta.class_group}</span></p>
+         <div className="fixed inset-0 z-[200] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-8 animate-in fade-in">
+            <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl flex flex-col h-[95vh] max-h-[95vh] overflow-hidden animate-in zoom-in-95 border border-amber-200">
+               <div className="bg-amber-50 border-b border-amber-100 p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 shrink-0">
+                  <div className="min-w-0">
+                     <h3 className="text-lg md:text-xl font-black text-amber-900 flex items-center gap-2 truncate"><FileEdit className="w-4 h-4 md:w-5 md:h-5 text-amber-600 shrink-0"/> <span className="truncate">Koreksi Esai</span></h3>
+                     <p className="text-xs md:text-sm font-bold text-amber-700 mt-0.5 md:mt-1 truncate">{selectedStudentMeta.name} <span className="text-[10px] md:text-xs text-amber-600/70 ml-1 md:ml-2 whitespace-nowrap">• {selectedStudentMeta.class_group}</span></p>
                   </div>
-                  <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
-                     {selectedStudentMeta.attempts.map(a => (
-                        <button 
-                           key={a.session_id} 
-                           onClick={() => setActiveEssaySessionId(a.session_id)}
-                           className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all shrink-0 ${activeEssaySessionId === a.session_id ? 'bg-amber-500 text-white border-amber-600 shadow-md' : 'bg-white text-amber-700 border-amber-200 hover:bg-amber-100'}`}
-                        >
-                           Percobaan {a.attempt_number}
-                        </button>
-                     ))}
-                     <button onClick={() => setSelectedStudentForEssay(null)} className="p-2 bg-white rounded-full hover:bg-rose-50 text-amber-600 hover:text-rose-500 shadow-sm ml-2 border border-amber-200 hover:border-rose-200 transition-colors"><X className="w-5 h-5"/></button>
+                  <div className="flex items-center justify-between sm:justify-end gap-2 overflow-x-auto w-full sm:w-auto custom-scrollbar hide-scroll-mobile pb-1 sm:pb-0">
+                     <div className="flex items-center gap-2">
+                        {selectedStudentMeta.attempts.map(a => (
+                           <button 
+                              key={a.session_id} 
+                              onClick={() => setActiveEssaySessionId(a.session_id)}
+                              className={`px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-bold border transition-all shrink-0 ${activeEssaySessionId === a.session_id ? 'bg-amber-500 text-white border-amber-600 shadow-md' : 'bg-white text-amber-700 border-amber-200 hover:bg-amber-100'}`}
+                           >
+                              Coba {a.attempt_number}
+                           </button>
+                        ))}
+                     </div>
+                     <button onClick={() => setSelectedStudentForEssay(null)} className="p-1.5 md:p-2 bg-white rounded-full hover:bg-rose-50 text-amber-600 hover:text-rose-500 shadow-sm sm:ml-2 border border-amber-200 hover:border-rose-200 transition-colors shrink-0"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                   </div>
                </div>
 
-               <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-8 bg-slate-50/50 custom-scrollbar">
+               <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 space-y-6 md:space-y-8 bg-slate-50/50 custom-scrollbar">
                   {selectedEssayStudentData ? selectedEssayStudentData.answers.map((ans, idx) => (
-                     <div key={ans.id} className="bg-white border border-slate-200 rounded-[2rem] shadow-sm flex flex-col md:flex-row overflow-hidden hover:border-blue-200 transition-colors">
-                       <div className="flex-1 p-6 md:p-8 bg-white border-b md:border-b-0 md:border-r border-slate-100 overflow-hidden">
-                         <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 mb-6 shadow-inner">
-                           <div className="flex justify-between items-center mb-3">
-                              <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-blue-500"></div> Soal No {idx + 1}</div>
-                              <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-md border ${ans.is_graded ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-500 border-rose-200'}`}>{ans.is_graded ? 'SUDAH DINILAI' : 'BELUM DINILAI'}</span>
+                     <div key={ans.id} className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm flex flex-col md:flex-row overflow-hidden hover:border-blue-200 transition-colors">
+                       <div className="flex-1 p-4 sm:p-5 md:p-8 bg-white border-b md:border-b-0 md:border-r border-slate-100 min-w-0">
+                         <div className="bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl p-4 md:p-6 mb-4 md:mb-6 shadow-inner">
+                           <div className="flex justify-between items-center mb-2 md:mb-3">
+                              <div className="text-[9px] md:text-[11px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 md:gap-2"><div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-blue-500"></div> Soal No {idx + 1}</div>
+                              <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest px-2 md:px-3 py-0.5 md:py-1 rounded md:rounded-md border whitespace-nowrap ${ans.is_graded ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-rose-50 text-rose-500 border-rose-200'}`}>{ans.is_graded ? 'DINILAI' : 'BELUM'}</span>
                            </div>
-                           <div className="text-base font-bold text-slate-800 prose prose-slate max-w-none" dangerouslySetInnerHTML={{ __html: processHtmlMedia(ans.questions?.question_text) }} />
+                           <div className="text-sm md:text-base font-bold text-slate-800 prose prose-sm md:prose-slate max-w-none break-words leading-snug md:leading-relaxed" dangerouslySetInnerHTML={{ __html: processHtmlMedia(ans.questions?.question_text) }} />
                          </div>
-                         <div className="bg-blue-50/50 border border-blue-100 rounded-[1.5rem] p-6 shadow-sm relative">
-                           <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-400 rounded-l-[1.5rem]"></div>
-                           <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-3 flex items-center gap-1.5"><FileText className="w-3.5 h-3.5"/> Jawaban Siswa:</p>
-                           <div className="text-base font-medium text-slate-900 prose prose-blue max-w-none [&>p]:m-0 leading-relaxed" dangerouslySetInnerHTML={{ __html: processHtmlMedia(ans.answer_text) }} />
+                         <div className="bg-blue-50/50 border border-blue-100 rounded-xl md:rounded-[1.5rem] p-4 md:p-6 shadow-sm relative">
+                           <div className="absolute top-0 left-0 w-1 md:w-1.5 h-full bg-blue-400 rounded-l-[1.5rem]"></div>
+                           <p className="text-[9px] md:text-[10px] font-black text-blue-500 uppercase tracking-widest mb-2 md:mb-3 flex items-center gap-1.5"><FileText className="w-3 h-3 md:w-3.5 md:h-3.5"/> Jawaban Siswa:</p>
+                           <div className="text-xs md:text-base font-medium text-slate-900 prose prose-sm md:prose-blue max-w-none [&>p]:m-0 leading-relaxed break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(ans.answer_text) }} />
                          </div>
                        </div>
                        
-                       <div className="w-full md:w-80 p-6 md:p-8 flex flex-col justify-between gap-6 bg-slate-50 shrink-0">
-                         <div className="space-y-5">
-                           <div><label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">Skor Diberikan</label>
-                             <div className="flex items-center gap-3">
+                       <div className="w-full md:w-72 lg:w-80 p-4 sm:p-5 md:p-8 flex flex-col justify-between gap-4 md:gap-6 bg-slate-50 shrink-0 border-t md:border-t-0 border-slate-100">
+                         <div className="space-y-4 md:space-y-5">
+                           <div><label className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5 md:mb-2">Skor Diberikan</label>
+                             <div className="flex items-center gap-2 md:gap-3">
                                <input 
                                  type="number" min={0} max={ans.questions?.points || 0} step={0.1}
                                  value={ans.points_given !== null && ans.points_given !== undefined ? ans.points_given : ''} 
@@ -1373,31 +1381,31 @@ export default function TeacherReportsAndAnalyticsPage() {
                                     if (val < 0) val = 0; if (val > maxP) val = maxP;
                                     setEssayAnswers(prev => prev.map(a => a.id === ans.id ? { ...a, points_given: val } : a));
                                  }}
-                                 className="w-full bg-white border-2 border-amber-200 rounded-xl p-4 text-3xl font-black text-amber-700 text-center outline-none focus:border-amber-400 shadow-sm" 
+                                 className="w-full bg-white border-2 border-amber-200 rounded-lg md:rounded-xl p-3 md:p-4 text-2xl md:text-3xl font-black text-amber-700 text-center outline-none focus:border-amber-400 shadow-sm" 
                                  placeholder="0" 
                                />
-                               <div className="bg-white px-4 py-3 rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center shrink-0">
-                                 <span className="text-[10px] font-black text-slate-400 uppercase leading-none mb-1 tracking-widest">Maks</span>
-                                 <span className="text-xl font-black text-slate-600 leading-tight">{ans.questions?.points}</span>
+                               <div className="bg-white px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl border border-slate-200 shadow-sm flex flex-col items-center justify-center shrink-0">
+                                 <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase leading-none mb-0.5 md:mb-1 tracking-widest">Maks</span>
+                                 <span className="text-lg md:text-xl font-black text-slate-600 leading-tight">{ans.questions?.points}</span>
                                </div>
                              </div>
                            </div>
-                           <div><label className="text-xs font-black text-slate-400 uppercase tracking-widest block mb-2">Catatan Evaluasi (Opsional)</label>
+                           <div><label className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest block mb-1.5 md:mb-2">Catatan Evaluasi (Opsional)</label>
                              <textarea 
                                value={ans.teacher_notes || ''} 
                                onChange={(e) => setEssayAnswers(prev => prev.map(a => a.id === ans.id ? { ...a, teacher_notes: e.target.value } : a))}
-                               className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm font-medium text-slate-900 h-28 focus:ring-2 focus:ring-blue-500 outline-none resize-none shadow-sm leading-relaxed placeholder-slate-400" 
+                               className="w-full bg-white border border-slate-200 rounded-lg md:rounded-xl p-3 md:p-4 text-xs md:text-sm font-medium text-slate-900 h-20 md:h-28 focus:ring-2 focus:ring-blue-500 outline-none resize-none shadow-sm leading-relaxed placeholder-slate-400" 
                                placeholder="Feedback perbaikan untuk siswa..." 
                              />
                            </div>
                          </div>
-                         <button onClick={() => saveEssayScore(ans.id, ans.student_id, ans.points_given, ans.teacher_notes)} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-sm shadow-lg shadow-blue-200 active:scale-95 transition-all flex items-center justify-center gap-2">
-                           <Save className="w-5 h-5"/> Simpan Nilai
+                         <button onClick={() => saveEssayScore(ans.id, ans.student_id, ans.points_given, ans.teacher_notes)} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 md:py-4 rounded-lg md:rounded-xl font-black text-xs md:text-sm shadow-lg shadow-blue-200 active:scale-95 transition-all flex items-center justify-center gap-1.5 md:gap-2 mt-2 md:mt-0">
+                           <Save className="w-4 h-4 md:w-5 md:h-5"/> Simpan Nilai
                          </button>
                        </div>
                      </div>
                   )) : (
-                     <div className="text-center py-20 font-bold text-slate-400 bg-white border-2 border-dashed border-slate-200 rounded-[2rem]">Siswa tidak memiliki jawaban esai pada percobaan ini.</div>
+                     <div className="text-center py-16 md:py-20 font-bold text-slate-400 bg-white border-2 border-dashed border-slate-200 rounded-2xl md:rounded-[2rem] text-sm md:text-base px-4">Siswa tidak memiliki jawaban esai pada percobaan ini.</div>
                   )}
                </div>
             </div>

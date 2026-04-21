@@ -112,8 +112,8 @@ export default function TeacherSchedulesPage() {
   };
 
   const formatZonedTimeStr = (isoString: string | null) => {
-     if (!isoString) return 'Belum diatur';
-     return new Date(isoString).toLocaleString('id-ID', { timeZone: appTimeZone, dateStyle: 'medium', timeStyle: 'short' });
+      if (!isoString) return 'Belum diatur';
+      return new Date(isoString).toLocaleString('id-ID', { timeZone: appTimeZone, dateStyle: 'medium', timeStyle: 'short' });
   };
 
   const handleCopyToken = (id: string, token: string) => {
@@ -237,17 +237,17 @@ export default function TeacherSchedulesPage() {
   });
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 text-slate-900 relative pb-24 max-w-7xl mx-auto">
+    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 text-slate-900 relative pb-24 max-w-7xl mx-auto">
       
       {/* ================= TOAST NOTIFICATION ELEGAN ================= */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-[1.5rem] shadow-2xl flex items-center gap-3 border backdrop-blur-sm ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10 w-[90%] max-w-sm sm:w-auto">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-2xl flex items-center gap-3 border backdrop-blur-sm ${
              toast.type === 'success' ? 'bg-emerald-50/95 border-emerald-200 text-emerald-700' : 
              toast.type === 'warning' ? 'bg-amber-50/95 border-amber-200 text-amber-700' : 'bg-rose-50/95 border-rose-200 text-rose-700'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <AlertTriangle className={`w-5 h-5 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 shrink-0 text-emerald-500" /> : <AlertTriangle className={`w-4 h-4 md:w-5 md:h-5 shrink-0 ${toast.type === 'warning' ? 'text-amber-500' : 'text-rose-500'}`} />}
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
@@ -255,29 +255,29 @@ export default function TeacherSchedulesPage() {
       {/* ================= MODAL PILIHAN FORMAT CETAK GLOBAL ================= */}
       {isPrintOptionsOpen && (
          <div className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-            <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
-               <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div className="bg-white w-full max-w-md rounded-2xl md:rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-200">
+               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                   <div>
-                    <h3 className="text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-5 h-5 text-blue-600"/> Cetak Jadwal Ujian</h3>
-                    <p className="text-sm font-medium text-slate-500 mt-1">Pilih format unduhan jadwal seluruh ujian.</p>
+                    <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2"><Printer className="w-4 h-4 md:w-5 md:h-5 text-blue-600"/> Cetak Jadwal Ujian</h3>
+                    <p className="text-xs md:text-sm font-medium text-slate-500 mt-1">Pilih format unduhan jadwal seluruh ujian.</p>
                   </div>
-                  <button onClick={() => setIsPrintOptionsOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm"><X className="w-5 h-5"/></button>
+                  <button onClick={() => setIsPrintOptionsOpen(false)} className="text-slate-400 hover:text-rose-500 bg-white rounded-full p-2 border border-slate-200 shadow-sm transition-colors"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
                </div>
-               <div className="p-8 space-y-4">
-                  <button onClick={handlePrintAllExamsPDF} disabled={isGeneratingPdf} className="w-full flex items-center p-4 rounded-2xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group text-left disabled:opacity-50">
-                     <div className="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform">
-                        {isGeneratingPdf ? <LoaderCircle className="w-6 h-6 animate-spin" /> : <FileText className="w-6 h-6"/>}
+               <div className="p-5 md:p-8 space-y-3 md:space-y-4">
+                  <button onClick={handlePrintAllExamsPDF} disabled={isGeneratingPdf} className="w-full flex items-center p-3 md:p-4 rounded-xl md:rounded-2xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-all group text-left disabled:opacity-50">
+                     <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg md:rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mr-3 md:mr-4 group-hover:scale-110 transition-transform">
+                        {isGeneratingPdf ? <LoaderCircle className="w-5 h-5 md:w-6 md:h-6 animate-spin" /> : <FileText className="w-5 h-5 md:w-6 md:h-6"/>}
                      </div>
                      <div>
-                       <h4 className="font-bold text-slate-800 text-base">{isGeneratingPdf ? 'Memproses PDF...' : 'Unduh Format PDF'}</h4>
-                       <p className="text-xs text-slate-500 font-medium mt-0.5">Daftar agenda ujian siap print (Landscape).</p>
+                       <h4 className="font-bold text-slate-800 text-sm md:text-base">{isGeneratingPdf ? 'Memproses PDF...' : 'Unduh Format PDF'}</h4>
+                       <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-0.5 leading-snug">Daftar agenda ujian siap print (Landscape).</p>
                      </div>
                   </button>
-                  <button onClick={handleDownloadAllExamsExcel} className="w-full flex items-center p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all group text-left">
-                     <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform"><FileSpreadsheet className="w-6 h-6"/></div>
+                  <button onClick={handleDownloadAllExamsExcel} className="w-full flex items-center p-3 md:p-4 rounded-xl md:rounded-2xl border-2 border-slate-200 hover:border-emerald-500 hover:bg-emerald-50 transition-all group text-left">
+                     <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg md:rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mr-3 md:mr-4 group-hover:scale-110 transition-transform"><FileSpreadsheet className="w-5 h-5 md:w-6 md:h-6"/></div>
                      <div>
-                       <h4 className="font-bold text-slate-800 text-base">Unduh Excel (.xlsx)</h4>
-                       <p className="text-xs text-slate-500 font-medium mt-0.5">File rekap mentah untuk pelaporan.</p>
+                       <h4 className="font-bold text-slate-800 text-sm md:text-base">Unduh Excel (.xlsx)</h4>
+                       <p className="text-[10px] md:text-xs text-slate-500 font-medium mt-0.5 leading-snug">File rekap mentah untuk pelaporan.</p>
                      </div>
                   </button>
                </div>
@@ -286,41 +286,42 @@ export default function TeacherSchedulesPage() {
       )}
 
       {/* ================= HEADER UTAMA ================= */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[2rem] border border-indigo-100 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-white p-4 sm:p-5 md:px-8 md:py-6 rounded-2xl md:rounded-[2rem] border border-indigo-100 shadow-sm">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-3">
-            <CalendarClock className="w-8 h-8 text-indigo-600" /> Jadwal Ujian
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+            <CalendarClock className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" /> Jadwal Ujian
           </h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium ml-11">Melihat agenda pelaksanaan ujian khusus mapel Anda.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Melihat agenda pelaksanaan ujian khusus mapel Anda.</p>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
+      <div className="flex flex-col sm:flex-row justify-between gap-3 md:gap-4">
         <div className="relative w-full max-w-xl">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-          <input type="text" placeholder="Cari jadwal mapel Anda..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-[1.5rem] pl-12 pr-4 py-3.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all placeholder-slate-400" />
+          <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400" />
+          <input type="text" placeholder="Cari jadwal mapel Anda..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white border border-slate-200 rounded-xl md:rounded-[1.5rem] pl-10 md:pl-12 pr-4 py-3 md:py-3.5 text-xs md:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm transition-all placeholder-slate-400" />
         </div>
-        <button onClick={() => setIsPrintOptionsOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-indigo-700 border border-slate-200 hover:border-indigo-200 px-6 py-3.5 rounded-[1.5rem] font-bold text-sm shadow-sm transition-colors shrink-0">
-           <Download className="w-5 h-5 text-indigo-600" /> Unduh Data Jadwal
+        <button onClick={() => setIsPrintOptionsOpen(true)} className="flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-indigo-700 border border-slate-200 hover:border-indigo-200 px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] font-bold text-xs md:text-sm shadow-sm transition-colors shrink-0 w-full sm:w-auto">
+           <Download className="w-4 h-4 md:w-5 md:h-5 text-indigo-600" /> Unduh Data Jadwal
         </button>
       </div>
 
-      {/* ================= TABEL DATA UJIAN ================= */}
-      <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden z-0">
+      {/* ================= TABEL / KARTU DATA UJIAN ================= */}
+      <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden z-0">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+          {/* Tambahkan w-full, dan ubah thead agar disembunyikan di ukuran layar kecil (md:max) */}
+          <table className="w-full text-sm text-left hidden md:table">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
               <tr>
-                <th className="px-8 py-5 w-[45%]">Informasi Ujian Mapel Anda</th>
-                <th className="px-8 py-5 w-[25%]">Waktu & Aturan</th>
-                <th className="px-8 py-5 w-[20%]">Token Akses</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[45%]">Informasi Ujian Mapel Anda</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[25%]">Waktu & Aturan</th>
+                <th className="px-6 lg:px-8 py-4 md:py-5 w-[20%]">Token Akses</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {loading ? (
-                <tr><td colSpan={3} className="text-center py-24"><LoaderCircle className="w-10 h-10 text-indigo-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Memuat jadwal Anda...</p></td></tr>
+                <tr><td colSpan={3} className="text-center py-20 md:py-24"><LoaderCircle className="w-8 h-8 md:w-10 md:h-10 text-indigo-500 animate-spin mx-auto mb-3" /><p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] md:text-xs">Memuat jadwal Anda...</p></td></tr>
               ) : filteredExams.length === 0 ? (
-                <tr><td colSpan={3} className="text-center py-24"><div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100"><CalendarClock className="w-10 h-10 text-slate-300" /></div><p className="text-slate-500 font-bold text-lg">Tidak ada jadwal ujian untuk Anda.</p></td></tr>
+                <tr><td colSpan={3} className="text-center py-20 md:py-24"><div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 border border-slate-100"><CalendarClock className="w-8 h-8 md:w-10 md:h-10 text-slate-300" /></div><p className="text-slate-500 font-bold text-sm md:text-lg">Tidak ada jadwal ujian untuk Anda.</p></td></tr>
               ) : (
                 filteredExams.map((exam) => {
                   const examTeachers = getTeachersForExam(exam.subject, exam.grade_level || '');
@@ -329,42 +330,42 @@ export default function TeacherSchedulesPage() {
                   return (
                     <tr key={exam.id} className="hover:bg-indigo-50/30 transition-colors">
                       
-                      <td className="px-8 py-5">
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-start gap-4">
-                             <div className="w-12 h-12 rounded-[1.2rem] bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0 shadow-sm mt-0.5">
-                                <BookOpen className="w-6 h-6 text-indigo-600"/>
+                          <div className="flex items-start gap-3 md:gap-4">
+                             <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-[1.2rem] bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0 shadow-sm mt-0.5">
+                                <BookOpen className="w-5 h-5 md:w-6 md:h-6 text-indigo-600"/>
                              </div>
-                             <div>
-                                <p className="font-black text-slate-800 text-base leading-tight flex flex-wrap items-center gap-2 mb-1">
-                                  {exam.subject}
-                                  {isTitlePresent && <span className="text-slate-500 font-bold text-xs bg-white px-2 py-0.5 rounded border border-slate-200 shadow-sm">{exam.title}</span>}
+                             <div className="min-w-0">
+                                <p className="font-black text-slate-800 text-sm md:text-base leading-tight flex flex-wrap items-center gap-1.5 md:gap-2 mb-1">
+                                  <span className="truncate">{exam.subject}</span>
+                                  {isTitlePresent && <span className="text-slate-500 font-bold text-[10px] md:text-xs bg-white px-1.5 md:px-2 py-0.5 rounded border border-slate-200 shadow-sm whitespace-nowrap">{exam.title}</span>}
                                 </p>
                                 
-                                <div className="flex flex-wrap items-center gap-2 mt-2">
-                                  <span className="inline-flex items-center gap-1.5 text-[10px] font-black bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-md border border-emerald-100 uppercase tracking-widest">
-                                    <GraduationCap className="w-3.5 h-3.5"/> {exam.grade_level || 'Umum'}
+                                <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-1.5 md:mt-2">
+                                  <span className="inline-flex items-center gap-1 md:gap-1.5 text-[9px] md:text-[10px] font-black bg-emerald-50 text-emerald-600 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-emerald-100 uppercase tracking-widest whitespace-nowrap">
+                                    <GraduationCap className="w-3 h-3 md:w-3.5 md:h-3.5"/> {exam.grade_level || 'Umum'}
                                   </span>
-                                  <span className="text-slate-300">|</span>
+                                  <span className="text-slate-300 hidden sm:inline">|</span>
                                   <div className="flex flex-wrap gap-1">
                                     {examTeachers.length > 0 ? (
                                        examTeachers.map((tName, i) => (
-                                         <span key={i} className="text-[10px] font-bold text-slate-600 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-sm flex items-center gap-1">
-                                           <UserCircle2 className="w-3 h-3 text-indigo-400"/> {tName}
+                                         <span key={i} className="text-[9px] md:text-[10px] font-bold text-slate-600 bg-white px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200 shadow-sm flex items-center gap-1 whitespace-nowrap">
+                                           <UserCircle2 className="w-2.5 h-2.5 md:w-3 md:h-3 text-indigo-400"/> {tName}
                                          </span>
                                        ))
                                     ) : (
-                                       <span className="text-[10px] italic text-slate-400 font-bold">Tanpa pengampu</span>
+                                       <span className="text-[9px] md:text-[10px] italic text-slate-400 font-bold whitespace-nowrap">Tanpa pengampu</span>
                                     )}
                                   </div>
                                 </div>
                              </div>
                           </div>
 
-                          <div className="mt-2 bg-amber-50/50 p-3 rounded-[1rem] border border-amber-100 w-fit max-w-full">
-                             <div className="flex items-center gap-2">
-                                <Users className="w-4 h-4 text-amber-500 shrink-0"/>
-                                <span className="text-xs font-bold text-slate-700 leading-snug break-words">
+                          <div className="mt-2 bg-amber-50/50 p-2.5 md:p-3 rounded-xl md:rounded-[1rem] border border-amber-100 w-fit max-w-full">
+                             <div className="flex items-center gap-1.5 md:gap-2">
+                                <Users className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500 shrink-0"/>
+                                <span className="text-[11px] md:text-xs font-bold text-slate-700 leading-snug break-words">
                                    {Array.isArray(exam.target_class) ? exam.target_class.join(', ') : (exam.target_class || 'Semua')}
                                 </span>
                              </div>
@@ -372,29 +373,29 @@ export default function TeacherSchedulesPage() {
                         </div>
                       </td>
 
-                      <td className="px-8 py-5">
-                        <div className="flex flex-col gap-2">
-                          <p className="text-slate-700 font-black text-xs flex items-center gap-2">
-                            <CalendarClock className="w-4 h-4 text-emerald-500" /> 
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
+                        <div className="flex flex-col gap-1.5 md:gap-2">
+                          <p className="text-slate-700 font-black text-[11px] md:text-xs flex items-center gap-1.5 md:gap-2">
+                            <CalendarClock className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500 shrink-0" /> 
                             {formatZonedTimeStr(exam.start_time)} {/* Sync Zone */}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-slate-500 font-bold text-[10px] bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 uppercase tracking-widest">{exam.duration_minutes} Menit</span>
-                            <span className="text-indigo-600 font-bold text-[10px] bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100 uppercase tracking-widest">{exam.max_attempts || 1}x Ujian</span>
+                          <div className="flex items-center gap-1.5 md:gap-2 mt-0.5 md:mt-1">
+                            <span className="text-slate-500 font-bold text-[9px] md:text-[10px] bg-slate-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200 uppercase tracking-widest whitespace-nowrap">{exam.duration_minutes} Menit</span>
+                            <span className="text-indigo-600 font-bold text-[9px] md:text-[10px] bg-indigo-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-indigo-100 uppercase tracking-widest whitespace-nowrap">{exam.max_attempts || 1}x Ujian</span>
                           </div>
                         </div>
                       </td>
                       
-                      <td className="px-8 py-5">
-                         <div className="flex items-center gap-2 w-52">
+                      <td className="px-6 lg:px-8 py-4 md:py-5">
+                         <div className="flex items-center gap-1.5 md:gap-2 w-full md:w-48 lg:w-52">
                             <div className="relative flex-1">
-                              <input type="text" value={exam.exam_token} readOnly className="w-full bg-indigo-50/50 border border-indigo-200 rounded-[1rem] px-3 py-2.5 text-xs text-center text-indigo-700 font-black tracking-widest outline-none shadow-sm uppercase pr-12" />
-                              <div className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] font-black text-indigo-500 bg-white px-1.5 py-0.5 rounded shadow-sm border border-indigo-100">
+                              <input type="text" value={exam.exam_token} readOnly className="w-full bg-indigo-50/50 border border-indigo-200 rounded-xl md:rounded-[1rem] px-2.5 md:px-3 py-2 md:py-2.5 text-[11px] md:text-xs text-center text-indigo-700 font-black tracking-widest outline-none shadow-sm uppercase pr-10 md:pr-12" />
+                              <div className="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 text-[8px] md:text-[9px] font-black text-indigo-500 bg-white px-1 md:px-1.5 py-0.5 rounded shadow-sm border border-indigo-100">
                                 {formatTime(getSecondsLeft(exam.token_updated_at))}
                               </div>
                             </div>
-                            <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2.5 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 text-slate-400 rounded-full shadow-sm transition-colors">
-                              {copiedTokenId === exam.id ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                            <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2 md:p-2.5 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 text-slate-400 rounded-full shadow-sm transition-colors shrink-0">
+                              {copiedTokenId === exam.id ? <Check className="w-3.5 h-3.5 md:w-4 md:h-4 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                             </button>
                          </div>
                       </td>
@@ -405,6 +406,101 @@ export default function TeacherSchedulesPage() {
               )}
             </tbody>
           </table>
+
+          {/* VIEW UNTUK MOBILE (Berbentuk List Card) */}
+          <div className="md:hidden flex flex-col divide-y divide-slate-100">
+            {loading ? (
+              <div className="text-center py-16">
+                <LoaderCircle className="w-8 h-8 text-indigo-500 animate-spin mx-auto mb-3" />
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Memuat jadwal Anda...</p>
+              </div>
+            ) : filteredExams.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3 border border-slate-100"><CalendarClock className="w-8 h-8 text-slate-300" /></div>
+                <p className="text-slate-500 font-bold text-sm">Tidak ada jadwal ujian untuk Anda.</p>
+              </div>
+            ) : (
+              filteredExams.map((exam) => {
+                const examTeachers = getTeachersForExam(exam.subject, exam.grade_level || '');
+                const isTitlePresent = exam.title && exam.title.trim() !== '';
+
+                return (
+                  <div key={exam.id} className="p-4 hover:bg-indigo-50/30 transition-colors flex flex-col gap-4">
+                    
+                    {/* Bagian Atas: Info Mapel */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center border border-indigo-100 shrink-0 shadow-sm mt-0.5">
+                        <BookOpen className="w-5 h-5 text-indigo-600"/>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-black text-slate-800 text-sm leading-tight flex flex-wrap items-center gap-1.5 mb-1">
+                          <span>{exam.subject}</span>
+                          {isTitlePresent && <span className="text-slate-500 font-bold text-[9px] bg-white px-1.5 py-0.5 rounded border border-slate-200 shadow-sm">{exam.title}</span>}
+                        </p>
+                        
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                          <span className="inline-flex items-center gap-1 text-[9px] font-black bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-md border border-emerald-100 uppercase tracking-widest">
+                            <GraduationCap className="w-3 h-3"/> {exam.grade_level || 'Umum'}
+                          </span>
+                          
+                          <div className="flex flex-wrap gap-1">
+                            {examTeachers.length > 0 ? (
+                                examTeachers.map((tName, i) => (
+                                  <span key={i} className="text-[9px] font-bold text-slate-600 bg-white px-2 py-0.5 rounded-md border border-slate-200 shadow-sm flex items-center gap-1">
+                                    <UserCircle2 className="w-2.5 h-2.5 text-indigo-400"/> <span className="truncate max-w-[80px]">{tName}</span>
+                                  </span>
+                                ))
+                            ) : (
+                                <span className="text-[9px] italic text-slate-400 font-bold">Tanpa pengampu</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="mt-2 bg-amber-50/50 p-2 rounded-lg border border-amber-100 w-fit max-w-full">
+                            <div className="flex items-center gap-1.5">
+                              <Users className="w-3 h-3 text-amber-500 shrink-0"/>
+                              <span className="text-[10px] font-bold text-slate-700 leading-snug break-words">
+                                  {Array.isArray(exam.target_class) ? exam.target_class.join(', ') : (exam.target_class || 'Semua')}
+                              </span>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bagian Bawah: Waktu & Token berjejer */}
+                    <div className="flex flex-col sm:flex-row gap-3 pt-3 border-t border-slate-100">
+                      {/* Info Waktu */}
+                      <div className="flex-1 flex flex-col gap-1.5 justify-center">
+                        <p className="text-slate-700 font-black text-[11px] flex items-center gap-1.5">
+                          <CalendarClock className="w-3.5 h-3.5 text-emerald-500 shrink-0" /> 
+                          {formatZonedTimeStr(exam.start_time)}
+                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-slate-500 font-bold text-[9px] bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200 uppercase tracking-widest">{exam.duration_minutes} Menit</span>
+                          <span className="text-indigo-600 font-bold text-[9px] bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100 uppercase tracking-widest">{exam.max_attempts || 1}x Ujian</span>
+                        </div>
+                      </div>
+
+                      {/* Token */}
+                      <div className="flex items-center gap-1.5 sm:w-48 shrink-0">
+                        <div className="relative flex-1">
+                          <input type="text" value={exam.exam_token} readOnly className="w-full bg-indigo-50/50 border border-indigo-200 rounded-xl px-2 py-2 text-[11px] text-center text-indigo-700 font-black tracking-widest outline-none shadow-sm uppercase pr-10" />
+                          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[8px] font-black text-indigo-500 bg-white px-1.5 py-0.5 rounded shadow-sm border border-indigo-100">
+                            {formatTime(getSecondsLeft(exam.token_updated_at))}
+                          </div>
+                        </div>
+                        <button onClick={() => handleCopyToken(exam.id, exam.exam_token)} title="Salin Token" className="p-2 bg-white border border-slate-200 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 text-slate-400 rounded-full shadow-sm transition-colors shrink-0">
+                          {copiedTokenId === exam.id ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                        </button>
+                      </div>
+                    </div>
+                    
+                  </div>
+                )
+              })
+            )}
+          </div>
+
         </div>
       </div>
     </div>

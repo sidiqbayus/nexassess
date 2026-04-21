@@ -20,7 +20,7 @@ if (typeof window !== 'undefined') {
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false, 
-  loading: () => <div className="h-32 bg-slate-50 border border-slate-200 rounded-[2rem] flex items-center justify-center text-slate-400 font-bold">Memuat Editor Ujian...</div> 
+  loading: () => <div className="h-32 bg-slate-50 border border-slate-200 rounded-[2rem] flex items-center justify-center text-slate-400 font-bold text-sm md:text-base">Memuat Editor Ujian...</div> 
 });
 
 const OptimizedQuillEditor = ({ initialValue, onChange, placeholder, minHeight, isEssay, allowMedia }: any) => {
@@ -60,7 +60,7 @@ const OptimizedQuillEditor = ({ initialValue, onChange, placeholder, minHeight, 
   }, [isEssay, allowMedia]);
 
   return (
-    <div className={`bg-white border-2 border-slate-200 rounded-[1.5rem] overflow-hidden focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all shadow-sm ${minHeight}`}>
+    <div className={`bg-white border-2 border-slate-200 rounded-[1.2rem] md:rounded-[1.5rem] overflow-hidden focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all shadow-sm ${minHeight}`}>
       <ReactQuill 
         theme="snow" 
         modules={modules} 
@@ -79,10 +79,6 @@ const getDriveId = (url: string | undefined | null) => {
   return match ? match[1] : null;
 };
 
-// =========================================================================
-// PERBAIKAN KHUSUS: Link Gambar Google Drive
-// Menggunakan endpoint LH3 agar Referrer Policy tidak memblokir gambar
-// =========================================================================
 const getSafeImageUrl = (url: string | undefined | null) => {
   if (!url) return '';
   if (url.startsWith('data:') || url.startsWith('blob:')) return url;
@@ -141,18 +137,18 @@ const LimitedAudioPlayer = ({ url, limit, questionId, studentId, onLimitReached 
   if (!hasMounted) return null;
 
   return (
-    <div className={`mt-5 flex flex-col gap-2 p-5 bg-slate-50 border rounded-2xl w-full max-w-2xl mx-auto transition-all ${canPlay ? 'border-slate-200' : 'border-rose-200 bg-rose-50/50'}`} onContextMenu={e => e.preventDefault()}>
-      <div className="flex items-center justify-between px-2">
-        <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
-          <Headphones className={`w-4 h-4 ${canPlay ? 'text-blue-500' : 'text-rose-400'}`} />
+    <div className={`mt-4 md:mt-5 flex flex-col gap-2 p-4 md:p-5 bg-slate-50 border rounded-xl md:rounded-2xl w-full max-w-2xl mx-auto transition-all ${canPlay ? 'border-slate-200' : 'border-rose-200 bg-rose-50/50'}`} onContextMenu={e => e.preventDefault()}>
+      <div className="flex flex-wrap items-center justify-between px-1 md:px-2 gap-2">
+        <span className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5 md:gap-2">
+          <Headphones className={`w-3.5 h-3.5 md:w-4 md:h-4 ${canPlay ? 'text-blue-500' : 'text-rose-400'}`} />
           Audio Ujian
         </span>
         {isUnlimited ? (
-          <span className="text-[10px] font-black px-3 py-1 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm uppercase tracking-widest">
+          <span className="text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm uppercase tracking-widest">
             Putar Bebas
           </span>
         ) : (
-          <span className={`text-[10px] font-black px-3 py-1 rounded-md shadow-sm uppercase tracking-widest ${canPlay ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}`}>
+          <span className={`text-[9px] md:text-[10px] font-black px-2.5 py-1 rounded-md shadow-sm uppercase tracking-widest ${canPlay ? 'bg-blue-50 text-blue-600 border border-blue-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}`}>
             Sisa Putar: {Math.max(0, limit - playCount)} / {limit}
           </span>
         )}
@@ -162,7 +158,7 @@ const LimitedAudioPlayer = ({ url, limit, questionId, studentId, onLimitReached 
         preload="auto"
         controls={canPlay} 
         controlsList="nodownload noremoteplayback noplaybackrate" 
-        className={`w-full h-12 outline-none transition-all duration-500 mt-2 ${canPlay ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale pointer-events-none'}`}
+        className={`w-full h-10 md:h-12 outline-none transition-all duration-500 mt-2 ${canPlay ? 'opacity-100 grayscale-0' : 'opacity-40 grayscale pointer-events-none'}`}
         onPlay={handlePlay}
         onEnded={handleEnded}
       >
@@ -170,7 +166,7 @@ const LimitedAudioPlayer = ({ url, limit, questionId, studentId, onLimitReached 
       </audio>
       
       {!canPlay && (
-        <div className="text-[10px] text-center text-rose-600 font-bold mt-2 uppercase tracking-widest bg-rose-50 py-2 rounded-lg border border-rose-100">
+        <div className="text-[9px] md:text-[10px] text-center text-rose-600 font-bold mt-2 uppercase tracking-widest bg-rose-50 py-2 rounded-lg border border-rose-100">
           Terkunci: Batas pemutaran maksimal tercapai.
         </div>
       )}
@@ -213,11 +209,12 @@ const TimerDisplay = ({ totalSeconds, sessionStartTime, onTimeUp }: { totalSecon
   };
 
   return (
-    <div className="w-full text-center">
-      <div className={`text-4xl font-black tracking-tight font-mono ${timeLeft < 300 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
+    <div className="w-full text-center flex flex-row md:flex-col items-center justify-between md:justify-center">
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest md:mb-2 flex items-center gap-1.5 md:hidden"><Clock className="w-3.5 h-3.5"/> Waktu</p>
+      <div className={`text-2xl md:text-4xl font-black tracking-tight font-mono ${timeLeft < 300 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
         {formatTime(timeLeft)}
       </div>
-      <div className="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden shadow-inner">
+      <div className="w-1/3 md:w-full bg-slate-100 rounded-full h-1.5 md:h-2 mt-0 md:mt-4 overflow-hidden shadow-inner hidden md:block">
         <div className={`h-full rounded-full transition-all duration-1000 ${timeLeft < 300 ? 'bg-rose-500' : 'bg-blue-500'}`} style={{ width: `${totalSeconds > 0 ? Math.max(0, Math.min(100, (timeLeft / totalSeconds) * 100)) : 0}%` }}></div>
       </div>
     </div>
@@ -237,7 +234,7 @@ const SmartMediaRenderer = ({ url, className = "" }: { url?: string, className?:
   const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
   if (ytMatch) {
     return (
-      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()}>
+      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-4 md:mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()}>
         <iframe src={`https://www.youtube.com/embed/${ytMatch[1]}?modestbranding=1&rel=0&controls=0&fs=0&disablekb=1&iv_load_policy=3`} className="w-full h-full border-0" allow="autoplay" />
         <div dangerouslySetInnerHTML={{ __html: safeOverlays }} />
       </div>
@@ -247,7 +244,7 @@ const SmartMediaRenderer = ({ url, className = "" }: { url?: string, className?:
   const driveId = getDriveId(url);
   if (driveId) {
     return (
-      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()}>
+      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-4 md:mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()}>
         <iframe src={`https://drive.google.com/file/d/${driveId}/preview`} className="w-full h-full border-0" allow="autoplay"></iframe>
         <div dangerouslySetInnerHTML={{ __html: safeOverlays }} />
       </div>
@@ -256,7 +253,7 @@ const SmartMediaRenderer = ({ url, className = "" }: { url?: string, className?:
 
   if (url.match(/\.(mp4|webm|ogg)$/i)) {
     return (
-      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-5 bg-black ${className}`} onContextMenu={(e) => e.preventDefault()}>
+      <div className={`relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 mt-4 md:mt-5 bg-black ${className}`} onContextMenu={(e) => e.preventDefault()}>
         <video src={url} controls controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture className="w-full h-full" />
         <div className="absolute top-0 left-0 w-full h-[15%] z-10 bg-transparent"></div>
         <div className="absolute bottom-0 right-0 w-[30%] h-[20%] z-10 bg-transparent cursor-not-allowed" title="Fullscreen dinonaktifkan"></div>
@@ -265,12 +262,12 @@ const SmartMediaRenderer = ({ url, className = "" }: { url?: string, className?:
   }
   
   if (url.match(/\.(mp3|wav|m4a)$/i)) {
-    return <audio src={url} controls controlsList="nodownload noremoteplayback" className={`w-full h-12 outline-none mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()} />;
+    return <audio src={url} controls controlsList="nodownload noremoteplayback" className={`w-full h-10 md:h-12 outline-none mt-4 md:mt-5 ${className}`} onContextMenu={(e) => e.preventDefault()} />;
   }
   
   return (
-    <div className="mt-5" onContextMenu={(e) => e.preventDefault()}>
-      <img src={getSafeImageUrl(url)} alt="Media Ujian" referrerPolicy="no-referrer" className={`rounded-2xl max-h-[400px] object-contain border border-slate-200 shadow-sm ${className}`} />
+    <div className="mt-4 md:mt-5" onContextMenu={(e) => e.preventDefault()}>
+      <img src={getSafeImageUrl(url)} alt="Media Ujian" referrerPolicy="no-referrer" className={`rounded-xl md:rounded-2xl max-h-[300px] md:max-h-[400px] object-contain border border-slate-200 shadow-sm ${className}`} />
     </div>
   );
 };
@@ -290,27 +287,27 @@ const processHtmlMedia = (html: string) => {
 
   p = p.replace(
     /<iframe[^>]*src="(?:https?:)?\/\/www\.youtube\.com\/embed\/([^"?]+)[^"]*"[^>]*><\/iframe>/gi,
-    (match, videoId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-5"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&controls=0&fs=0&disablekb=1&iv_load_policy=3" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
+    (match, videoId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-4 md:my-5"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&controls=0&fs=0&disablekb=1&iv_load_policy=3" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
   );
   p = p.replace(
     /(?:<a[^>]*href="|>|\s|^)(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s<]{11})[^<]*(?:<\/a>|<|\s|$)/g, 
-    (match, videoId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-5"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&controls=0&fs=0&disablekb=1&iv_load_policy=3" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
+    (match, videoId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-4 md:my-5"><iframe src="https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&controls=0&fs=0&disablekb=1&iv_load_policy=3" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
   );
   p = p.replace(
     /<a[^>]*href="((?:https?:\/\/)?drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|uc\?export=view&id=)([a-zA-Z0-9_-]+)[^"]*)"[^>]*>(.*?)<\/a>/gi, 
     (match, fullUrl, driveId, text) => {
       if (text.toUpperCase().includes('AUDIO') || text.toUpperCase().includes('MP3') || text.toUpperCase().includes('SUARA') || text.toUpperCase().includes('LISTENING')) {
-          return `<div class="my-5 p-5 bg-slate-50 border border-slate-200 rounded-2xl w-full max-w-2xl mx-auto"><span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">🎧 Audio Sisipan</span><audio src="https://docs.google.com/uc?export=open&id=${driveId}" preload="auto" controls controlsList="nodownload noremoteplayback" class="w-full h-12 outline-none mt-2"></audio></div>`;
+          return `<div class="my-4 md:my-5 p-4 md:p-5 bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl w-full max-w-2xl mx-auto"><span class="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">🎧 Audio Sisipan</span><audio src="https://docs.google.com/uc?export=open&id=${driveId}" preload="auto" controls controlsList="nodownload noremoteplayback" class="w-full h-10 md:h-12 outline-none mt-2"></audio></div>`;
       }
-      return `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-5"><iframe src="https://drive.google.com/file/d/${driveId}/preview" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`;
+      return `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-4 md:my-5"><iframe src="https://drive.google.com/file/d/${driveId}/preview" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`;
     }
   );
-  p = p.replace(/<a[^>]*href="([^"]+\.(?:mp3|wav|m4a))"[^>]*>.*?<\/a>/gi, '<div class="my-5 p-5 bg-slate-50 border border-slate-200 rounded-2xl w-full max-w-2xl mx-auto"><span class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">🎧 Audio Sisipan</span><audio src="$1" preload="auto" controls controlsList="nodownload noremoteplayback" class="w-full h-12 outline-none mt-2"></audio></div>');
+  p = p.replace(/<a[^>]*href="([^"]+\.(?:mp3|wav|m4a))"[^>]*>.*?<\/a>/gi, '<div class="my-4 md:my-5 p-4 md:p-5 bg-slate-50 border border-slate-200 rounded-xl md:rounded-2xl w-full max-w-2xl mx-auto"><span class="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-2">🎧 Audio Sisipan</span><audio src="$1" preload="auto" controls controlsList="nodownload noremoteplayback" class="w-full h-10 md:h-12 outline-none mt-2"></audio></div>');
   p = p.replace(
     /(?:>|\s|^)(?:https?:\/\/)?drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|uc\?export=view&id=)([a-zA-Z0-9_-]+)[^<]*(?:<|\s|$)/g, 
-    (match, driveId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-5"><iframe src="https://drive.google.com/file/d/${driveId}/preview" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
+    (match, driveId) => `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-4 md:my-5"><iframe src="https://drive.google.com/file/d/${driveId}/preview" class="w-full h-full border-0"></iframe>${safeOverlays}</div>`
   );
-  p = p.replace(/<a[^>]*href="([^"]+\.(?:mp4|webm|ogg))"[^>]*>.*?<\/a>/gi, `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-5 bg-black" oncontextmenu="return false;"><video src="$1" controls controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture class="w-full h-full"></video><div class="absolute top-0 left-0 w-full h-[15%] z-10 bg-transparent"></div><div class="absolute bottom-0 right-0 w-[30%] h-[20%] z-10 bg-transparent cursor-not-allowed" title="Fullscreen dinonaktifkan"></div></div>`);
+  p = p.replace(/<a[^>]*href="([^"]+\.(?:mp4|webm|ogg))"[^>]*>.*?<\/a>/gi, `<div class="relative w-full max-w-3xl mx-auto aspect-video rounded-xl md:rounded-2xl overflow-hidden shadow-sm border border-slate-200 my-4 md:my-5 bg-black" oncontextmenu="return false;"><video src="$1" controls controlsList="nodownload nofullscreen noremoteplayback" disablePictureInPicture class="w-full h-full"></video><div class="absolute top-0 left-0 w-full h-[15%] z-10 bg-transparent"></div><div class="absolute bottom-0 right-0 w-[30%] h-[20%] z-10 bg-transparent cursor-not-allowed" title="Fullscreen dinonaktifkan"></div></div>`);
   return p;
 };
 
@@ -425,25 +422,25 @@ const MatchingInteractiveUI = ({ currentQuestion, selectedAnswerJSON, onChange }
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2 pl-2">
-        <p className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-          <HelpCircle className="w-4 h-4 text-amber-500"/> Hubungkan Kotak Kiri dan Kanan.
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-2 pl-1 md:pl-2">
+        <p className="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1.5 md:gap-2">
+          <HelpCircle className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500"/> Hubungkan Kotak Kiri dan Kanan.
         </p>
-        <button onClick={() => onChange('{}')} className="text-[10px] font-bold text-rose-500 hover:bg-rose-50 px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-rose-100">
+        <button onClick={() => onChange('{}')} className="text-[9px] md:text-[10px] font-bold text-rose-500 hover:bg-rose-50 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg transition-colors flex items-center gap-1.5 border border-rose-100 self-start sm:self-auto">
           <Trash2 className="w-3 h-3"/> Hapus Garis
         </button>
       </div>
 
-      <div className="bg-white border-2 border-slate-200 p-6 md:p-10 rounded-[2rem] shadow-sm relative overflow-hidden min-h-[300px]" ref={containerRef}>
+      <div className="bg-white border-2 border-slate-200 p-4 md:p-10 rounded-2xl md:rounded-[2rem] shadow-sm relative overflow-hidden min-h-[250px] md:min-h-[300px]" ref={containerRef}>
         <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
           {lines.map((l, i) => (
-            <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="#3b82f6" strokeWidth="4" strokeLinecap="round" className="animate-in fade-in duration-300 drop-shadow-md" />
+            <line key={i} x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" className="animate-in fade-in duration-300 drop-shadow-sm md:strokeWidth-[4] md:drop-shadow-md" />
           ))}
         </svg>
 
-        <div className="flex flex-col md:flex-row justify-between gap-12 md:gap-24 relative z-10">
+        <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-24 relative z-10">
           {/* Kotak Kiri */}
-          <div className="flex-1 flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-3 md:gap-4">
             {premises.map((p: string, idx: number) => {
                const isConnected = !!currentMap[p];
                return (
@@ -451,21 +448,21 @@ const MatchingInteractiveUI = ({ currentQuestion, selectedAnswerJSON, onChange }
                    key={p} 
                    ref={el => { leftRefs.current[p] = el; }}
                    onClick={() => handleLeftClick(p)}
-                   className={`p-4 md:p-5 rounded-2xl cursor-pointer transition-all border-2 flex items-center gap-4 relative
+                   className={`p-3 md:p-5 rounded-xl md:rounded-2xl cursor-pointer transition-all border-2 flex items-center gap-3 md:gap-4 relative
                      ${activePremis === p ? 'bg-blue-50 border-blue-500 shadow-md scale-[1.02] z-20' : 
                        isConnected ? 'bg-slate-50 border-blue-300 opacity-90' : 'bg-white border-slate-200 hover:border-blue-400 hover:bg-slate-50'}
                    `}
                  >
-                   <div className={`w-8 h-8 shrink-0 rounded-xl flex items-center justify-center font-black text-xs transition-colors border ${activePremis === p || isConnected ? 'bg-blue-600 text-white border-blue-700 shadow-sm' : 'bg-slate-100 border-slate-200 text-slate-500'}`}>{idx + 1}</div>
-                   <div className="font-bold text-slate-800 text-sm [&>p]:m-0" dangerouslySetInnerHTML={{ __html: processHtmlMedia(p) }} />
-                   <div className={`absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 bg-white ${activePremis === p || isConnected ? 'border-blue-500' : 'border-slate-300'}`}></div>
+                   <div className={`w-6 h-6 md:w-8 md:h-8 shrink-0 rounded-lg md:rounded-xl flex items-center justify-center font-black text-[10px] md:text-xs transition-colors border ${activePremis === p || isConnected ? 'bg-blue-600 text-white border-blue-700 shadow-sm' : 'bg-slate-100 border-slate-200 text-slate-500'}`}>{idx + 1}</div>
+                   <div className="font-bold text-slate-800 text-xs md:text-sm [&>p]:m-0 break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(p) }} />
+                   <div className={`absolute -right-2 top-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full border-2 bg-white ${activePremis === p || isConnected ? 'border-blue-500' : 'border-slate-300'}`}></div>
                  </div>
                )
             })}
           </div>
 
           {/* Kotak Kanan */}
-          <div className="flex-1 flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-3 md:gap-4">
             {responses.map((r: any) => {
                const isConnected = Object.values(currentMap).includes(r);
                return (
@@ -473,12 +470,12 @@ const MatchingInteractiveUI = ({ currentQuestion, selectedAnswerJSON, onChange }
                    key={r} 
                    ref={el => { rightRefs.current[r] = el; }}
                    onClick={() => handleRightClick(r)}
-                   className={`p-4 md:p-5 rounded-2xl cursor-pointer transition-all border-2 flex items-center justify-center text-center relative
+                   className={`p-3 md:p-5 rounded-xl md:rounded-2xl cursor-pointer transition-all border-2 flex items-center justify-center text-center relative
                      ${isConnected ? 'bg-slate-50 border-blue-400 opacity-90' : 'bg-white border-slate-200 hover:border-amber-400 hover:bg-amber-50'}
                    `}
                  >
-                   <div className={`absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 bg-white ${isConnected ? 'border-blue-500' : 'border-slate-300'}`}></div>
-                   <div className="font-bold text-slate-700 text-sm [&>p]:m-0" dangerouslySetInnerHTML={{ __html: processHtmlMedia(r) }} />
+                   <div className={`absolute -left-2 top-1/2 -translate-y-1/2 w-3 h-3 md:w-4 md:h-4 rounded-full border-2 bg-white ${isConnected ? 'border-blue-500' : 'border-slate-300'}`}></div>
+                   <div className="font-bold text-slate-700 text-xs md:text-sm [&>p]:m-0 break-words" dangerouslySetInnerHTML={{ __html: processHtmlMedia(r) }} />
                  </div>
                )
             })}
@@ -1375,51 +1372,51 @@ export default function ExamLivePage() {
       <video ref={videoRef} autoPlay playsInline muted className="hidden" />
 
       {isTokenPromptOpen && (
-         <div className="fixed inset-0 z-[99999] bg-slate-100/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in">
-             <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-2xl max-w-md w-full border border-slate-200">
-                <div className="w-20 h-20 bg-blue-50 border border-blue-100 rounded-[1.5rem] flex items-center justify-center mx-auto mb-6 shadow-inner">
-                    <Lock className="w-10 h-10 text-blue-600" />
+         <div className="fixed inset-0 z-[99999] bg-slate-100/90 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center animate-in fade-in">
+             <div className="bg-white p-6 sm:p-8 md:p-10 rounded-[2.5rem] shadow-2xl max-w-md w-full border border-slate-200">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-50 border border-blue-100 rounded-[1.2rem] md:rounded-[1.5rem] flex items-center justify-center mx-auto mb-5 md:mb-6 shadow-inner">
+                    <Lock className="w-8 h-8 md:w-10 md:h-10 text-blue-600" />
                 </div>
-                <h2 className="text-2xl font-black text-slate-800 mb-2">Token Lanjutan</h2>
-                <p className="text-slate-500 text-sm mb-8 font-medium">Ujian Anda telah dibuka kembali oleh pengawas. Silakan masukkan 6 digit token untuk melanjutkan.</p>
+                <h2 className="text-xl md:text-2xl font-black text-slate-800 mb-2">Token Lanjutan</h2>
+                <p className="text-slate-500 text-xs md:text-sm mb-6 md:mb-8 font-medium">Ujian Anda telah dibuka kembali oleh pengawas. Silakan masukkan 6 digit token untuk melanjutkan.</p>
                 <input 
                    type="text" 
                    value={resumeTokenInput} 
                    onChange={(e) => setResumeTokenInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
                    placeholder="XXXXXX" 
-                   className="w-full bg-slate-50 border-2 border-slate-200 rounded-[1.2rem] px-6 py-4 text-3xl font-black text-center tracking-[0.5em] text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none mb-6 transition-all" 
+                   className="w-full bg-slate-50 border-2 border-slate-200 rounded-[1.2rem] px-4 md:px-6 py-3 md:py-4 text-2xl md:text-3xl font-black text-center tracking-[0.3em] md:tracking-[0.5em] text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none mb-5 md:mb-6 transition-all" 
                 />
-                <button onClick={handleResumeTokenSubmit} disabled={resumeTokenInput.length < 6} className="w-full py-4 bg-blue-600 text-white font-black rounded-[1.2rem] hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 disabled:opacity-50 active:scale-95 uppercase tracking-widest text-xs">Lanjutkan Ujian</button>
+                <button onClick={handleResumeTokenSubmit} disabled={resumeTokenInput.length < 6} className="w-full py-3 md:py-4 bg-blue-600 text-white font-black rounded-[1.2rem] hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200 disabled:opacity-50 active:scale-95 uppercase tracking-widest text-[10px] md:text-xs">Lanjutkan Ujian</button>
              </div>
          </div>
       )}
 
       {isBlockedFullscreen && securitySettings?.enable_fullscreen && (
-         <div className="fixed inset-0 z-[99990] bg-slate-50/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-300">
-             <div className="w-24 h-24 bg-rose-50 rounded-[2rem] flex items-center justify-center border border-rose-100 shadow-xl shadow-rose-200/50 mb-8 animate-bounce">
-                <AlertTriangle className="w-12 h-12 text-rose-600" />
+         <div className="fixed inset-0 z-[99990] bg-slate-50/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center animate-in fade-in duration-300">
+             <div className="w-20 h-20 md:w-24 md:h-24 bg-rose-50 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center border border-rose-100 shadow-xl shadow-rose-200/50 mb-6 md:mb-8 animate-bounce">
+                <AlertTriangle className="w-10 h-10 md:w-12 md:h-12 text-rose-600" />
              </div>
-             <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-4 tracking-tight">PELANGGARAN LAYAR!</h2>
-             <p className="text-slate-600 font-medium mb-10 max-w-lg leading-relaxed text-lg">Anda telah keluar dari mode Layar Penuh (Fullscreen). Ujian dijeda sementara untuk alasan keamanan. Silakan kembali ke mode Layar Penuh untuk melanjutkan.</p>
+             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800 mb-3 md:mb-4 tracking-tight">PELANGGARAN LAYAR!</h2>
+             <p className="text-slate-600 font-medium mb-8 md:mb-10 max-w-lg leading-relaxed text-sm md:text-lg">Anda telah keluar dari mode Layar Penuh (Fullscreen). Ujian dijeda sementara untuk alasan keamanan. Silakan kembali ke mode Layar Penuh untuk melanjutkan.</p>
              <button onClick={() => {
                  document.documentElement.requestFullscreen().catch(() => {});
-             }} className="px-10 py-4 bg-blue-600 hover:bg-blue-700 text-white text-sm uppercase tracking-widest font-black rounded-[1.2rem] shadow-xl shadow-blue-600/30 transition-all active:scale-95 flex items-center gap-3">
-                 <Maximize className="w-5 h-5"/> Kembali ke Ujian
+             }} className="px-6 md:px-10 py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white text-[10px] md:text-sm uppercase tracking-widest font-black rounded-[1.2rem] shadow-xl shadow-blue-600/30 transition-all active:scale-95 flex items-center gap-2 md:gap-3">
+                 <Maximize className="w-4 h-4 md:w-5 md:h-5"/> Kembali ke Ujian
              </button>
          </div>
       )}
 
       {isBlockedGeo && (
-         <div className="fixed inset-0 z-[99990] bg-slate-50/95 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-300">
-             <div className="w-24 h-24 bg-emerald-50 rounded-[2rem] flex items-center justify-center border border-emerald-100 shadow-xl shadow-emerald-200/50 mb-8 animate-bounce">
-                <MapPin className="w-12 h-12 text-emerald-600" />
+         <div className="fixed inset-0 z-[99990] bg-slate-50/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-6 text-center animate-in fade-in duration-300">
+             <div className="w-20 h-20 md:w-24 md:h-24 bg-emerald-50 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center border border-emerald-100 shadow-xl shadow-emerald-200/50 mb-6 md:mb-8 animate-bounce">
+                <MapPin className="w-10 h-10 md:w-12 md:h-12 text-emerald-600" />
              </div>
-             <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-4 tracking-tight">LOKASI DI LUAR JANGKAUAN</h2>
-             <p className="text-slate-600 font-medium mb-10 max-w-lg leading-relaxed text-lg">{geoErrorMsg}</p>
+             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800 mb-3 md:mb-4 tracking-tight">LOKASI DI LUAR JANGKAUAN</h2>
+             <p className="text-slate-600 font-medium mb-8 md:mb-10 max-w-lg leading-relaxed text-sm md:text-lg">{geoErrorMsg}</p>
              <button onClick={() => {
                  window.location.reload();
-             }} className="px-10 py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-sm uppercase tracking-widest font-black rounded-[1.2rem] shadow-xl shadow-emerald-600/30 transition-all active:scale-95 flex items-center gap-3">
-                 <Globe className="w-5 h-5"/> Cek Ulang Lokasi
+             }} className="px-6 md:px-10 py-3 md:py-4 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] md:text-sm uppercase tracking-widest font-black rounded-[1.2rem] shadow-xl shadow-emerald-600/30 transition-all active:scale-95 flex items-center gap-2 md:gap-3">
+                 <Globe className="w-4 h-4 md:w-5 md:h-5"/> Cek Ulang Lokasi
              </button>
          </div>
       )}
@@ -1427,33 +1424,33 @@ export default function ExamLivePage() {
       {isReady && securitySettings?.enable_watermark && (
         <div className="fixed inset-0 z-[999] pointer-events-none overflow-hidden opacity-[0.03] flex flex-wrap gap-12 items-center justify-center -rotate-12 select-none mix-blend-multiply">
            {Array.from({ length: 60 }).map((_, i) => (
-              <span key={i} className="text-3xl font-black whitespace-nowrap">{studentName} - {studentNIS}</span>
+              <span key={i} className="text-2xl md:text-3xl font-black whitespace-nowrap">{studentName} - {studentNIS}</span>
            ))}
         </div>
       )}
 
       {dialogConfig.isOpen && (
         <div className="fixed inset-0 z-[99995] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white w-full max-w-md rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200">
-            <div className="p-8 flex flex-col items-center text-center">
-               <div className={`w-20 h-20 rounded-[1.5rem] flex items-center justify-center mb-6 shadow-inner border 
+          <div className="bg-white w-full max-w-md rounded-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border border-slate-200">
+            <div className="p-6 md:p-8 flex flex-col items-center text-center">
+               <div className={`w-16 h-16 md:w-20 md:h-20 rounded-[1.2rem] md:rounded-[1.5rem] flex items-center justify-center mb-5 md:mb-6 shadow-inner border 
                   ${dialogConfig.type === 'confirm' ? 'bg-blue-50 text-blue-600 border-blue-100' : 
                     dialogConfig.type === 'success' ? 'bg-emerald-50 text-emerald-500 border-emerald-100' : 
                     dialogConfig.type === 'info' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 
                     'bg-rose-50 text-rose-600 border-rose-100'}`}>
-                  {dialogConfig.type === 'confirm' ? <HelpCircle className="w-10 h-10" /> : 
-                   dialogConfig.type === 'success' ? <CheckCircle2 className="w-10 h-10" /> :
-                   dialogConfig.type === 'info' ? <MessageSquare className="w-10 h-10" /> :
-                   <AlertTriangle className="w-10 h-10" />}
+                  {dialogConfig.type === 'confirm' ? <HelpCircle className="w-8 h-8 md:w-10 md:h-10" /> : 
+                   dialogConfig.type === 'success' ? <CheckCircle2 className="w-8 h-8 md:w-10 md:h-10" /> :
+                   dialogConfig.type === 'info' ? <MessageSquare className="w-8 h-8 md:w-10 md:h-10" /> :
+                   <AlertTriangle className="w-8 h-8 md:w-10 md:h-10" />}
                </div>
-               <h3 className="text-2xl font-black text-slate-800 mb-3">{dialogConfig.title}</h3>
-               <p className="text-slate-500 font-medium text-sm leading-relaxed whitespace-pre-wrap">{dialogConfig.message}</p>
+               <h3 className="text-xl md:text-2xl font-black text-slate-800 mb-2 md:mb-3">{dialogConfig.title}</h3>
+               <p className="text-slate-500 font-medium text-xs md:text-sm leading-relaxed whitespace-pre-wrap">{dialogConfig.message}</p>
             </div>
-            <div className="p-4 bg-slate-50/80 border-t border-slate-100 flex gap-3 justify-center">
+            <div className="p-3 md:p-4 bg-slate-50/80 border-t border-slate-100 flex gap-2 md:gap-3 justify-center">
                {dialogConfig.type === 'confirm' && (
-                 <button onClick={() => { closeDialog(); if(dialogConfig.onCancel) dialogConfig.onCancel(); }} className="px-6 py-3.5 rounded-2xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors w-full shadow-sm">Batal</button>
+                 <button onClick={() => { closeDialog(); if(dialogConfig.onCancel) dialogConfig.onCancel(); }} className="px-4 md:px-6 py-3 md:py-3.5 rounded-[1rem] md:rounded-2xl font-bold text-slate-600 bg-white border border-slate-200 hover:bg-slate-100 transition-colors w-full shadow-sm text-sm">Batal</button>
                )}
-               <button onClick={() => { closeDialog(); if(dialogConfig.onConfirm) dialogConfig.onConfirm(); }} className={`px-6 py-3.5 rounded-2xl font-bold text-white transition-all shadow-md active:scale-95 w-full ${dialogConfig.type === 'alert' && dialogConfig.title === 'PELANGGARAN KEAMANAN!' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : dialogConfig.type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'}`}>Mengerti</button>
+               <button onClick={() => { closeDialog(); if(dialogConfig.onConfirm) dialogConfig.onConfirm(); }} className={`px-4 md:px-6 py-3 md:py-3.5 rounded-[1rem] md:rounded-2xl font-bold text-white transition-all shadow-md active:scale-95 w-full text-sm ${dialogConfig.type === 'alert' && dialogConfig.title === 'PELANGGARAN KEAMANAN!' ? 'bg-rose-600 hover:bg-rose-700 shadow-rose-200' : dialogConfig.type === 'success' ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'}`}>Mengerti</button>
             </div>
           </div>
         </div>
@@ -1461,81 +1458,80 @@ export default function ExamLivePage() {
 
       {loading ? (
         <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center gap-4">
-          <LoaderCircle className="w-12 h-12 text-blue-600 animate-spin" />
-          <p className="text-slate-500 font-bold tracking-widest uppercase text-sm animate-pulse">Menyiapkan Lembar Ujian...</p>
+          <LoaderCircle className="w-10 h-10 md:w-12 md:h-12 text-blue-600 animate-spin" />
+          <p className="text-slate-500 font-bold tracking-widest uppercase text-xs md:text-sm animate-pulse">Menyiapkan Lembar Ujian...</p>
         </div>
       ) : !isReady && !isTokenPromptOpen ? (
         <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 selection:bg-blue-200">
-          <div className="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-200 max-w-lg text-center relative overflow-hidden animate-in zoom-in-95">
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
-            <div className="w-24 h-24 bg-blue-50 text-blue-600 rounded-[2rem] flex items-center justify-center mx-auto mb-8 border border-blue-100 shadow-inner rotate-3">
-              <Monitor className="w-12 h-12 -rotate-3" />
+          <div className="bg-white p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-slate-200 max-w-lg w-full text-center relative overflow-hidden animate-in zoom-in-95">
+            <div className="absolute top-0 left-0 w-full h-1.5 md:h-2 bg-gradient-to-r from-blue-600 to-indigo-600"></div>
+            <div className="w-16 h-16 md:w-24 md:h-24 bg-blue-50 text-blue-600 rounded-[1.2rem] md:rounded-[2rem] flex items-center justify-center mx-auto mb-6 md:mb-8 border border-blue-100 shadow-inner rotate-3">
+              <Monitor className="w-8 h-8 md:w-12 md:h-12 -rotate-3" />
             </div>
-            <h2 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">Siap Memulai?</h2>
+            <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-3 md:mb-4 tracking-tight">Siap Memulai?</h2>
             
-            {/* PERBAIKAN: List dengan margin & alignment rapi */}
-            <div className="mb-10 text-sm space-y-4 bg-slate-50 p-6 rounded-3xl border border-slate-100 shadow-inner text-slate-600">
-              <div className="flex items-start gap-4 text-left">
-                  <div className="bg-emerald-100 p-2 rounded-xl shrink-0"><CheckCircle2 className="w-5 h-5 text-emerald-600"/></div>
+            <div className="mb-8 md:mb-10 text-xs md:text-sm space-y-3 md:space-y-4 bg-slate-50 p-4 md:p-6 rounded-2xl md:rounded-3xl border border-slate-100 shadow-inner text-slate-600">
+              <div className="flex items-start gap-3 md:gap-4 text-left">
+                  <div className="bg-emerald-100 p-1.5 md:p-2 rounded-lg md:rounded-xl shrink-0"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-emerald-600"/></div>
                   <p className="pt-0.5 leading-relaxed">Ujian ini berjalan dalam mode <b className="text-slate-800">Layar Penuh (Fullscreen)</b>.</p>
               </div>
-              <div className="flex items-start gap-4 text-left">
-                  <div className="bg-amber-100 p-2 rounded-xl shrink-0"><AlertTriangle className="w-5 h-5 text-amber-600"/></div>
+              <div className="flex items-start gap-3 md:gap-4 text-left">
+                  <div className="bg-amber-100 p-1.5 md:p-2 rounded-lg md:rounded-xl shrink-0"><AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-amber-600"/></div>
                   <p className="pt-0.5 leading-relaxed">Dilarang menekan tombol <b className="text-slate-800">Windows/Command, Alt</b>, meminimalkan browser, atau membagi fokus layar.</p>
               </div>
-              <div className="flex items-start gap-4 text-left">
-                  <div className="bg-blue-100 p-2 rounded-xl shrink-0"><Clock className="w-5 h-5 text-blue-600"/></div>
+              <div className="flex items-start gap-3 md:gap-4 text-left">
+                  <div className="bg-blue-100 p-1.5 md:p-2 rounded-lg md:rounded-xl shrink-0"><Clock className="w-4 h-4 md:w-5 md:h-5 text-blue-600"/></div>
                   <p className="pt-0.5 leading-relaxed">Waktu akan terus berjalan meskipun Anda keluar dari aplikasi ujian.</p>
               </div>
               {securitySettings?.enable_geolocation && (
-                  <div className="flex items-start gap-4 text-left">
-                    <div className="bg-emerald-100 p-2 rounded-xl shrink-0"><MapPin className="w-5 h-5 text-emerald-600"/></div>
+                  <div className="flex items-start gap-3 md:gap-4 text-left">
+                    <div className="bg-emerald-100 p-1.5 md:p-2 rounded-lg md:rounded-xl shrink-0"><MapPin className="w-4 h-4 md:w-5 md:h-5 text-emerald-600"/></div>
                     <p className="pt-0.5 leading-relaxed">Sistem melacak koordinat lokasi GPS Anda untuk validasi kehadiran.</p>
                   </div>
               )}
             </div>
 
-            <button onClick={handleStartExamScreen} className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-sm rounded-2xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 flex items-center justify-center gap-3">
-              <Maximize className="w-5 h-5"/> Masuk Mode Ujian
+            <button onClick={handleStartExamScreen} className="w-full py-3 md:py-4 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest text-xs md:text-sm rounded-[1.2rem] md:rounded-2xl transition-all shadow-lg shadow-blue-600/30 active:scale-95 flex items-center justify-center gap-2 md:gap-3">
+              <Maximize className="w-4 h-4 md:w-5 md:h-5"/> Masuk Mode Ujian
             </button>
           </div>
         </div>
       ) : isReady && (
         <div 
-           className={`h-screen w-screen bg-slate-50 text-slate-800 overflow-hidden font-sans flex flex-col md:flex-row ${securitySettings?.enable_copy_paste === false ? 'select-none' : ''}`}
+           className={`h-[100dvh] w-screen bg-slate-50 text-slate-800 overflow-hidden font-sans flex flex-col md:flex-row ${securitySettings?.enable_copy_paste === false ? 'select-none' : ''}`}
            onCopy={blockCopyPaste}
            onPaste={blockCopyPaste}
            onCut={blockCopyPaste}
            onContextMenu={blockCopyPaste}
         >
           
-          <aside className="w-full md:w-[340px] h-auto md:h-screen bg-white border-r border-slate-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 shrink-0 overflow-hidden">
+          <aside className="w-full md:w-[340px] h-[35dvh] sm:h-[40dvh] md:h-[100dvh] bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 shrink-0 overflow-hidden">
             
-            <div className="p-6 border-b border-slate-100 bg-white flex items-center gap-4 relative">
+            <div className="p-3 md:p-6 border-b border-slate-100 bg-white flex items-center gap-3 md:gap-4 relative shrink-0">
               {studentAvatar ? (
-                 <img src={getAvatarUrl(studentAvatar)} alt="Profil" className="w-14 h-14 rounded-full object-cover border-2 border-blue-100 shadow-sm shrink-0" referrerPolicy="no-referrer" />
+                 <img src={getAvatarUrl(studentAvatar)} alt="Profil" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-blue-100 shadow-sm shrink-0 hidden sm:block md:block" referrerPolicy="no-referrer" />
               ) : (
-                 <div className="w-14 h-14 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm shrink-0">
-                   <UserCircle2 className="w-8 h-8 text-blue-600" strokeWidth={1.5} />
+                 <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm shrink-0 hidden sm:flex md:flex">
+                   <UserCircle2 className="w-6 h-6 md:w-8 md:h-8 text-blue-600" strokeWidth={1.5} />
                  </div>
               )}
-              <div className="overflow-hidden">
-                <h1 className="font-black text-slate-800 text-base truncate leading-tight tracking-tight" title={studentName}>{studentName}</h1>
-                <div className="flex items-center gap-2 mt-1">
-                   <span className="text-[9px] font-black text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest">NIS</span>
-                   <span className="text-[11px] font-bold text-slate-500 truncate">{studentNIS}</span>
+              <div className="overflow-hidden w-full flex flex-col justify-center">
+                <h1 className="font-black text-slate-800 text-sm md:text-base truncate leading-tight tracking-tight" title={studentName}>{studentName}</h1>
+                <div className="flex items-center gap-1.5 md:gap-2 mt-0.5 md:mt-1">
+                   <span className="text-[8px] md:text-[9px] font-black text-blue-700 bg-blue-50 px-1.5 md:px-2 py-0.5 rounded border border-blue-200 uppercase tracking-widest">NIS</span>
+                   <span className="text-[10px] md:text-[11px] font-bold text-slate-500 truncate">{studentNIS}</span>
                 </div>
               </div>
               
               {tabViolationCount > 0 && (
-                 <div className="absolute top-4 right-4 bg-rose-50 text-rose-600 text-[10px] font-black px-2 py-1 rounded-md border border-rose-200 animate-pulse flex items-center gap-1" title="Jumlah Pelanggaran Keamanan">
-                    <AlertTriangle className="w-3.5 h-3.5" /> {tabViolationCount}
+                 <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-rose-50 text-rose-600 text-[9px] md:text-[10px] font-black px-1.5 py-0.5 md:px-2 md:py-1 rounded-md border border-rose-200 animate-pulse flex items-center gap-1" title="Jumlah Pelanggaran Keamanan">
+                    <AlertTriangle className="w-3 h-3 md:w-3.5 md:h-3.5" /> {tabViolationCount}
                  </div>
               )}
             </div>
 
-            <div className="p-6 border-b border-slate-100 bg-white flex flex-col items-center justify-center shrink-0">
-               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5"><Clock className="w-3.5 h-3.5"/> Sisa Waktu Ujian</p>
+            <div className="p-3 md:p-6 border-b border-slate-100 bg-white flex flex-col items-center justify-center shrink-0">
+               <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 items-center gap-1.5 hidden md:flex"><Clock className="w-3.5 h-3.5"/> Sisa Waktu Ujian</p>
                
                {examInfo && examInfo.duration_seconds > 0 && examInfo.start_time_ms > 0 && (
                   <TimerDisplay 
@@ -1546,24 +1542,24 @@ export default function ExamLivePage() {
                )}
             </div>
 
-            <div className="px-6 py-4 border-b border-slate-100 flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-50/80 shrink-0">
-              <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-blue-600 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-blue-400 rotate-45"></div></div> Dijawab</span>
-              <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-amber-400 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white/50 rotate-45"></div></div> Ragu</span>
-              <span className="flex items-center gap-1.5"><div className="w-3 h-3 rounded-md bg-white border border-slate-200" /> Kosong</span>
+            <div className="px-3 py-2 md:px-6 md:py-4 border-b border-slate-100 flex justify-between text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-50/80 shrink-0">
+              <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-blue-600 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-blue-400 rotate-45"></div></div> <span className="hidden sm:inline">Dijawab</span></span>
+              <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-amber-400 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white/50 rotate-45"></div></div> <span className="hidden sm:inline">Ragu</span></span>
+              <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-white border border-slate-200" /> <span className="hidden sm:inline">Kosong</span></span>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 bg-slate-50/30 custom-scrollbar">
-              <div className="grid grid-cols-5 gap-3">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 bg-slate-50/30 custom-scrollbar">
+              <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
                 {questions.map((q, idx) => {
                   const ans = answers[q.id];
                   const isAnswered = isAnswerFilled(ans?.selected_answer);
                   const isDoubt = ans?.flag_status === 'marked_for_review';
                   const isActive = currentIndex === idx;
 
-                  let btnClass = "w-full aspect-square rounded-[0.8rem] text-sm font-black flex items-center justify-center transition-all border-2 relative overflow-hidden ";
+                  let btnClass = "w-full aspect-square rounded-lg md:rounded-[0.8rem] text-xs md:text-sm font-black flex items-center justify-center transition-all border-2 relative overflow-hidden ";
                   
                   if (isActive) {
-                    btnClass += "ring-4 ring-blue-100 border-blue-600 z-10 scale-110 shadow-lg ";
+                    btnClass += "ring-2 md:ring-4 ring-blue-100 border-blue-600 z-10 scale-110 shadow-lg ";
                     btnClass += isDoubt ? "bg-amber-400 text-amber-900 " : (isAnswered ? "bg-blue-600 text-white " : "bg-white text-blue-700 ");
                   } else if (isDoubt) {
                     btnClass += "bg-amber-400 border-amber-500 text-amber-900 shadow-sm hover:bg-amber-500 hover:scale-105 ";
@@ -1576,78 +1572,77 @@ export default function ExamLivePage() {
                   return (
                     <button key={q.id} onClick={() => changeQuestion(idx)} className={btnClass}>
                       <span className="relative z-10">{idx + 1}</span>
-                      {isDoubt && <div className="absolute -top-3 -right-3 w-6 h-6 bg-white/40 rotate-45 z-0"></div>}
-                      {!isDoubt && isAnswered && <div className="absolute -top-3 -right-3 w-6 h-6 bg-blue-400 rotate-45 z-0"></div>}
-                      {isDoubt && isAnswered && <div className="absolute bottom-1 right-1 w-2.5 h-2.5 rounded-full bg-blue-700 border border-white shadow-sm z-10"></div>}
+                      {isDoubt && <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-4 h-4 md:w-6 md:h-6 bg-white/40 rotate-45 z-0"></div>}
+                      {!isDoubt && isAnswered && <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-4 h-4 md:w-6 md:h-6 bg-blue-400 rotate-45 z-0"></div>}
+                      {isDoubt && isAnswered && <div className="absolute bottom-1 right-1 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-blue-700 border border-white shadow-sm z-10"></div>}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="p-6 border-t border-slate-200 bg-white mt-auto shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
-              <div className="flex justify-between items-center mb-3 text-[11px] font-black uppercase tracking-widest text-slate-500">
-                <span>Progres Menjawab:</span>
-                <span className={answeredQuestions === questions.length && questions.length > 0 ? 'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100' : 'text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100'}>{answeredQuestions} / {questions.length > 0 ? questions.length : 0} Soal</span>
+            <div className="p-3 md:p-6 border-t border-slate-200 bg-white mt-auto shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+              <div className="flex justify-between items-center mb-2 md:mb-3 text-[9px] md:text-[11px] font-black uppercase tracking-widest text-slate-500">
+                <span className="hidden sm:inline">Progres Menjawab:</span>
+                <span className={answeredQuestions === questions.length && questions.length > 0 ? 'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 ml-auto' : 'text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100 ml-auto'}>{answeredQuestions} / {questions.length > 0 ? questions.length : 0} Soal</span>
               </div>
-              <button onClick={triggerSubmit} disabled={submitting} className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white disabled:text-slate-500 font-black uppercase tracking-widest text-xs rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
-                {submitting ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
-                {submitting ? 'Mengumpulkan...' : 'Selesai & Kumpulkan'}
+              <button onClick={triggerSubmit} disabled={submitting} className="w-full py-2.5 md:py-4 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white disabled:text-slate-500 font-black uppercase tracking-widest text-[10px] md:text-xs rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 md:gap-2">
+                {submitting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" />}
+                {submitting ? 'Mengumpulkan...' : 'Kumpulkan'}
               </button>
             </div>
           </aside>
 
-          <main className="flex-1 h-screen bg-slate-50 flex flex-col relative scroll-smooth custom-scrollbar">
+          <main className="flex-1 min-h-0 bg-slate-50 flex flex-col relative scroll-smooth">
             
             <div className="h-1.5 w-full bg-slate-200 shrink-0 z-20">
               <div className="h-full bg-blue-500 transition-all duration-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: questions.length > 0 ? `${((currentIndex + 1) / questions.length) * 100}%` : '0%' }}></div>
             </div>
 
-            <div className="flex-1 overflow-y-auto relative flex flex-col p-6 md:p-10">
+            <div className="flex-1 overflow-y-auto relative flex flex-col p-4 sm:p-6 md:p-10 custom-scrollbar">
                {questions.length === 0 ? (
-                  <div className="flex-1 flex flex-col items-center justify-center p-10 text-center">
-                      <div className="w-24 h-24 bg-amber-50 text-amber-500 rounded-[2rem] flex items-center justify-center mb-6 shadow-inner rotate-3 border border-amber-100">
-                         <AlertTriangle className="w-12 h-12 -rotate-3" />
+                  <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-10 text-center">
+                      <div className="w-20 h-20 md:w-24 md:h-24 bg-amber-50 text-amber-500 rounded-[1.5rem] md:rounded-[2rem] flex items-center justify-center mb-4 md:mb-6 shadow-inner rotate-3 border border-amber-100">
+                         <AlertTriangle className="w-10 h-10 md:w-12 md:h-12 -rotate-3" />
                       </div>
-                      <h2 className="text-3xl font-black text-slate-800 mb-4 tracking-tight">Soal Belum Tersedia</h2>
-                      <p className="text-slate-500 font-medium max-w-md leading-relaxed">Admin atau guru pembuat ujian belum memasukkan soal ke dalam sistem untuk jadwal ini. Silakan lapor kepada pengawas ruangan Anda.</p>
+                      <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-3 md:mb-4 tracking-tight">Soal Belum Tersedia</h2>
+                      <p className="text-slate-500 font-medium max-w-md leading-relaxed text-sm md:text-base">Admin atau guru pembuat ujian belum memasukkan soal ke dalam sistem untuk jadwal ini. Silakan lapor kepada pengawas ruangan Anda.</p>
                   </div>
                ) : currentQuestion ? (
                  <div className="max-w-4xl mx-auto w-full flex flex-col flex-1">
                    
-                   <div className="bg-white rounded-[2rem] shadow-sm border border-slate-200 mb-8 overflow-hidden flex flex-col z-20">
-                     <div className="p-6 md:px-8 md:py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                       <div className="flex items-center gap-5">
-                         <div className="w-14 h-14 bg-blue-600 text-white rounded-[1.2rem] flex flex-col items-center justify-center shadow-lg shadow-blue-600/30 shrink-0">
-                           <span className="text-xl font-black leading-none">{currentIndex + 1}</span>
-                           <div className="w-6 h-[2px] bg-blue-400/50 my-0.5 rounded-full"></div>
-                           <span className="text-[10px] font-bold text-blue-200">{questions.length}</span>
+                   <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] shadow-sm border border-slate-200 mb-6 md:mb-8 overflow-hidden flex flex-col z-20">
+                     <div className="p-4 md:p-6 md:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4">
+                       <div className="flex items-center gap-3 md:gap-5 w-full sm:w-auto">
+                         <div className="w-12 h-12 md:w-14 md:h-14 bg-blue-600 text-white rounded-[1rem] md:rounded-[1.2rem] flex flex-col items-center justify-center shadow-lg shadow-blue-600/30 shrink-0">
+                           <span className="text-lg md:text-xl font-black leading-none">{currentIndex + 1}</span>
+                           <div className="w-5 md:w-6 h-[2px] bg-blue-400/50 my-0.5 rounded-full"></div>
+                           <span className="text-[9px] md:text-[10px] font-bold text-blue-200">{questions.length}</span>
                          </div>
-                         <div className="flex flex-col justify-center">
-                           <h3 className="text-xl font-black text-slate-800 tracking-tight leading-tight">{examInfo?.subject}</h3>
-                           <div className="flex items-center gap-2 mt-2">
-                              <span className="text-[9px] font-black text-blue-700 uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">Kelas {examInfo?.grade_level}</span>
-                              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">{currentQuestion.question_type.replace(/_/g, ' ')}</span>
+                         <div className="flex flex-col justify-center flex-1 min-w-0">
+                           <h3 className="text-lg md:text-xl font-black text-slate-800 tracking-tight leading-tight truncate">{examInfo?.subject}</h3>
+                           <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mt-1 md:mt-2">
+                              <span className="text-[8px] md:text-[9px] font-black text-blue-700 uppercase tracking-widest bg-blue-50 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-blue-100">Kls {examInfo?.grade_level}</span>
+                              <span className="text-[8px] md:text-[9px] font-black text-slate-500 uppercase tracking-widest bg-slate-100 px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border border-slate-200">{currentQuestion.question_type.replace(/_/g, ' ')}</span>
                            </div>
                          </div>
                        </div>
-                       <div className="flex items-center gap-2 bg-amber-50 px-4 py-2.5 rounded-[1rem] border border-amber-100 shrink-0 shadow-inner">
-                         <Bookmark className="w-4 h-4 text-amber-500" />
-                         <span className="text-xs font-black text-amber-700 uppercase tracking-widest">{currentQuestion.points} Poin</span>
+                       <div className="flex items-center gap-1.5 md:gap-2 bg-amber-50 px-3 md:px-4 py-2 md:py-2.5 rounded-xl md:rounded-[1rem] border border-amber-100 shrink-0 shadow-inner self-start sm:self-auto">
+                         <Bookmark className="w-3.5 h-3.5 md:w-4 md:h-4 text-amber-500" />
+                         <span className="text-[10px] md:text-xs font-black text-amber-700 uppercase tracking-widest">{currentQuestion.points} Poin</span>
                        </div>
                      </div>
                    </div>
 
-                   <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-sm border border-slate-200 mb-8 font-serif z-20 relative">
+                   <div className="bg-white p-5 sm:p-8 md:p-10 rounded-[1.5rem] md:rounded-[2.5rem] shadow-sm border border-slate-200 mb-6 md:mb-8 font-serif z-20 relative">
                      <div 
-                       className="prose prose-lg prose-slate max-w-none text-slate-800 leading-relaxed font-medium [&>p]:m-0 relative z-20"
+                       className="prose prose-sm md:prose-lg prose-slate max-w-none text-slate-800 leading-relaxed font-medium [&>p]:m-0 relative z-20 break-words"
                        dangerouslySetInnerHTML={{ __html: processedQuestionHtml }} 
                      />
                      
                      {currentQuestion.image_url && (
-                       <div className="mt-5 relative z-20" onContextMenu={e => e.preventDefault()}>
-                         {/* PERBAIKAN: Gunakan referrerPolicy agar Google tidak memblokir akses */}
-                         <img src={getSafeImageUrl(currentQuestion.image_url)} alt="Gambar Soal" className="rounded-2xl max-h-[400px] object-contain border border-slate-200 shadow-sm pointer-events-none" referrerPolicy="no-referrer" />
+                       <div className="mt-4 md:mt-5 relative z-20" onContextMenu={e => e.preventDefault()}>
+                         <img src={getSafeImageUrl(currentQuestion.image_url)} alt="Gambar Soal" className="rounded-xl md:rounded-2xl max-h-[300px] md:max-h-[400px] object-contain border border-slate-200 shadow-sm pointer-events-none" referrerPolicy="no-referrer" />
                        </div>
                      )}
                      
@@ -1672,11 +1667,11 @@ export default function ExamLivePage() {
                    <div className="mb-auto z-20">
                      
                      {['multiple_choice', 'complex_multiple_choice', 'true_false'].includes(currentQuestion.question_type) && (
-                       <div className="space-y-4">
-                         <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 pl-2">
+                       <div className="space-y-3 md:space-y-4">
+                         <p className="text-[10px] md:text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 md:mb-3 pl-1 md:pl-2">
                            {currentQuestion.question_type === 'complex_multiple_choice' ? 'Pilih Semua Jawaban yang Benar (Bisa > 1):' : 'Pilih Salah Satu Jawaban:'}
                          </p>
-                         <div className="grid grid-cols-1 gap-3">
+                         <div className="grid grid-cols-1 gap-2.5 md:gap-3">
                            {currentQuestion.options?.filter((opt: any) => {
                                const text = opt.text || opt.value || opt.right || '';
                                return text && text.trim() !== '' && text.trim().toLowerCase() !== 'null';
@@ -1705,35 +1700,34 @@ export default function ExamLivePage() {
                                <div 
                                  key={opt.key} 
                                  onClick={handleOptionClick}
-                                 className={`group relative flex items-start gap-4 p-5 rounded-[1.5rem] border-2 cursor-pointer transition-all duration-200
+                                 className={`group relative flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-[1.2rem] md:rounded-[1.5rem] border-2 cursor-pointer transition-all duration-200
                                    ${isSelected 
                                      ? 'bg-blue-50 border-blue-500 shadow-md scale-[1.01] z-10' 
                                      : 'bg-white border-slate-200 hover:border-blue-400 hover:bg-slate-50 shadow-sm hover:scale-[1.01]'
                                    }`}
                                >
-                                 <div className={`shrink-0 w-10 h-10 rounded-[0.8rem] flex items-center justify-center font-black text-sm transition-colors border
+                                 <div className={`shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-[0.8rem] flex items-center justify-center font-black text-xs md:text-sm transition-colors border
                                    ${isSelected ? 'bg-blue-600 text-white border-blue-700 shadow-sm' : 'bg-slate-100 text-slate-500 border-slate-200 group-hover:bg-blue-100 group-hover:text-blue-600'}
                                  `}>
                                    {displayKey}
                                  </div>
                                  
-                                 <div className="flex-1 pt-1 overflow-hidden">
+                                 <div className="flex-1 pt-0.5 md:pt-1 overflow-hidden">
                                    {opt.text && opt.text !== '' && (
-                                     <div className={`font-medium leading-relaxed break-words [&>p]:m-0 ${isSelected ? 'text-blue-900 font-bold' : 'text-slate-700'}`} dangerouslySetInnerHTML={{ __html: processHtmlMedia(opt.text || opt.value || '') }} />
+                                     <div className={`font-medium text-sm md:text-base leading-relaxed break-words [&>p]:m-0 ${isSelected ? 'text-blue-900 font-bold' : 'text-slate-700'}`} dangerouslySetInnerHTML={{ __html: processHtmlMedia(opt.text || opt.value || '') }} />
                                    )}
                                    
                                    {opt.image_url && (
-                                     <div className="mt-4" onContextMenu={e => e.preventDefault()}>
-                                       {/* PERBAIKAN: Gunakan referrerPolicy juga di sini */}
-                                       <img src={getSafeImageUrl(opt.image_url)} alt="Gambar Opsi" className="rounded-xl max-h-40 object-contain border border-slate-200 shadow-sm pointer-events-none" referrerPolicy="no-referrer" />
+                                     <div className="mt-3 md:mt-4" onContextMenu={e => e.preventDefault()}>
+                                       <img src={getSafeImageUrl(opt.image_url)} alt="Gambar Opsi" className="rounded-xl max-h-32 md:max-h-40 object-contain border border-slate-200 shadow-sm pointer-events-none" referrerPolicy="no-referrer" />
                                      </div>
                                    )}
                                  </div>
 
-                                 <div className={`shrink-0 flex items-center justify-center w-6 h-6 rounded-full border-2 transition-all mt-2
+                                 <div className={`shrink-0 flex items-center justify-center w-5 h-5 md:w-6 md:h-6 rounded-full border-2 transition-all mt-1 md:mt-2
                                    ${isSelected ? 'bg-blue-600 border-blue-600 scale-100 opacity-100 shadow-sm' : 'border-slate-300 scale-75 opacity-50 group-hover:border-blue-300'}
                                  `}>
-                                   {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
+                                   {isSelected && <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />}
                                  </div>
                                </div>
                              );
@@ -1743,11 +1737,11 @@ export default function ExamLivePage() {
                      )}
 
                      {['short_answer', 'essay'].includes(currentQuestion.question_type) && (
-                       <div className="space-y-4">
+                       <div className="space-y-3 md:space-y-4">
                          <div className="flex items-center justify-between">
-                            <p className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 pl-2">Ketik Jawaban Anda di Kotak Berikut:</p>
+                            <p className="text-[10px] md:text-[11px] font-black text-slate-500 uppercase tracking-widest mb-2 md:mb-3 pl-1 md:pl-2">Ketik Jawaban Anda di Kotak Berikut:</p>
                             {currentQuestion.question_type === 'essay' && currentQuestion.allow_media_upload && (
-                               <span className="text-[9px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-1 rounded flex items-center gap-1.5"><Globe className="w-3 h-3"/> Izinkan Link/Media</span>
+                               <span className="text-[8px] md:text-[9px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-1.5 md:px-2 py-1 rounded flex items-center gap-1 md:gap-1.5"><Globe className="w-3 h-3"/> Izinkan Link/Media</span>
                             )}
                          </div>
                          
@@ -1756,13 +1750,13 @@ export default function ExamLivePage() {
                            initialValue={answers[currentQuestion.id]?.selected_answer || ''}
                            onChange={(content: string) => handleAnswerChange(currentQuestion.id, content)}
                            placeholder={currentQuestion.question_type === 'essay' ? "Jelaskan jawaban Anda secara detail (Bisa unggah media/rumus)..." : "Ketik jawaban / angka di sini..."}
-                           minHeight={currentQuestion.question_type === 'essay' ? 'h-72' : 'h-32'}
+                           minHeight={currentQuestion.question_type === 'essay' ? 'h-48 md:h-72' : 'h-24 md:h-32'}
                            isEssay={currentQuestion.question_type === 'essay'}
                            allowMedia={currentQuestion.allow_media_upload === true}
                          />
 
                          {currentQuestion.question_type === 'essay' && (
-                           <div className="flex justify-end"><span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1.5 rounded-md border border-emerald-100 shadow-sm">Sistem menyimpan otomatis</span></div>
+                           <div className="flex justify-end"><span className="text-[8px] md:text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 md:px-3 py-1 md:py-1.5 rounded-md border border-emerald-100 shadow-sm">Sistem menyimpan otomatis</span></div>
                          )}
                        </div>
                      )}
@@ -1776,31 +1770,31 @@ export default function ExamLivePage() {
                      )}
                    </div>
 
-                   <div className="h-32 w-full shrink-0"></div>
+                   <div className="h-24 md:h-32 w-full shrink-0"></div>
 
                  </div>
                ) : null}
             </div>
 
-            <div className="shrink-0 w-full bg-white/95 backdrop-blur-xl border-t border-slate-200 p-4 md:px-10 md:py-6 flex items-center justify-between z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+            <div className="shrink-0 w-full bg-white/95 backdrop-blur-xl border-t border-slate-200 p-3 sm:p-4 md:px-10 md:py-6 flex items-center justify-between z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
               <button 
                 onClick={() => changeQuestion(Math.max(0, currentIndex - 1))} 
                 disabled={currentIndex === 0 || questions.length === 0}
-                className="flex items-center gap-2 px-6 py-4 bg-slate-50 hover:bg-slate-100 disabled:bg-slate-50/50 text-slate-600 disabled:text-slate-300 text-sm font-black uppercase tracking-widest rounded-2xl transition-all active:scale-95 border border-slate-200 disabled:border-slate-100"
+                className="flex items-center gap-1 md:gap-2 px-4 py-3 md:px-6 md:py-4 bg-slate-50 hover:bg-slate-100 disabled:bg-slate-50/50 text-slate-600 disabled:text-slate-300 text-xs md:text-sm font-black uppercase tracking-widest rounded-xl md:rounded-2xl transition-all active:scale-95 border border-slate-200 disabled:border-slate-100"
               >
-                <ChevronLeft className="w-5 h-5" /> <span className="hidden sm:inline">Kembali</span>
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">Kembali</span>
               </button>
 
               <button 
                 onClick={() => handleToggleFlag(currentQuestion?.id)}
                 disabled={questions.length === 0}
-                className={`flex items-center gap-2 px-6 py-4 text-sm font-black uppercase tracking-widest rounded-2xl transition-all active:scale-95 border-2 shadow-sm
+                className={`flex items-center gap-1 md:gap-2 px-4 py-3 md:px-6 md:py-4 text-xs md:text-sm font-black uppercase tracking-widest rounded-xl md:rounded-2xl transition-all active:scale-95 border-2 shadow-sm
                   ${answers[currentQuestion?.id]?.flag_status === 'marked_for_review' 
                     ? 'bg-amber-400 border-amber-500 text-amber-900 shadow-amber-200/50' 
                     : 'bg-white border-amber-200 text-amber-600 hover:bg-amber-50 hover:border-amber-300 disabled:opacity-50'
                   }`}
               >
-                <Flag className={`w-5 h-5 ${answers[currentQuestion?.id]?.flag_status === 'marked_for_review' ? 'fill-amber-900' : ''}`} /> 
+                <Flag className={`w-4 h-4 md:w-5 md:h-5 ${answers[currentQuestion?.id]?.flag_status === 'marked_for_review' ? 'fill-amber-900' : ''}`} /> 
                 <span>Ragu</span>
               </button>
 
@@ -1809,9 +1803,9 @@ export default function ExamLivePage() {
                   if (currentIndex === questions.length - 1 || questions.length === 0) triggerSubmit();
                   else changeQuestion(Math.min(questions.length - 1, currentIndex + 1));
                 }}
-                className="flex items-center gap-2 px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white text-sm font-black uppercase tracking-widest rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 border border-blue-500"
+                className="flex items-center gap-1 md:gap-2 px-4 py-3 md:px-6 md:py-4 bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-black uppercase tracking-widest rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 border border-blue-500"
               >
-                <span className="hidden sm:inline">{(currentIndex === questions.length - 1 || questions.length === 0) ? 'Kumpul' : 'Lanjut'}</span> <ChevronRight className="w-5 h-5" />
+                <span className="hidden sm:inline">{(currentIndex === questions.length - 1 || questions.length === 0) ? 'Kumpul' : 'Lanjut'}</span> <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
 

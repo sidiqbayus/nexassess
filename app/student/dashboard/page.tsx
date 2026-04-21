@@ -78,7 +78,6 @@ export default function StudentDashboard() {
           setExams(filteredExams);
         }
 
-        // PERBAIKAN TypeScript Error: Memaksa ID menjadi string (as string)
         const { data: sessionsData } = await supabase.from('exam_sessions').select('exam_id, status').eq('student_id', user.id as string);
         
         if (sessionsData) {
@@ -107,7 +106,6 @@ export default function StudentDashboard() {
     
     const channel = supabase.channel('realtime_exams_dashboard')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'exams' }, () => fetchStudentDataAndExams(false))
-      // PERBAIKAN TypeScript Error: Menambahkan tipe (payload: any) agar TS tidak bingung
       .on('postgres_changes', { event: '*', schema: 'public', table: 'exam_sessions' }, (payload: any) => {
          if (student && payload.new && payload.new.student_id === student.id) {
              fetchStudentDataAndExams(false);
@@ -165,7 +163,6 @@ export default function StudentDashboard() {
     setIsStarting(prev => ({ ...prev, [exam.id]: true }));
 
     try {
-      // PENGECEKAN KETAT MULTIPLE ATTEMPTS
       const { data: checkSessions } = await supabase.from('exam_sessions').select('id, status').eq('student_id', student.id).eq('exam_id', exam.id);
 
       let actualOngoing = false;
@@ -253,38 +250,38 @@ export default function StudentDashboard() {
       `}} />
 
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-top-10 fade-out duration-300">
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] animate-in slide-in-from-top-10 fade-out duration-300 w-[90%] sm:w-auto">
           <div className={`px-6 py-3.5 rounded-[1.5rem] shadow-2xl flex items-center gap-3 backdrop-blur-md border ${
              toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
              toast.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700' : 
              toast.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-700' : 
              'bg-blue-50 border-blue-200 text-blue-700'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className={`w-5 h-5 text-emerald-500`} /> : 
-             toast.type === 'warning' ? <AlertCircle className={`w-5 h-5 text-amber-500`} /> : 
-             toast.type === 'error' ? <AlertCircle className={`w-5 h-5 text-rose-500`} /> :
-             <Info className={`w-5 h-5 text-blue-500`} />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className={`w-5 h-5 shrink-0 text-emerald-500`} /> : 
+             toast.type === 'warning' ? <AlertCircle className={`w-5 h-5 shrink-0 text-amber-500`} /> : 
+             toast.type === 'error' ? <AlertCircle className={`w-5 h-5 shrink-0 text-rose-500`} /> :
+             <Info className={`w-5 h-5 shrink-0 text-blue-500`} />}
+            <p className="font-bold text-sm tracking-wide leading-tight">{toast.message}</p>
           </div>
         </div>
       )}
 
       <header className="bg-white/90 backdrop-blur-lg border-b border-slate-200 sticky top-0 z-50 transition-all shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[84px] flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[84px] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             {appSettings.appIcon ? (
-              <img src={appSettings.appIcon} alt="Logo" className="w-12 h-12 object-contain drop-shadow-sm" />
+              <img src={appSettings.appIcon} alt="Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain drop-shadow-sm shrink-0" />
             ) : (
-              <div className="w-12 h-12 bg-blue-600 rounded-[1.2rem] flex items-center justify-center shadow-md border border-blue-500">
-                <GraduationCap className="w-7 h-7 text-white" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-[1.2rem] flex items-center justify-center shadow-md border border-blue-500 shrink-0">
+                <GraduationCap className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
             )}
-            <div>
-              <h1 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">{appSettings.appName}</h1>
-              <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mt-0.5"><ShieldCheck className="w-3 h-3 text-emerald-500"/> Portal Ujian Siswa</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800 tracking-tight truncate">{appSettings.appName}</h1>
+              <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1 mt-0.5 truncate"><ShieldCheck className="w-3 h-3 text-emerald-500 shrink-0"/> Portal Ujian Siswa</p>
             </div>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 px-4 py-2.5 rounded-xl transition-all border border-transparent hover:border-rose-200 shadow-sm active:scale-95">
+          <button onClick={handleLogout} className="flex items-center shrink-0 gap-2 text-sm font-bold text-slate-500 hover:text-rose-600 hover:bg-rose-50 px-3 sm:px-4 py-2.5 rounded-xl transition-all border border-transparent hover:border-rose-200 shadow-sm active:scale-95">
             <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Keluar</span>
           </button>
         </div>
@@ -295,7 +292,7 @@ export default function StudentDashboard() {
             <div className="max-w-7xl mx-auto flex items-center relative z-10">
                <div className="bg-white/20 backdrop-blur-md px-5 py-2.5 flex items-center gap-2 font-black text-xs uppercase tracking-widest z-20 shrink-0 border-r border-white/20 shadow-[15px_0_20px_-5px_rgba(0,0,0,0.2)]">
                   <BellRing className="w-4 h-4 text-amber-300 animate-pulse"/> 
-                  <span className="text-amber-100">Info</span>
+                  <span className="text-amber-100 hidden sm:inline">Info</span>
                </div>
                <div className="flex-1 overflow-hidden py-2.5 relative">
                   <div className="animate-marquee font-bold text-sm tracking-wide text-white flex items-center">
@@ -306,16 +303,16 @@ export default function StudentDashboard() {
          </div>
       )}
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
         
-        <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-800 rounded-[2.5rem] p-8 md:p-12 text-white shadow-2xl shadow-blue-900/10 mb-10 relative overflow-hidden group">
+        <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-indigo-800 rounded-[2.5rem] p-6 sm:p-8 md:p-12 text-white shadow-2xl shadow-blue-900/10 mb-10 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:bg-white/20 transition-all duration-1000"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
           
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-            <div className="flex items-center gap-6">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 sm:gap-6">
               
-              <div className="relative group/avatar cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+              <div className="relative group/avatar cursor-pointer shrink-0" onClick={() => fileInputRef.current?.click()}>
                  {uploadingAvatar ? (
                     <div className="w-20 h-20 md:w-24 md:h-24 rounded-[1.5rem] bg-white/10 backdrop-blur-sm border-2 border-white/20 flex flex-col items-center justify-center shadow-lg">
                        <LoaderCircle className="w-6 h-6 animate-spin text-white mb-1" />
@@ -337,30 +334,30 @@ export default function StudentDashboard() {
                  <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
               </div>
 
-              <div className="space-y-3">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm w-fit mb-1 shadow-inner">
+              <div className="space-y-3 flex flex-col items-center sm:items-start w-full">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm w-fit mb-1 shadow-inner mx-auto sm:mx-0">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                   </span>
                   <span className="text-[10px] font-black text-blue-50 tracking-widest uppercase font-mono">{getFormattedTime()}</span>
                 </div>
-                <div>
-                  <h2 className="text-2xl md:text-4xl font-black tracking-tight drop-shadow-sm">{student?.full_name}</h2>
+                <div className="w-full">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight drop-shadow-sm break-words line-clamp-2">{student?.full_name}</h2>
                 </div>
-                <div className="flex flex-wrap items-center gap-3 text-[11px] font-bold pt-1">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-[11px] font-bold pt-1 w-full">
                   <span className="bg-black/20 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 flex items-center gap-2 shadow-inner">
-                    <Users className="w-3.5 h-3.5 text-blue-300" /> Kelas {student?.class_group}
+                    <Users className="w-3.5 h-3.5 text-blue-300 shrink-0" /> Kelas {student?.class_group}
                   </span>
                   <span className="bg-black/20 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-white/10 flex items-center gap-2 shadow-inner">
-                    <Award className="w-3.5 h-3.5 text-amber-300" /> NIS: {student?.student_number || '-'}
+                    <Award className="w-3.5 h-3.5 text-amber-300 shrink-0" /> NIS: {student?.student_number || '-'}
                   </span>
                 </div>
               </div>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-[1.5rem] p-5 flex items-center gap-4 shadow-xl text-center md:text-left self-end md:self-auto">
-               <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-400/30">
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-[1.5rem] p-5 flex items-center justify-center sm:justify-start gap-4 shadow-xl text-left w-full lg:w-auto mt-4 lg:mt-0">
+               <div className="w-12 h-12 bg-emerald-500/20 rounded-full flex items-center justify-center border border-emerald-400/30 shrink-0">
                  <CheckCircle2 className="w-6 h-6 text-emerald-400" />
                </div>
                <div>
@@ -380,15 +377,15 @@ export default function StudentDashboard() {
         </div>
 
         {exams.length === 0 ? (
-          <div className="bg-white border border-slate-200 border-dashed rounded-[3rem] p-20 text-center shadow-sm">
-            <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
+          <div className="bg-white border border-slate-200 border-dashed rounded-[3rem] p-10 sm:p-20 text-center shadow-sm">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-100 shadow-inner">
               <Calendar className="w-10 h-10 text-slate-300" />
             </div>
-            <h4 className="text-2xl font-black text-slate-700 mb-3">Belum Ada Jadwal Ujian</h4>
+            <h4 className="text-xl sm:text-2xl font-black text-slate-700 mb-3">Belum Ada Jadwal Ujian</h4>
             <p className="text-slate-500 font-medium max-w-md mx-auto text-sm leading-relaxed">Saat ini tidak ada jadwal ujian yang ditugaskan untuk kelas Anda. Silakan istirahat atau hubungi pengawas jika ini adalah sebuah kesalahan.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {exams.map((exam) => {
               const finishedCount = completedExamsCounts[exam.id] || 0;
               const maxAttempts = exam.max_attempts || 1;
@@ -400,37 +397,37 @@ export default function StudentDashboard() {
               const hasAttemptsLeft = finishedCount > 0 && finishedCount < maxAttempts;
 
               return (
-                <div key={exam.id} className={`group bg-white rounded-[2.5rem] p-8 transition-all duration-500 relative overflow-hidden flex flex-col justify-between h-full ${isFullyCompleted && !isOngoing ? 'border border-emerald-200 shadow-sm opacity-90' : 'border border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.2)] hover:border-blue-300 hover:-translate-y-2'}`}>
+                <div key={exam.id} className={`group bg-white rounded-[2.5rem] p-6 sm:p-8 transition-all duration-500 relative overflow-hidden flex flex-col justify-between h-full ${isFullyCompleted && !isOngoing ? 'border border-emerald-200 shadow-sm opacity-90' : 'border border-slate-200 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_-15px_rgba(59,130,246,0.2)] hover:border-blue-300 hover:-translate-y-2'}`}>
                   
                   {(!isFullyCompleted || isOngoing) && <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-50 to-indigo-50/50 rounded-bl-full -z-10 group-hover:scale-[1.3] transition-transform duration-700"></div>}
 
                   <div>
-                     <div className="mb-6 flex justify-between items-start">
-                       <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-[1.2rem] flex items-center justify-center border border-blue-100 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500">
-                         <BookOpen className="w-7 h-7" />
+                     <div className="mb-5 sm:mb-6 flex flex-wrap sm:flex-nowrap justify-between items-start gap-3">
+                       <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-50 text-blue-600 rounded-[1.2rem] flex items-center justify-center border border-blue-100 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors duration-500 shrink-0">
+                         <BookOpen className="w-6 h-6 sm:w-7 sm:h-7" />
                        </div>
                        {isFullyCompleted && !isOngoing ? (
-                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-200 shadow-sm"><CheckCircle2 className="w-3.5 h-3.5"/> Selesai ({finishedCount}/{maxAttempts})</span>
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-emerald-200 shadow-sm shrink-0 whitespace-nowrap"><CheckCircle2 className="w-3.5 h-3.5"/> Selesai ({finishedCount}/{maxAttempts})</span>
                        ) : isOngoing ? (
-                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-200 shadow-sm animate-pulse"><RotateCcw className="w-3.5 h-3.5"/> Lanjut</span>
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-amber-200 shadow-sm animate-pulse shrink-0 whitespace-nowrap"><RotateCcw className="w-3.5 h-3.5"/> Lanjut</span>
                        ) : hasAttemptsLeft ? (
-                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-indigo-200 shadow-sm"><Repeat className="w-3.5 h-3.5"/> Sisa {maxAttempts - finishedCount}x</span>
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-indigo-200 shadow-sm shrink-0 whitespace-nowrap"><Repeat className="w-3.5 h-3.5"/> Sisa {maxAttempts - finishedCount}x</span>
                        ) : (
-                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-200 shadow-sm"><PlayCircle className="w-3.5 h-3.5"/> Menunggu</span>
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 text-blue-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-blue-200 shadow-sm shrink-0 whitespace-nowrap"><PlayCircle className="w-3.5 h-3.5"/> Menunggu</span>
                        )}
                      </div>
 
                      <div className="mb-6">
                        <div className="flex items-center gap-2 mb-3">
-                          {exam.grade_level && <span className="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 text-[9px] font-black uppercase tracking-widest">{exam.grade_level}</span>}
+                          {exam.grade_level && <span className="bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 text-[9px] font-black uppercase tracking-widest inline-block">{exam.grade_level}</span>}
                        </div>
-                       <h4 className="text-xl md:text-2xl font-black text-slate-800 mb-2 line-clamp-2 leading-tight group-hover:text-blue-700 transition-colors duration-300" title={exam.subject}>{exam.subject}</h4>
-                       <p className="text-sm font-bold text-slate-500 line-clamp-2 leading-relaxed">{exam.title || '-'}</p>
+                       <h4 className="text-lg sm:text-xl md:text-2xl font-black text-slate-800 mb-2 line-clamp-2 leading-tight group-hover:text-blue-700 transition-colors duration-300 break-words" title={exam.subject}>{exam.subject}</h4>
+                       <p className="text-sm font-bold text-slate-500 line-clamp-2 leading-relaxed break-words">{exam.title || '-'}</p>
                      </div>
 
                      <div className="flex flex-col gap-3 mb-8">
                        <div className="flex items-center justify-center gap-2 text-xs font-bold text-slate-600 bg-slate-50 px-4 py-3 rounded-xl border border-slate-200 shadow-sm">
-                         <Clock className="w-4 h-4 text-slate-400" /> Waktu: {exam.duration_minutes} Menit
+                         <Clock className="w-4 h-4 text-slate-400 shrink-0" /> Waktu: {exam.duration_minutes} Menit
                        </div>
                        
                        {(!isFullyCompleted || isOngoing) && (
@@ -445,21 +442,21 @@ export default function StudentDashboard() {
                      {isFullyCompleted && !isOngoing ? (
                        <div className="pt-2 border-t border-slate-100">
                          <button disabled className="w-full py-4 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-[1.2rem] font-black cursor-not-allowed uppercase tracking-widest text-[10px] flex justify-center gap-2 items-center shadow-sm">
-                            <CheckCircle2 className="w-4 h-4"/> Batas Mengerjakan Habis
+                            <CheckCircle2 className="w-4 h-4 shrink-0"/> Batas Mengerjakan Habis
                          </button>
                        </div>
                      ) : (
-                       <div className="space-y-4 pt-6 border-t border-slate-100 relative">
+                       <div className="space-y-4 pt-5 sm:pt-6 border-t border-slate-100 relative">
                          {!isOngoing && (
                              <div className="relative group-focus-within:shadow-md transition-shadow rounded-[1.2rem]">
-                               <KeyRound className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 ${isLocked ? 'text-slate-300' : 'text-slate-400 group-focus-within:text-blue-500 transition-colors'}`} />
+                               <KeyRound className={`absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 w-5 h-5 ${isLocked ? 'text-slate-300' : 'text-slate-400 group-focus-within:text-blue-500 transition-colors'}`} />
                                <input 
                                  type="text" 
                                  placeholder={isLocked ? "Terkunci" : "Ketik Token..."}
                                  value={inputTokens[exam.id] || ''}
                                  onChange={(e) => handleTokenChange(exam.id, e.target.value)}
                                  disabled={isLocked || isStarting[exam.id]}
-                                 className={`w-full pl-14 pr-4 py-4 border rounded-[1.2rem] text-sm font-black text-slate-900 tracking-[0.2em] uppercase placeholder:tracking-normal placeholder:font-bold placeholder:text-xs focus:outline-none transition-all shadow-sm
+                                 className={`w-full pl-12 sm:pl-14 pr-4 py-3 sm:py-4 border rounded-[1.2rem] text-sm font-black text-slate-900 tracking-[0.2em] uppercase placeholder:tracking-normal placeholder:font-bold placeholder:text-xs focus:outline-none transition-all shadow-sm
                                    ${isLocked ? 'bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed' : 'bg-slate-50 border-slate-200 focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-400'}`
                                  }
                                  maxLength={6}
@@ -468,13 +465,13 @@ export default function StudentDashboard() {
                          )}
                          
                          {tokenErrors[exam.id] && !isOngoing && (
-                           <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 flex items-center justify-center gap-1.5 animate-in fade-in slide-in-from-top-1 bg-rose-50 p-2.5 rounded-xl border border-rose-200"><AlertCircle className="w-3.5 h-3.5"/> {tokenErrors[exam.id]}</p>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 flex items-center justify-center gap-1.5 animate-in fade-in slide-in-from-top-1 bg-rose-50 p-2.5 rounded-xl border border-rose-200"><AlertCircle className="w-3.5 h-3.5 shrink-0"/> {tokenErrors[exam.id]}</p>
                          )}
 
                          <button 
                            onClick={() => handleStartExam(exam, timeData.status, isOngoing)} 
                            disabled={isLocked || isStarting[exam.id]}
-                           className={`w-full py-4 rounded-[1.2rem] font-black uppercase tracking-widest text-[11px] transition-all flex items-center justify-center gap-2 group/btn active:scale-95
+                           className={`w-full py-3 sm:py-4 rounded-[1.2rem] font-black uppercase tracking-widest text-[10px] sm:text-[11px] transition-all flex items-center justify-center gap-2 group/btn active:scale-95
                              ${isLocked 
                                ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed' 
                                : isOngoing 
@@ -484,8 +481,8 @@ export default function StudentDashboard() {
                                    : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-600/30'}`
                              }
                          >
-                           {isStarting[exam.id] ? <LoaderCircle className="w-5 h-5 animate-spin" /> : (isLocked ? <Lock className="w-3.5 h-3.5"/> : isOngoing ? 'Lanjutkan Ujian' : hasAttemptsLeft ? 'Ulangi Ujian' : 'Mulai Kerjakan')} 
-                           {!isLocked && !isStarting[exam.id] && <ChevronRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />}
+                           {isStarting[exam.id] ? <LoaderCircle className="w-5 h-5 animate-spin shrink-0" /> : (isLocked ? <Lock className="w-3.5 h-3.5 shrink-0"/> : isOngoing ? 'Lanjutkan Ujian' : hasAttemptsLeft ? 'Ulangi Ujian' : 'Mulai Kerjakan')} 
+                           {!isLocked && !isStarting[exam.id] && <ChevronRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform shrink-0" />}
                          </button>
                        </div>
                      )}

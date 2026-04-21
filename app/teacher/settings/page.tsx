@@ -182,67 +182,67 @@ export default function TeacherSettingsPage() {
 
   const finalAvatarUrl = useMemo(() => getDriveImageUrl(teacherProfile.avatar_url), [teacherProfile.avatar_url]);
 
-  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all placeholder:text-slate-400";
-  const labelClass = "text-xs font-black text-slate-500 uppercase tracking-widest block mb-2";
+  const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-xl px-3 md:px-4 py-3 text-xs md:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold transition-all placeholder:text-slate-400";
+  const labelClass = "text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2";
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center"><LoaderCircle className="w-12 h-12 text-blue-500 animate-spin" /></div>;
+  if (isLoading) return <div className="min-h-[60vh] md:min-h-screen flex items-center justify-center"><LoaderCircle className="w-10 h-10 md:w-12 md:h-12 text-blue-500 animate-spin" /></div>;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-4xl mx-auto text-slate-900 relative pb-20">
+    <div className="space-y-4 md:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-4xl mx-auto text-slate-900 relative pb-24 md:pb-20">
       
       {/* TOAST NOTIFIKASI */}
       {toast && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[150] animate-in slide-in-from-top-10">
-          <div className={`px-6 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 border ${
+        <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-[150] w-[90%] max-w-sm sm:w-auto animate-in slide-in-from-top-10">
+          <div className={`px-4 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-[1.5rem] shadow-xl flex items-center gap-2 md:gap-3 border ${
              toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
              toast.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700' : 
              toast.type === 'info' ? 'bg-blue-50 border-blue-200 text-blue-700' :
              'bg-rose-50 border-rose-200 text-rose-700'
           }`}>
-            {toast.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : 
-             toast.type === 'warning' ? <AlertTriangle className="w-5 h-5" /> : 
-             toast.type === 'info' ? <Info className="w-5 h-5" /> :
-             <AlertCircle className="w-5 h-5" />}
-            <p className="font-bold text-sm tracking-wide">{toast.message}</p>
+            {toast.type === 'success' ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 shrink-0" /> : 
+             toast.type === 'warning' ? <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 shrink-0" /> : 
+             toast.type === 'info' ? <Info className="w-4 h-4 md:w-5 md:h-5 shrink-0" /> :
+             <AlertCircle className="w-4 h-4 md:w-5 md:h-5 shrink-0" />}
+            <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
       )}
 
       {/* HEADER & TOMBOL SIMPAN PROFIL */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[2rem] border border-blue-100 shadow-sm">
-        <div className="flex items-center gap-4">
-           <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><UserCircle2 className="w-6 h-6" /></div>
-           <div>
-             <h1 className="text-xl font-black text-slate-800">Pengaturan Profil</h1>
-             <p className="text-slate-500 text-sm font-medium">Sesuaikan identitas akun pengampu Anda.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 md:p-5 lg:px-8 lg:py-6 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
+        <div className="flex items-center gap-3 md:gap-4 min-w-0">
+           <div className="p-2 md:p-3 bg-blue-50 text-blue-600 rounded-xl shrink-0"><UserCircle2 className="w-5 h-5 md:w-6 md:h-6" /></div>
+           <div className="min-w-0 flex-1">
+             <h1 className="text-lg md:text-xl font-black text-slate-800 truncate">Pengaturan Profil</h1>
+             <p className="text-slate-500 text-xs md:text-sm font-medium truncate mt-0.5">Sesuaikan identitas akun pengampu Anda.</p>
            </div>
         </div>
-        <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-all shadow-md shadow-blue-200 active:scale-95 whitespace-nowrap w-full md:w-auto">
-          {isSaving ? <LoaderCircle className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+        <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3.5 md:px-8 md:py-3.5 rounded-xl font-bold text-xs md:text-sm transition-all shadow-md shadow-blue-200 active:scale-95 whitespace-nowrap w-full sm:w-auto shrink-0">
+          {isSaving ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <Save className="w-4 h-4 md:w-5 md:h-5" />}
           {isSaving ? 'Menyimpan...' : 'Simpan Profil'}
         </button>
       </div>
 
       {/* KONTEN PROFIL */}
-      <div className="bg-white border border-slate-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-100">
-          <div className="flex items-center gap-3">
-            <div>
-              <h2 className="text-xl font-black text-slate-800">Data Diri & Keamanan</h2>
-              <p className="text-sm text-slate-500 font-medium mt-1">Ubah nama, foto profil, dan atur kata sandi akun Anda.</p>
+      <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 md:gap-4 mb-6 md:mb-8 pb-4 border-b border-slate-100">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="min-w-0">
+              <h2 className="text-lg md:text-xl font-black text-slate-800">Data Diri & Keamanan</h2>
+              <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5 md:mt-1">Ubah nama, foto profil, dan atur kata sandi akun Anda.</p>
             </div>
           </div>
-          <div className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-2 rounded-xl text-xs font-black tracking-widest uppercase flex items-center gap-2">
-            Role Saat Ini: {teacherProfile.role === 'teacher' ? 'GURU PENGAMPU' : teacherProfile.role}
+          <div className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[9px] md:text-xs font-black tracking-widest uppercase flex items-center justify-center gap-1.5 md:gap-2 w-full sm:w-auto shrink-0 text-center">
+            Role: {teacherProfile.role === 'teacher' ? 'GURU PENGAMPU' : teacherProfile.role}
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
           {/* BAGIAN FOTO PROFIL */}
-          <div className="col-span-1 flex flex-col items-center gap-4 bg-slate-50 border border-slate-200 p-6 rounded-[2rem] h-fit">
+          <div className="col-span-1 flex flex-col items-center gap-3 md:gap-4 bg-slate-50 border border-slate-200 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] h-fit">
              <label className={labelClass + " text-center mb-0"}>Foto Profil (Avatar)</label>
              
-             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md relative bg-slate-200 flex shrink-0 items-center justify-center">
+             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white shadow-md relative bg-slate-200 flex shrink-0 items-center justify-center">
                {!avatarError && finalAvatarUrl ? (
                   <img 
                     src={finalAvatarUrl} 
@@ -258,15 +258,15 @@ export default function TeacherSettingsPage() {
                     }} 
                   />
                ) : (
-                  <UserCircle2 className="w-16 h-16 text-slate-400" />
+                  <UserCircle2 className="w-12 h-12 md:w-16 md:h-16 text-slate-400" />
                )}
              </div>
 
-             <div className="w-full space-y-3 mt-2">
+             <div className="w-full space-y-2 md:space-y-3 mt-1 md:mt-2">
                <div className="flex gap-2">
-                  <input type="url" name="avatar_url" value={teacherProfile.avatar_url} onChange={handleProfileChange} className={`${inputClass} !py-2 !px-3 !text-xs`} placeholder="Tempel URL GDrive..." />
-                  <label className={`shrink-0 flex items-center justify-center px-3 rounded-xl cursor-pointer transition-all ${isUploadingAvatar ? 'bg-slate-200 text-slate-500' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`} title="Upload Foto">
-                    {isUploadingAvatar ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <UploadCloud className="w-4 h-4" />}
+                  <input type="url" name="avatar_url" value={teacherProfile.avatar_url} onChange={handleProfileChange} className={`${inputClass} !py-2 !px-3 !text-[10px] md:!text-xs leading-tight`} placeholder="Tempel URL GDrive..." />
+                  <label className={`shrink-0 flex items-center justify-center px-3 rounded-lg md:rounded-xl cursor-pointer transition-all ${isUploadingAvatar ? 'bg-slate-200 text-slate-500' : 'bg-blue-100 text-blue-600 hover:bg-blue-200'}`} title="Upload Foto">
+                    {isUploadingAvatar ? <LoaderCircle className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin" /> : <UploadCloud className="w-3.5 h-3.5 md:w-4 md:h-4" />}
                     <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploadingAvatar} />
                   </label>
                </div>
@@ -274,8 +274,8 @@ export default function TeacherSettingsPage() {
           </div>
 
           {/* BAGIAN IDENTITAS */}
-          <div className="col-span-1 md:col-span-2 space-y-6">
-            <div className="space-y-2">
+          <div className="col-span-1 md:col-span-2 space-y-4 md:space-y-6">
+            <div className="space-y-1.5 md:space-y-2">
               <label className={labelClass}>Nama Lengkap & Gelar</label>
               <input 
                 type="text" 
@@ -286,7 +286,7 @@ export default function TeacherSettingsPage() {
                 placeholder="Masukkan nama beserta gelar..."
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5 md:space-y-2">
               <label className={labelClass}>Username / Akun Login (Email)</label>
               <input 
                 type="email" 
@@ -294,24 +294,24 @@ export default function TeacherSettingsPage() {
                 disabled 
                 className={`${inputClass} bg-slate-100/70 border-slate-200 text-slate-500 cursor-not-allowed select-none shadow-inner`} 
               />
-              <p className="text-[10px] font-bold text-slate-400 mt-1">Username tidak dapat diubah sendiri. Hubungi admin jika perlu diganti.</p>
+              <p className="text-[9px] md:text-[10px] font-bold text-slate-400 mt-1 leading-snug">Username tidak dapat diubah sendiri. Hubungi admin jika perlu diganti.</p>
             </div>
           </div>
         </div>
 
         {/* FITUR UBAH PASSWORD LANGSUNG */}
-        <div className="pt-8 border-t border-slate-100 flex flex-col gap-6 bg-slate-50 border border-slate-200 p-6 rounded-[2rem]">
+        <div className="pt-6 md:pt-8 border-t border-slate-100 flex flex-col gap-4 md:gap-6 bg-slate-50 border border-slate-200 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem]">
           <div>
-            <h3 className={`${labelClass} flex items-center gap-2 text-blue-600 !mb-1`}>
-              <KeyRound className="w-4 h-4" /> Ubah Kata Sandi
+            <h3 className={`${labelClass} flex items-center gap-1.5 md:gap-2 text-blue-600 !mb-0.5 md:!mb-1`}>
+              <KeyRound className="w-3.5 h-3.5 md:w-4 md:h-4" /> Ubah Kata Sandi
             </h3>
-            <p className="text-xs text-slate-500 font-bold leading-relaxed max-w-lg mt-1">
+            <p className="text-[10px] md:text-xs text-slate-500 font-bold leading-relaxed max-w-lg mt-1">
               Perbarui kata sandi akun Anda. Pastikan menggunakan kombinasi yang mudah diingat namun aman.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+            <div className="space-y-1.5 md:space-y-2">
               <label className={labelClass}>Kata Sandi Baru</label>
               <input 
                 type="password" 
@@ -321,7 +321,7 @@ export default function TeacherSettingsPage() {
                 placeholder="Minimal 6 karakter"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5 md:space-y-2">
               <label className={labelClass}>Konfirmasi Kata Sandi</label>
               <input 
                 type="password" 
@@ -333,14 +333,14 @@ export default function TeacherSettingsPage() {
             </div>
           </div>
           
-          <div className="flex justify-end mt-2">
+          <div className="flex justify-end mt-1 md:mt-2">
             <button 
               type="button" 
               onClick={handleUpdatePassword} 
               disabled={isUpdatingPassword || !newPassword || !confirmPassword}
-              className="shrink-0 flex items-center justify-center gap-2 bg-slate-800 hover:bg-black text-white px-8 py-3.5 rounded-xl font-black text-sm transition-all shadow-md active:scale-95 disabled:bg-slate-300 w-full md:w-auto"
+              className="shrink-0 flex items-center justify-center gap-1.5 md:gap-2 bg-slate-800 hover:bg-black text-white px-6 md:px-8 py-3.5 md:py-3.5 rounded-xl font-black text-xs md:text-sm transition-all shadow-md active:scale-95 disabled:bg-slate-300 w-full sm:w-auto"
             >
-              {isUpdatingPassword ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {isUpdatingPassword ? <LoaderCircle className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin" /> : <Save className="w-3.5 h-3.5 md:w-4 md:h-4" />}
               {isUpdatingPassword ? 'Memperbarui...' : 'Simpan Sandi Baru'}
             </button>
           </div>
