@@ -81,7 +81,7 @@ interface Question {
   image_url: string | null; audio_url: string | null; video_url: string | null;
   points: number; difficulty: number; is_active: boolean; scoring_type?: string;
   options: any; correct_answer: any; audio_duration?: number; tags?: string[];
-  package_name?: string; allow_media_upload?: boolean; // Tambahan interface izin media
+  package_name?: string; allow_media_upload?: boolean;
 }
 
 export default function UnifiedQuestionsBankPage() {
@@ -118,7 +118,6 @@ export default function UnifiedQuestionsBankPage() {
   const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
   const [isUploadingMedia, setIsUploadingMedia] = useState(false);
 
-  // STATE FORM DIPERBARUI DENGAN allow_media_upload
   const [formData, setFormData] = useState({
     subject: '', question_type: 'multiple_choice', question_text: '',
     image_url: '', audio_url: '', video_url: '', audio_play_limit: 0,
@@ -289,7 +288,7 @@ export default function UnifiedQuestionsBankPage() {
       points: q.points || 1.0, difficulty: q.difficulty || 3,
       is_active: q.is_active, scoring_type: q.scoring_type || 'all_or_nothing',
       package_name: q.package_name || 'Paket 1',
-      allow_media_upload: q.allow_media_upload || false // Set status izin media
+      allow_media_upload: q.allow_media_upload || false 
     });
 
     if (q.options && Array.isArray(q.options)) {
@@ -694,7 +693,7 @@ export default function UnifiedQuestionsBankPage() {
   }, [questions, searchQuery]);
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24 md:pb-20">
+    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24 md:pb-20">
       
       {/* TOAST NOTIFIKASI */}
       {toast && (
@@ -705,10 +704,10 @@ export default function UnifiedQuestionsBankPage() {
             toast.type === 'warning' ? 'bg-amber-50 border-amber-200 text-amber-700' :
             'bg-blue-50 border-blue-200 text-blue-700'
           }`}>
-            {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 shrink-0 text-emerald-500" />}
-            {toast.type === 'error' && <AlertCircle className="w-4 h-4 md:w-5 md:h-5 shrink-0 text-rose-500" />}
-            {toast.type === 'warning' && <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 shrink-0 text-amber-500" />}
-            {toast.type === 'info' && <Info className="w-4 h-4 md:w-5 md:h-5 shrink-0 text-blue-500" />}
+            {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6 shrink-0 text-emerald-500" />}
+            {toast.type === 'error' && <AlertCircle className="w-5 h-5 md:w-6 md:h-6 shrink-0 text-rose-500" />}
+            {toast.type === 'warning' && <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 shrink-0 text-amber-500" />}
+            {toast.type === 'info' && <Info className="w-5 h-5 md:w-6 md:h-6 shrink-0 text-blue-500" />}
             <p className="font-bold text-xs md:text-sm tracking-wide leading-snug">{toast.message}</p>
           </div>
         </div>
@@ -745,8 +744,8 @@ export default function UnifiedQuestionsBankPage() {
         <div className="space-y-4 md:space-y-6 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 bg-white p-4 md:p-5 lg:p-6 lg:px-8 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal</h1>
-              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium sm:ml-8 md:ml-11">Kelola kumpulan soal berdasarkan mata pelajaran dan kesulitan.</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal Master</h1>
+              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium sm:ml-8 md:ml-11">Pilih Folder Mata Pelajaran untuk mengelola soal secara permanen.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full sm:w-auto mt-2 sm:mt-0">
               <button onClick={openImportModal} className="flex items-center justify-center gap-1.5 md:gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl font-bold text-xs md:text-sm shadow-sm transition-colors w-full sm:w-auto"><FileUp className="w-4 h-4 md:w-5 md:h-5 text-emerald-500" /> Import Massal</button>
@@ -811,7 +810,7 @@ export default function UnifiedQuestionsBankPage() {
                 </div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight mb-1 truncate leading-tight">{activeSubject.name}</h1>
                 <p className="text-xs md:text-sm font-medium text-blue-100 flex items-center gap-1 md:gap-1.5">
-                  <Database className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bank Soal
+                  <Database className="w-3.5 h-3.5 md:w-4 md:h-4"/> Bank Soal Master
                 </p>
               </div>
             </div>
@@ -889,7 +888,7 @@ export default function UnifiedQuestionsBankPage() {
               <div className="p-3 md:p-4 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/20 shrink-0"><Package className="w-6 h-6 md:w-8 md:h-8" /></div>
               <div className="min-w-0">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight truncate leading-tight mb-1">{activePackage}</h1>
-                <div className="flex flex-wrap gap-2 mt-1 md:mt-2 text-xs md:text-sm font-bold text-cyan-100">
+                <div className="flex flex-wrap gap-1.5 md:gap-2 mt-1 md:mt-2 text-xs md:text-sm font-bold text-cyan-100">
                   <span className="bg-white/20 px-2 md:px-3 py-0.5 md:py-1 rounded-md md:rounded-lg border border-white/10 flex items-center gap-1.5 truncate max-w-[200px] sm:max-w-none"><BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" /> <span className="truncate">{activeSubject.name}</span></span>
                 </div>
               </div>
@@ -927,8 +926,7 @@ export default function UnifiedQuestionsBankPage() {
 
           <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden z-0">
             <div className="overflow-x-auto custom-scrollbar">
-              {/* Gunakan class hidden md:table untuk menyembunyikan table asli di layar kecil */}
-              <table className="w-full text-sm text-left hidden md:table">
+              <table className="w-full text-sm text-left hidden md:table min-w-[700px]">
                 <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
                   <tr><th className="px-6 lg:px-8 py-4 md:py-5 w-12 text-center">No</th><th className="px-6 lg:px-8 py-4 md:py-5">Pertanyaan</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Tipe</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Bobot</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Status</th><th className="px-6 lg:px-8 py-4 md:py-5 text-right">Aksi</th></tr>
                 </thead>
@@ -994,13 +992,139 @@ export default function UnifiedQuestionsBankPage() {
 
                             <div className="flex justify-end gap-2 mt-2 pt-3 border-t border-slate-100/60">
                               <button onClick={() => openEditForm(q)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-slate-500 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 hover:border-blue-200 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Edit3 className="w-3.5 h-3.5" /> Edit</button>
-                              <button onClick={() => handleQuestionDelete(q.id)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-rose-500 hover:bg-rose-50 hover:text-rose-600 border border-rose-200 hover:border-rose-300 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Trash2 className="w-3.5 h-3.5" /> Hapus</button>
+                              <button onClick={() => handleQuestionDelete(q.id)} className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-rose-500 hover:bg-rose-50 hover:text-rose-600 border border-slate-200 hover:border-rose-300 rounded-lg transition-all shadow-sm text-[10px] font-bold uppercase tracking-widest"><Trash2 className="w-3.5 h-3.5" /> Hapus</button>
                             </div>
                          </div>
                       ))
                  )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
 
+      {/* ================= MODAL MINI PILIH MAPEL ================= */}
+      {isSelectMapelModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 z-[120] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white w-full max-w-sm md:max-w-md rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col border border-slate-100">
+            <div className="p-6 md:p-8 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+               <h2 className="text-lg md:text-xl font-black text-slate-800">Pilih Target Mapel</h2>
+               <button onClick={() => setIsSelectMapelModalOpen(false)} className="p-1.5 md:p-2 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 rounded-full shadow-sm transition-colors"><X className="w-4 h-4 md:w-5 md:h-5" /></button>
+            </div>
+            <div className="p-6 md:p-8 space-y-3 md:space-y-4">
+              <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2">Mata Pelajaran Master</label>
+              <div className="relative">
+                 {subjects.length > 0 ? (
+                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-3 md:py-4 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all cursor-pointer appearance-none shadow-sm truncate pr-10">
+                        <option value="" disabled>-- Pilih Mapel --</option>
+                        {subjects.map(subj => <option key={subj.id} value={subj.id}>{subj.name} - {subj.grade_level}</option>)}
+                     </select>
+                 ) : (
+                     <div className="bg-rose-50 border border-rose-200 text-rose-700 p-3 md:p-4 rounded-lg md:rounded-xl text-xs md:text-sm font-bold text-center">Data mata pelajaran belum tersedia.</div>
+                 )}
+                 <ChevronDown className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400 pointer-events-none" />
+              </div>
+            </div>
+            <div className="p-4 md:p-8 border-t border-slate-100 bg-slate-50 flex gap-2 md:gap-3 shrink-0">
+               <button onClick={() => setIsSelectMapelModalOpen(false)} className="flex-1 py-3 md:py-3.5 bg-white border border-slate-200 text-slate-600 rounded-lg md:rounded-xl font-bold hover:bg-slate-100 shadow-sm transition-colors text-xs md:text-sm">Batal</button>
+               {subjects.length > 0 && (
+                 <button onClick={() => { if(!importSelectedSubject) { showToast("Pilih Mapel dulu!", "warning"); return; } setIsSelectMapelModalOpen(false); openCreateForm(subjects.find(s => s.id === importSelectedSubject)); }} className="flex-1 py-3 md:py-3.5 bg-blue-600 text-white rounded-lg md:rounded-xl font-bold hover:bg-blue-700 shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 md:gap-2 text-xs md:text-sm">Lanjut <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4"/></button>
+               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL: IMPORT EXCEL (POPUP STYLE) ================= */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-[120] bg-slate-900/60 backdrop-blur-sm overflow-y-auto flex items-center justify-center p-2 sm:p-4 md:p-8">
+          <div className="bg-white w-full max-w-5xl rounded-2xl md:rounded-[2.5rem] shadow-2xl flex flex-col max-h-[95vh] animate-in zoom-in-95 duration-300 overflow-hidden border border-slate-200">
+            
+            {/* HEADER MODAL */}
+            <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 flex items-start sm:items-center justify-between bg-slate-50 sticky top-0 z-20 gap-3">
+              <div>
+                <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
+                  <FileUp className="w-5 h-5 md:w-7 md:h-7 text-emerald-500 shrink-0"/> <span className="truncate">Import Massal Soal</span>
+                </h2>
+                <p className="text-xs md:text-sm text-slate-500 font-medium mt-0.5 md:mt-1 hidden sm:block">Unggah file Excel untuk menambahkan soal ke dalam Bank Soal secara cepat.</p>
+              </div>
+              <button onClick={() => setIsImportModalOpen(false)} className="p-2 md:p-3 bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 rounded-full transition-all shadow-sm shrink-0">
+                <X className="w-4 h-4 md:w-5 md:h-5"/>
+              </button>
+            </div>
+
+            {/* AREA KONTEN MODAL */}
+            <div className="p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 space-y-4 md:space-y-8 custom-scrollbar">
+              {importError && <div className="bg-rose-50 border border-rose-200 text-rose-700 px-4 md:px-6 py-4 md:py-5 rounded-xl md:rounded-2xl flex items-start gap-3 md:gap-4 shadow-sm text-xs md:text-sm"><div className="p-1.5 md:p-2 bg-rose-100 rounded-full shrink-0"><AlertCircle className="w-4 h-4 md:w-6 md:h-6" /></div><p className="font-bold mt-0.5 md:mt-1.5">{importError}</p></div>}
+              {importSuccess && <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 md:px-6 py-4 md:py-5 rounded-2xl md:rounded-3xl flex items-start gap-3 md:gap-4 shadow-sm"><div className="p-2 md:p-3 bg-emerald-100 rounded-full shrink-0"><CheckCircle2 className="w-4 h-4 md:w-6 md:h-6 text-emerald-600" /></div><div><p className="font-black text-base md:text-lg mb-0.5 md:mb-1 leading-tight">{importSuccess}</p><p className="text-xs md:text-sm font-medium text-emerald-700/80">Semua soal beserta medianya telah berhasil masuk ke database dan siap digunakan.</p></div></div>}
+
+              <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm">
+                 {/* KOTAK PANDUAN BIRU ELEGAN */}
+                 <div className="bg-blue-50 border border-blue-100 rounded-xl md:rounded-[1.5rem] p-4 sm:p-5 md:p-6 mb-6 md:mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+                    <div className="flex items-start gap-3 md:gap-4">
+                       <div className="p-1.5 md:p-2 bg-blue-100 text-blue-600 rounded-full shrink-0 mt-0.5 md:mt-1"><Info className="w-4 h-4 md:w-6 md:h-6" /></div>
+                       <div>
+                          <h3 className="font-bold text-blue-900 text-base md:text-lg mb-0.5 md:mb-1">Panduan Import & Validasi</h3>
+                          <p className="text-xs md:text-sm text-blue-700/80 font-medium leading-relaxed">Unduh template, isi soal sesuai panduan pada baris pertama, lalu unggah kembali file Excel tersebut ke dalam kotak di bawah ini.</p>
+                       </div>
+                    </div>
+                    <button type="button" onClick={downloadTemplate} className="shrink-0 bg-white border border-blue-200 text-blue-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 font-bold px-4 md:px-6 py-2.5 md:py-3 rounded-lg md:rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 w-full md:w-auto text-xs md:text-sm">
+                       <Download className="w-3.5 h-3.5 md:w-4 md:h-4"/> <span className="hidden sm:inline">Unduh Template Excel</span><span className="sm:hidden">Unduh Template</span>
+                    </button>
+                 </div>
+
+                 {/* PILIH TARGET MATA PELAJARAN (MASTER) */}
+                 <div className="mb-6 md:mb-8">
+                   <label className="font-black text-slate-800 mb-2 md:mb-3 block text-base md:text-lg flex items-center gap-1.5 md:gap-2"><BookOpen className="w-4 h-4 md:w-5 md:h-5 text-slate-400"/> Pilih Target Mata Pelajaran (Master)</label>
+                   <div className="relative max-w-2xl">
+                     <select value={importSelectedSubject} onChange={(e) => setImportSelectedSubject(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-3 md:py-4 text-sm md:text-base font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm appearance-none truncate pr-10">
+                       <option value="" disabled>-- Klik untuk memilih mata pelajaran --</option>
+                       {subjects.map(subj => <option key={subj.id} value={subj.id}>{subj.name} - {subj.grade_level}</option>)}
+                     </select>
+                     <ChevronDown className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-slate-400 pointer-events-none" />
+                   </div>
+                 </div>
+                 
+                 {/* AREA DROP EXCEL */}
+                 <label className={`border-2 border-dashed rounded-xl md:rounded-[2rem] p-8 sm:p-12 md:p-16 flex flex-col items-center justify-center text-center cursor-pointer transition-all group ${importFile ? 'border-emerald-400 bg-emerald-50/50' : 'border-blue-300 bg-blue-50/30 hover:border-blue-500 hover:bg-blue-50'}`}>
+                   <div className="p-3 sm:p-4 md:p-5 bg-white rounded-full shadow-sm border border-slate-200 mb-3 md:mb-4 group-hover:scale-110 transition-all duration-300">
+                      {importFile ? <FileSpreadsheet className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-500" /> : <FileUp className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />}
+                   </div>
+                   <span className="text-base sm:text-lg md:text-xl font-black text-slate-700 mb-1 leading-tight break-words max-w-full px-2">{importFile ? importFile.name : 'Pilih File Excel (.xlsx)'}</span>
+                   {!importFile && <span className="text-xs md:text-sm font-medium text-slate-500 px-4">Klik di sini untuk menelusuri file dari komputer</span>}
+                   <input type="file" accept=".xlsx, .xls" className="hidden" onChange={handleImportFileChange} />
+                 </label>
+              </div>
+              
+              {/* TABEL PREVIEW MUNCUL DI BAWAH JIKA ADA DATA */}
+              {previewData.length > 0 && (
+                 <div className="bg-white border border-slate-200 rounded-xl md:rounded-[2rem] shadow-sm overflow-hidden flex flex-col animate-in slide-in-from-bottom-4">
+                   <div className="px-4 sm:px-6 md:px-8 py-4 md:py-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-slate-50/80">
+                     <h2 className="font-black text-slate-800 flex items-center gap-2 md:gap-3 text-base md:text-lg">Preview Data Soal <span className="bg-emerald-100 text-emerald-700 text-[10px] md:text-xs px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg font-black tracking-widest uppercase whitespace-nowrap">{previewData.length} Baris Siap</span></h2>
+                     <button onClick={handleUploadData} disabled={isImporting} className="flex items-center justify-center gap-1.5 md:gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 text-white px-4 md:px-8 py-2.5 md:py-3.5 rounded-lg md:rounded-xl font-bold text-xs md:text-sm transition-all shadow-md shadow-blue-200 active:scale-95 w-full md:w-auto">
+                        {isImporting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin"/> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} 
+                        {isImporting ? 'Menyimpan...' : 'Simpan ke Database'}
+                     </button>
+                   </div>
+                   <div className="overflow-x-auto max-h-[300px] md:max-h-[400px] custom-scrollbar">
+                     <table className="w-full text-xs md:text-sm text-left whitespace-nowrap">
+                       <thead className="bg-white text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest border-b border-slate-200 sticky top-0 z-10 shadow-sm">
+                         <tr><th className="px-4 md:px-8 py-3 md:py-4">Paket</th><th className="px-4 md:px-8 py-3 md:py-4">Tipe Soal</th><th className="px-4 md:px-8 py-3 md:py-4">Cuplikan Pertanyaan</th><th className="px-4 md:px-8 py-3 md:py-4 text-center">Bobot</th></tr>
+                       </thead>
+                       <tbody className="divide-y divide-slate-100">
+                         {previewData.map((row, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                               <td className="px-4 md:px-8 py-3 md:py-5 font-bold text-cyan-600">{row.package_name}</td>
+                               <td className="px-4 md:px-8 py-3 md:py-5"><span className="bg-slate-100 text-slate-600 px-2 md:px-2.5 py-1 md:py-1.5 rounded-md text-[8px] md:text-[10px] font-black uppercase tracking-widest border border-slate-200">{row.question_type.replace(/_/g, ' ')}</span></td>
+                               <td className="px-4 md:px-8 py-3 md:py-5 text-slate-800 font-medium max-w-[200px] md:max-w-[400px] truncate">{row.question_text}</td>
+                               <td className="px-4 md:px-8 py-3 md:py-5 text-center font-black text-emerald-600">{row.points}</td>
+                            </tr>
+                         ))}
+                       </tbody>
+                     </table>
+                   </div>
+                 </div>
+              )}
             </div>
           </div>
         </div>
@@ -1010,20 +1134,21 @@ export default function UnifiedQuestionsBankPage() {
       {isFormModalOpen && (
         <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
           <div className="min-h-screen p-2 sm:p-4 md:p-8 flex items-center justify-center">
-            <div className="bg-white w-[95%] md:w-full max-w-6xl rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[95vh] my-auto border border-slate-200">
+            {/* JADIKAN SELURUH KOTAK MODAL INI SEBAGAI <form> */}
+            <form onSubmit={handleFormSubmit} className="bg-white w-[95%] md:w-full max-w-6xl rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[95vh] my-auto border border-slate-200">
               
               {/* HEADER FORM */}
               <div className="bg-slate-50 border-b border-slate-100 p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 shrink-0 z-10 sticky top-0">
                 <div>
-                  <button onClick={() => setIsFormModalOpen(false)} className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 flex items-center gap-1.5 md:gap-2 mb-1 md:mb-2 transition-colors"><ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4"/> Batal & Tutup</button>
+                  <button type="button" onClick={() => setIsFormModalOpen(false)} className="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 flex items-center gap-1.5 md:gap-2 mb-1 md:mb-2 transition-colors"><ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4"/> Batal & Tutup</button>
                   <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3 leading-tight">
                      {editingId ? <Edit3 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-600"/> : <Plus className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-blue-600"/>}
                      {editingId ? 'Edit Soal HOTS' : 'Menyusun Soal HOTS'}
                   </h1>
                 </div>
                 <div className="flex gap-2.5 md:gap-3 self-end md:self-auto w-full md:w-auto mt-2 md:mt-0">
-                   <button onClick={() => setIsFormModalOpen(false)} className="flex items-center justify-center p-3 sm:p-3.5 bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-500 text-slate-400 rounded-xl md:rounded-full transition-all shadow-sm shrink-0"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
-                   <button onClick={handleFormSubmit} disabled={isSubmittingForm} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 md:px-8 py-3 sm:py-3.5 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all text-xs md:text-sm">
+                   <button type="button" onClick={() => setIsFormModalOpen(false)} className="flex items-center justify-center p-3 sm:p-3.5 bg-white border border-slate-200 hover:bg-rose-50 hover:text-rose-500 text-slate-400 rounded-xl md:rounded-full transition-all shadow-sm shrink-0"><X className="w-4 h-4 md:w-5 md:h-5"/></button>
+                   <button type="submit" disabled={isSubmittingForm} className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-4 md:px-8 py-3 sm:py-3.5 rounded-xl md:rounded-2xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all text-xs md:text-sm">
                      {isSubmittingForm ? <LoaderCircle className="animate-spin w-4 h-4 md:w-5 md:h-5" /> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} <span className="hidden sm:inline">Simpan ke Database</span><span className="sm:hidden">Simpan</span>
                    </button>
                 </div>
@@ -1033,7 +1158,7 @@ export default function UnifiedQuestionsBankPage() {
               <div className="p-4 sm:p-6 md:p-8 overflow-y-auto bg-slate-50/50 flex-1 custom-scrollbar">
                 {formError && <div className="bg-rose-50 border border-rose-200 text-rose-700 p-4 md:p-5 rounded-xl md:rounded-2xl mb-4 md:mb-6 font-bold flex items-start gap-2.5 md:gap-3 shadow-sm text-xs md:text-sm"><AlertCircle className="w-4 h-4 md:w-5 md:h-5 shrink-0 mt-0.5"/>{formError}</div>}
 
-                <form className="space-y-4 md:space-y-6 pb-20">
+                <div className="space-y-4 md:space-y-6 pb-20">
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
                     <div className="lg:col-span-1 bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] p-4 sm:p-6 md:p-8 shadow-sm space-y-4 md:space-y-5 h-fit">
                       
@@ -1064,7 +1189,6 @@ export default function UnifiedQuestionsBankPage() {
                          <input type="text" name="subject" value={formData.subject} onChange={handleFormChange} placeholder="Ketik topik materi di sini..." className="w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl p-2.5 md:p-3 text-xs md:text-sm font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-400 shadow-sm" />
                       </div>
 
-                      {/* --- FITUR BARU: IZIN MEDIA UNTUK ESAI --- */}
                       {formData.question_type === 'essay' && (
                          <div className="mt-3 md:mt-4 p-3 md:p-4 bg-blue-50/50 border border-blue-200 rounded-xl md:rounded-2xl shadow-sm">
                             <label className="flex items-center gap-3 md:gap-4 cursor-pointer">
@@ -1339,14 +1463,11 @@ export default function UnifiedQuestionsBankPage() {
                          </label>
                       </div>
                       
-                      <button type="button" onClick={handleFormSubmit} disabled={isSubmittingForm} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:opacity-70 transition-all w-full mt-4 sm:hidden text-sm">
-                        {isSubmittingForm ? <LoaderCircle className="animate-spin w-4 h-4" /> : <Save className="w-4 h-4"/>} Simpan Soal
-                      </button>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}
