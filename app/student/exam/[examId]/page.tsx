@@ -211,7 +211,6 @@ const TimerDisplay = ({ totalSeconds, sessionStartTime, onTimeUp }: { totalSecon
 
   return (
     <div className="w-full text-center flex flex-row md:flex-col items-center justify-end md:justify-center gap-1.5 md:gap-0">
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest md:mb-2 flex items-center gap-1.5 md:hidden"><Clock className="w-3.5 h-3.5 text-blue-500"/> Waktu:</p>
       <div className={`text-lg md:text-4xl font-black tracking-tight font-mono ${timeLeft < 300 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
         {formatTime(timeLeft)}
       </div>
@@ -523,7 +522,6 @@ export default function ExamLivePage() {
 
   const router = useRouter();
 
-  // STATE BARU: Untuk Sidebar / Drawer Menu di HP
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [appTimeZone, setAppTimeZone] = useState('Asia/Jakarta');
@@ -834,12 +832,14 @@ export default function ExamLivePage() {
         } catch(e) {}
         
         const browserInfo = navigator.userAgent;
-        const currentDeviceInfo = `${browserInfo} | IP: ${userIp}`;
         
         let deviceFingerprint = "Unknown";
         if (typeof window !== 'undefined') {
             deviceFingerprint = btoa(`${browserInfo}-${window.screen.width}x${window.screen.height}`).substring(0, 50);
         }
+        
+        // PERBAIKAN: Mengikat Device ID dari perangkat (Browser + Fingerprint), bukan IP, karena IP siswa di satu sekolah bisa sama
+        const currentDeviceInfo = `${deviceFingerprint}`; 
         
         if (!sessionData) {
           const { data: newSession, error: createError } = await supabase
@@ -864,8 +864,11 @@ export default function ExamLivePage() {
           }
           sessionData = newSession;
         } else {
+            // PERBAIKAN: Deteksi ketat Multi-Device / Login Ganda di HP Lain
             if (sessionData.locked_device_id && sessionData.locked_device_id !== currentDeviceInfo) {
-                showDialog('alert', 'Perangkat Diblokir!', 'Anda terdeteksi menggunakan perangkat yang berbeda dari saat ujian dimulai. Silakan melapor ke pengawas/guru untuk mereset sesi Anda.', () => router.push('/student/dashboard'));
+                showDialog('alert', 'Perangkat Lain Terdeteksi!', 'Akun ini sedang digunakan untuk ujian di perangkat/browser lain. Jika Anda berganti perangkat karena error, minta Pengawas Ruangan untuk Mereset Akses (Token) Anda.', () => {
+                   supabase.auth.signOut().then(() => router.push('/login'));
+                });
                 setLoading(false); return;
             }
 
@@ -930,19 +933,16 @@ export default function ExamLivePage() {
 
         if (targetSubjectId) {
             const { data: qBySubjectId, error: err1 } = await supabase.from('questions').select('*').eq('subject_id', targetSubjectId).order('question_order', { ascending: true });
-            if (err1) console.error("Error Q1 (Subject ID):", err1);
             if (qBySubjectId && qBySubjectId.length > 0) allQuestions = qBySubjectId as Question[];
         }
 
         if (allQuestions.length === 0 && examData.subject) {
             const { data: qBySubjectName, error: err2 } = await supabase.from('questions').select('*').eq('subject', examData.subject).order('question_order', { ascending: true });
-            if (err2) console.error("Error Q2 (Subject Name):", err2);
             if (qBySubjectName && qBySubjectName.length > 0) allQuestions = qBySubjectName as Question[];
         }
 
         if (allQuestions.length === 0) {
              const { data: qByExam, error: err3 } = await supabase.from('questions').select('*').eq('exam_id', examId).order('question_order', { ascending: true });
-             if (err3) console.error("Error Q3 (Exam ID):", err3);
              if (qByExam && qByExam.length > 0) allQuestions = qByExam as Question[];
         }
 
@@ -984,6 +984,16 @@ export default function ExamLivePage() {
                  let needSave = false;
 
                  filteredQuestions = filteredQuestions.map(q => {
+                     // PERBAIKAN: Suntik opsi Benar/Salah (T/F) jika opsi asli kosong dari Admin
+                     if (q.question_type === 'true_false') {
+                         if (!q.options || (Array.isArray(q.options) && q.options.length === 0)) {
+                             q.options = [
+                                { key: 'True', text: 'Benar', is_correct: String(q.correct_answer).toLowerCase() === 'true' },
+                                { key: 'False', text: 'Salah', is_correct: String(q.correct_answer).toLowerCase() === 'false' }
+                             ];
+                         }
+                     }
+
                      if (['multiple_choice', 'complex_multiple_choice', 'true_false'].includes(q.question_type) && Array.isArray(q.options)) {
                          let validOptions = q.options.filter(opt => {
                              const text = opt.text || opt.value || opt.right || '';
@@ -1335,7 +1345,7 @@ export default function ExamLivePage() {
     if (questions.length === 0) return;
     await flushAutoSave(newIndex); 
     setCurrentIndex(newIndex);
-    setIsMobileSidebarOpen(false); // Menutup otomatis Sidebar Navigasi di Mobile saat soal dipilih
+    setIsMobileSidebarOpen(false);
   };
 
   const handleAnswerChange = useCallback((questionId: string, selectedAnswer: string) => {
@@ -1819,7 +1829,7 @@ export default function ExamLivePage() {
                 disabled={currentIndex === 0 || questions.length === 0}
                 className="flex items-center gap-1 md:gap-2 px-4 py-3 md:px-6 md:py-4 bg-slate-50 hover:bg-slate-100 disabled:bg-slate-50/50 text-slate-600 disabled:text-slate-300 text-xs md:text-sm font-black uppercase tracking-widest rounded-xl md:rounded-2xl transition-all active:scale-95 border border-slate-200 disabled:border-slate-100"
               >
-                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">Kembali</span>
+                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" /> <span className="hidden sm:inline">Kembali</span><span className="sm:hidden">Sblmnya</span>
               </button>
 
               <button 
@@ -1842,7 +1852,9 @@ export default function ExamLivePage() {
                 }}
                 className="flex items-center gap-1 md:gap-2 px-4 py-3 md:px-6 md:py-4 bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-black uppercase tracking-widest rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-600/30 border border-blue-500"
               >
-                <span className="hidden sm:inline">{(currentIndex === questions.length - 1 || questions.length === 0) ? 'Kumpul' : 'Lanjut'}</span> <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">{(currentIndex === questions.length - 1 || questions.length === 0) ? 'Kumpul' : 'Lanjut'}</span>
+                <span className="sm:hidden">{(currentIndex === questions.length - 1 || questions.length === 0) ? 'Kumpul' : 'Lanjut'}</span>
+                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
               </button>
             </div>
 
