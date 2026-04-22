@@ -19,6 +19,17 @@ if (typeof window !== 'undefined') {
   (window as any).katex = katex;
 }
 
+// ============================================================================
+// HELPER AMAN UNTUK EXAM BROWSER (ANTI-CRASH)
+// ============================================================================
+// Banyak Exam Browser memblokir localStorage, jika tidak dibungkus try-catch akan menyebabkan layar blank putih.
+const safeGetStorage = (key: string) => {
+  try { return localStorage.getItem(key); } catch (e) { return null; }
+};
+const safeSetStorage = (key: string, value: string) => {
+  try { localStorage.setItem(key, value); } catch (e) {}
+};
+
 const ReactQuill = dynamic(() => import('react-quill-new'), { 
   ssr: false, 
   loading: () => <div className="h-32 bg-slate-50 border border-slate-200 rounded-[2rem] flex items-center justify-center text-slate-400 font-bold text-sm md:text-base">Memuat Editor Ujian...</div> 
@@ -111,7 +122,7 @@ const LimitedAudioPlayer = ({ url, limit, questionId, studentId, onLimitReached 
 
   useEffect(() => {
     setHasMounted(true);
-    const stored = localStorage.getItem(storageKey);
+    const stored = safeGetStorage(storageKey);
     if (stored) setPlayCount(parseInt(stored, 10));
   }, [storageKey]);
 
@@ -131,7 +142,7 @@ const LimitedAudioPlayer = ({ url, limit, questionId, studentId, onLimitReached 
     if (!isUnlimited) {
       const newCount = playCount + 1;
       setPlayCount(newCount);
-      localStorage.setItem(storageKey, newCount.toString());
+      safeSetStorage(storageKey, newCount.toString());
     }
   };
 
@@ -522,6 +533,7 @@ export default function ExamLivePage() {
 
   const router = useRouter();
 
+  // STATE BARU: Untuk Sidebar / Drawer Menu di HP
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [appTimeZone, setAppTimeZone] = useState('Asia/Jakarta');
@@ -833,12 +845,15 @@ export default function ExamLivePage() {
         
         const browserInfo = navigator.userAgent;
         
+        // --- PERBAIKAN 2: DEVICE ID YANG LEBIH AKURAT ---
+        // Membuat hash fingerprint unik berdasarkan Browser, OS, Tipe HP/Laptop, dan Resolusi Layar
         let deviceFingerprint = "Unknown";
         if (typeof window !== 'undefined') {
-            deviceFingerprint = btoa(`${browserInfo}-${window.screen.width}x${window.screen.height}`).substring(0, 50);
+            // Gunakan kombinasi userAgent dan screen resolution untuk mendeteksi hardware fisik
+            const rawFingerprint = `${browserInfo}-${window.screen.width}x${window.screen.height}-${navigator.platform}`;
+            deviceFingerprint = btoa(rawFingerprint).substring(0, 50); 
         }
         
-        // PERBAIKAN: Mengikat Device ID dari perangkat (Browser + Fingerprint), bukan IP, karena IP siswa di satu sekolah bisa sama
         const currentDeviceInfo = `${deviceFingerprint}`; 
         
         if (!sessionData) {
@@ -850,7 +865,7 @@ export default function ExamLivePage() {
                 status: 'ongoing', 
                 current_question_index: 0,
                 device_info: currentDeviceInfo,
-                locked_device_id: currentDeviceInfo,
+                locked_device_id: currentDeviceInfo, // Kunci ke perangkat/browser saat ini
                 ip_address: userIp,
                 browser_info: browserInfo,
                 device_fingerprint: deviceFingerprint,
@@ -864,14 +879,16 @@ export default function ExamLivePage() {
           }
           sessionData = newSession;
         } else {
-            // PERBAIKAN: Deteksi ketat Multi-Device / Login Ganda di HP Lain
+            // JIKA MENCOBA LOGIN DI PERANGKAT/BROWSER LAIN KETIKA SEDANG ONGOING
             if (sessionData.locked_device_id && sessionData.locked_device_id !== currentDeviceInfo) {
-                showDialog('alert', 'Perangkat Lain Terdeteksi!', 'Akun ini sedang digunakan untuk ujian di perangkat/browser lain. Jika Anda berganti perangkat karena error, minta Pengawas Ruangan untuk Mereset Akses (Token) Anda.', () => {
+                showDialog('alert', 'Akses Diblokir! Multi-Device', 'Akun Anda sedang digunakan untuk ujian di perangkat/browser lain. Anda tidak bisa login ganda. Jika Anda berganti HP karena error, minta Pengawas Ruangan untuk Mereset Sesi Anda.', () => {
+                   // Paksa logout agar tidak menyalahgunakan akses
                    supabase.auth.signOut().then(() => router.push('/login'));
                 });
                 setLoading(false); return;
             }
 
+            // Jika device ID cocok (artinya direfresh dari HP yang sama), update data pelacakannya saja
             await supabase.from('exam_sessions').update({ 
                device_info: currentDeviceInfo,
                locked_device_id: sessionData.locked_device_id || currentDeviceInfo,
@@ -950,7 +967,7 @@ export default function ExamLivePage() {
 
         if (allQuestions.length > 0 && sessionData) {
             const availablePackages = Array.from(new Set(allQuestions.map(q => q.package_name || 'Paket 1')));
-            let assignedPackage = localStorage.getItem(`session_${sessionData.id}_package`);
+            let assignedPackage = safeGetStorage(`session_${sessionData.id}_package`);
             
             if (!assignedPackage && savedAnswers && savedAnswers.length > 0) {
                 const firstAnswered = allQuestions.find(q => q.id === savedAnswers[0].question_id);
@@ -958,13 +975,13 @@ export default function ExamLivePage() {
             }
             if (!assignedPackage) {
                 assignedPackage = availablePackages[Math.floor(Math.random() * availablePackages.length)] || 'Paket 1';
-                localStorage.setItem(`session_${sessionData.id}_package`, assignedPackage);
+                safeSetStorage(`session_${sessionData.id}_package`, assignedPackage);
             }
             let filteredQuestions = allQuestions.filter(q => (q.package_name || 'Paket 1') === assignedPackage);
             if (filteredQuestions.length === 0 && allQuestions.length > 0) filteredQuestions = allQuestions;
 
             if (config.randQ && filteredQuestions.length > 0) {
-                const savedOrder = localStorage.getItem(`session_${sessionData.id}_qOrder`);
+                const savedOrder = safeGetStorage(`session_${sessionData.id}_qOrder`);
                 if (savedOrder) {
                     const orderIds = JSON.parse(savedOrder);
                     filteredQuestions.sort((a, b) => {
@@ -974,17 +991,19 @@ export default function ExamLivePage() {
                     });
                 } else {
                     filteredQuestions.sort(() => Math.random() - 0.5);
-                    localStorage.setItem(`session_${sessionData.id}_qOrder`, JSON.stringify(filteredQuestions.map(q => q.id)));
+                    safeSetStorage(`session_${sessionData.id}_qOrder`, JSON.stringify(filteredQuestions.map(q => q.id)));
                 }
             }
 
             if (config.randOpt && filteredQuestions.length > 0) {
-                 const savedOptOrder = localStorage.getItem(`session_${sessionData.id}_optOrder`);
+                 const savedOptOrder = safeGetStorage(`session_${sessionData.id}_optOrder`);
                  let optOrderMap = savedOptOrder ? JSON.parse(savedOptOrder) : {};
                  let needSave = false;
 
                  filteredQuestions = filteredQuestions.map(q => {
-                     // PERBAIKAN: Suntik opsi Benar/Salah (T/F) jika opsi asli kosong dari Admin
+                     // --- PERBAIKAN 1: SUNTIKAN OTOMATIS OPSI BENAR/SALAH ---
+                     // Jika soal bertipe True/False tapi opsinya kosong (karena guru tidak membuatnya),
+                     // maka kita paksakan memasukkan array opsi manual.
                      if (q.question_type === 'true_false') {
                          if (!q.options || (Array.isArray(q.options) && q.options.length === 0)) {
                              q.options = [
@@ -1013,7 +1032,7 @@ export default function ExamLivePage() {
                      }
                      return q;
                  });
-                 if (needSave) localStorage.setItem(`session_${sessionData.id}_optOrder`, JSON.stringify(optOrderMap));
+                 if (needSave) safeSetStorage(`session_${sessionData.id}_optOrder`, JSON.stringify(optOrderMap));
             }
             setQuestions(filteredQuestions);
         }
@@ -1345,7 +1364,7 @@ export default function ExamLivePage() {
     if (questions.length === 0) return;
     await flushAutoSave(newIndex); 
     setCurrentIndex(newIndex);
-    setIsMobileSidebarOpen(false);
+    setIsMobileSidebarOpen(false); // Menutup otomatis Sidebar Navigasi di Mobile saat soal dipilih
   };
 
   const handleAnswerChange = useCallback((questionId: string, selectedAnswer: string) => {
