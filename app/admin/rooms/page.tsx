@@ -120,7 +120,12 @@ export default function RoomsManagementPage() {
       const { data: studentsData } = await supabase.from('users').select('id, full_name, student_number, class_group, room_id').eq('role', 'student').order('full_name');
       setStudents(studentsData || []);
 
-      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'teacher').order('full_name');
+      // PERBAIKAN PADA FITUR INI (Mengambil Role 'teacher' dan 'proctor')
+      const { data: teachersData } = await supabase
+        .from('users')
+        .select('id, full_name, taught_subjects')
+        .in('role', ['teacher', 'proctor'])
+        .order('full_name');
       setTeachers(teachersData || []);
 
       const { data: subjectsData } = await supabase.from('subjects').select('*').order('name');
@@ -228,7 +233,7 @@ export default function RoomsManagementPage() {
           if (row.Penanggung_Jawab) {
              const names = String(row.Penanggung_Jawab).split(',').map(n => n.trim().toLowerCase());
              teachers.forEach(t => {
-                if (names.includes(t.full_name.toLowerCase())) proctorIds.push(t.id);
+                if (names.includes((t.full_name || '').toLowerCase())) proctorIds.push(t.id);
              });
           }
 
@@ -453,7 +458,9 @@ export default function RoomsManagementPage() {
      (r.subject || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  const filteredTeachersForModal = teachers.filter(t => t.full_name.toLowerCase().includes(proctorSearchQuery.toLowerCase()));
+  // PENANGANAN SAFE-SEARCH UNTUK NAMA GURU AGAR TIDAK ERROR "undefined"
+  const filteredTeachersForModal = teachers.filter(t => (t.full_name || '').toLowerCase().includes(proctorSearchQuery.toLowerCase()));
+  
   const studentsInRoom = students.filter(s => activeRoom && s.room_id === activeRoom.id).sort((a,b) => a.full_name.localeCompare(b.full_name));
   
   const availableStudents = students.filter(s => {
@@ -507,8 +514,8 @@ export default function RoomsManagementPage() {
       {/* ================= MODAL PILIHAN FORMAT CETAK ================= */}
       {isPrintOptionsOpen && (
          <div className="fixed inset-0 z-[130] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-            <div className="bg-white w-full max-w-md rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-100">
-               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0">
+            <div className="bg-white w-full max-w-sm md:max-w-md rounded-2xl md:rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col border border-slate-100">
+               <div className="p-4 md:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50 shrink-0 gap-2">
                   <div className="min-w-0">
                     <h3 className="text-lg md:text-xl font-black text-slate-800 flex items-center gap-2 truncate"><Printer className="w-5 h-5 md:w-6 md:h-6 text-blue-600 shrink-0"/> <span className="truncate">Unduh Seluruh Sesi</span></h3>
                     <p className="text-xs md:text-sm font-medium text-slate-500 mt-1 hidden sm:block">Pilih format unduhan di bawah.</p>
@@ -601,7 +608,7 @@ export default function RoomsManagementPage() {
                )}
             </div>
 
-            <div className="p-4 md:p-6 lg:p-8 border-t border-slate-100 bg-white flex gap-2 md:gap-3 shrink-0">
+            <div className="p-4 md:p-6 lg:p-8 border-t border-slate-100 bg-white flex gap-2.5 md:gap-3 shrink-0 mt-auto">
                <button onClick={() => {setIsImportOpen(false); setPreviewData([]); setImportFile(null);}} className="flex-1 py-3 md:py-3.5 bg-slate-50 border border-slate-200 text-slate-600 font-bold rounded-lg md:rounded-xl hover:bg-slate-100 transition-colors shadow-sm text-xs md:text-sm">Batal</button>
                <button onClick={executeImport} disabled={previewData.filter(d=>!d.isDuplicate).length === 0 || isImporting} className="flex-1 py-3 md:py-3.5 bg-emerald-500 text-white font-bold rounded-lg md:rounded-xl shadow-md active:scale-95 transition-all disabled:bg-slate-300 flex items-center justify-center gap-1.5 md:gap-2 text-xs md:text-sm shadow-emerald-200 hover:bg-emerald-600">
                  {isImporting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin"/> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} Import <span className="hidden sm:inline">& Eksekusi Plotting</span>

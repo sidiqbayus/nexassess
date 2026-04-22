@@ -161,7 +161,11 @@ export default function UnifiedQuestionsBankPage() {
       const { data: subjectsData, error } = await supabase.from('subjects').select('id, name, grade_level').order('name', { ascending: true });
       if (error) throw error;
 
-      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'teacher');
+      // PERBAIKAN: Mengambil role 'teacher' DAN 'proctor'
+      const { data: teachersData } = await supabase
+        .from('users')
+        .select('id, full_name, taught_subjects')
+        .in('role', ['teacher', 'proctor']);
       
       let finalSubjects: Subject[] = [];
       if (subjectsData) {
@@ -693,7 +697,7 @@ export default function UnifiedQuestionsBankPage() {
   }, [questions, searchQuery]);
 
   return (
-    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 sm:p-6 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24 md:pb-20">
+    <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 p-4 md:p-8 max-w-7xl mx-auto text-slate-900 relative pb-24 md:pb-20">
       
       {/* TOAST NOTIFIKASI */}
       {toast && (
@@ -888,7 +892,7 @@ export default function UnifiedQuestionsBankPage() {
               <div className="p-3 md:p-4 bg-white/20 backdrop-blur-md rounded-xl md:rounded-2xl border border-white/20 shrink-0"><Package className="w-6 h-6 md:w-8 md:h-8" /></div>
               <div className="min-w-0">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight truncate leading-tight mb-1">{activePackage}</h1>
-                <div className="flex flex-wrap gap-1.5 md:gap-2 mt-1 md:mt-2 text-xs md:text-sm font-bold text-cyan-100">
+                <div className="flex flex-wrap gap-2 mt-1 md:mt-2 text-xs md:text-sm font-bold text-cyan-100">
                   <span className="bg-white/20 px-2 md:px-3 py-0.5 md:py-1 rounded-md md:rounded-lg border border-white/10 flex items-center gap-1.5 truncate max-w-[200px] sm:max-w-none"><BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" /> <span className="truncate">{activeSubject.name}</span></span>
                 </div>
               </div>
@@ -926,6 +930,7 @@ export default function UnifiedQuestionsBankPage() {
 
           <div className="bg-white border border-slate-200 rounded-2xl md:rounded-[2rem] shadow-sm overflow-hidden z-0">
             <div className="overflow-x-auto custom-scrollbar">
+              {/* Gunakan class hidden md:table untuk menyembunyikan table asli di layar kecil */}
               <table className="w-full text-sm text-left hidden md:table min-w-[700px]">
                 <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-black uppercase tracking-widest border-b border-slate-100">
                   <tr><th className="px-6 lg:px-8 py-4 md:py-5 w-12 text-center">No</th><th className="px-6 lg:px-8 py-4 md:py-5">Pertanyaan</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Tipe</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Bobot</th><th className="px-6 lg:px-8 py-4 md:py-5 text-center">Status</th><th className="px-6 lg:px-8 py-4 md:py-5 text-right">Aksi</th></tr>
