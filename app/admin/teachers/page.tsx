@@ -124,7 +124,13 @@ export default function TeachersManagementPage() {
       if (subjErr) throw subjErr;
       if (subjData) setSubjectsList(subjData as Subject[]);
 
-      const { data: teacherData, error: teacherErr } = await supabase.from('users').select('*').eq('role', 'teacher').order('full_name', { ascending: true }); // Role di Supabase adalah 'proctor'
+      // PERBAIKAN: Ambil 'teacher' DAN 'proctor' agar tidak ada data yang terlewat
+      const { data: teacherData, error: teacherErr } = await supabase
+         .from('users')
+         .select('*')
+         .in('role', ['teacher', 'proctor']) 
+         .order('full_name', { ascending: true });
+         
       if (teacherErr) throw teacherErr;
       setTeachers(teacherData || []);
     } catch (err: any) { showToast("Gagal memuat data: " + err.message, "error"); } finally { setLoading(false); }
@@ -180,7 +186,6 @@ export default function TeachersManagementPage() {
     } catch (e) { showToast("Gagal memotong gambar", "error"); }
   };
 
-  // --- PERBAIKAN: SUBMIT MENGGUNAKAN API AGAR AUTH TERDAFTAR ---
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.full_name || !formData.username || (!editingId && !formData.password)) {
@@ -199,7 +204,7 @@ export default function TeachersManagementPage() {
         full_name: formData.full_name, 
         username: formData.username, 
         email: `${formData.username}@nexassess.com`, 
-        role: 'teacher', 
+        role: 'teacher', // PASTIKAN TEACHER
         taught_subjects: formData.taught_subjects, 
         avatar_url: formData.avatar_url || null, 
         ...(formData.password ? { password: formData.password } : {})
@@ -220,17 +225,13 @@ export default function TeachersManagementPage() {
       if (!response.ok) throw new Error(result.error || 'Gagal menyimpan ke server. Pastikan API backend berjalan.');
 
       if (editingId) {
-        setTeachers(prev => prev.map(t => t.id === editingId ? { ...t, ...payload } : t));
         showToast("Data guru berhasil diperbarui!", "success");
       } else {
-        // Karena insert, API akan mengembalikan data lengkap (termasuk ID dari Auth)
-        if (result.data && result.data.length > 0) {
-          setTeachers(prev => [...prev, result.data[0] as Teacher].sort((a, b) => a.full_name.localeCompare(b.full_name)));
-        }
         showToast("Guru baru berhasil ditambahkan dan didaftarkan di sistem login!", "success");
       }
+      
       setIsFormOpen(false);
-      fetchData(); // Sync ulang
+      fetchData(); // Refresh Data dari DB langsung
     } catch (err: any) { 
       showToast(err.message, "error"); 
     } finally { 
@@ -312,7 +313,6 @@ export default function TeachersManagementPage() {
     reader.readAsBinaryString(file);
   };
 
-  // --- PERBAIKAN: EKSEKUSI IMPORT MENGGUNAKAN API ---
   const executeImport = async () => {
     const validData = previewData.filter(d => !d.isDuplicate);
     if (validData.length === 0) {
@@ -333,12 +333,9 @@ export default function TeachersManagementPage() {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Server error saat import');
       
-      if (result.data && result.data.length > 0) {
-        setTeachers(prev => [...prev, ...result.data].sort((a, b) => a.full_name.localeCompare(b.full_name)));
-      }
-      
       showToast(`${validData.length} Data guru valid berhasil didaftarkan ke sistem!`, "success");
-      setIsImportOpen(false); setPreviewData([]); setImportFile(null); fetchData();
+      setIsImportOpen(false); setPreviewData([]); setImportFile(null); 
+      fetchData(); // Refresh Data dari DB langsung
     } catch (err: any) { 
        showToast("Gagal import: " + err.message, "error"); 
     } finally { 
@@ -438,15 +435,16 @@ export default function TeachersManagementPage() {
     });
   };
 
-  // FILTER GURU DI TABEL UTAMA
+  // FILTER GURU DI TABEL UTAMA (Dengan pengaman OR undefined agar tidak crash)
   const filteredTeachers = teachers.filter(t => 
-    t.full_name.toLowerCase().includes(searchQuery.toLowerCase()) || t.username.toLowerCase().includes(searchQuery.toLowerCase())
+    (t.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (t.username || '').toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // FILTER MATA PELAJARAN DI MODAL TAMBAH/EDIT
   const filteredSubjectsModal = subjectsList.filter(subj => 
-    subj.name.toLowerCase().includes(subjectSearchQuery.toLowerCase()) || 
-    subj.grade_level.toLowerCase().includes(subjectSearchQuery.toLowerCase())
+    (subj.name || '').toLowerCase().includes(subjectSearchQuery.toLowerCase()) || 
+    (subj.grade_level || '').toLowerCase().includes(subjectSearchQuery.toLowerCase())
   );
 
   const inputClass = "w-full bg-slate-50 border border-slate-200 rounded-lg md:rounded-xl px-3 md:px-4 py-2.5 md:py-3 text-xs md:text-sm font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all placeholder:text-slate-400 placeholder:font-medium";
@@ -761,7 +759,6 @@ export default function TeachersManagementPage() {
                       <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2 flex items-center gap-1.5 md:gap-2"><UserCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4"/> Nama Lengkap *</label>
                       <input type="text" value={formData.full_name} onChange={e => setFormData({...formData, full_name: e.target.value})} className={inputClass} placeholder="Contoh: Budi Santoso, S.Pd" required />
                     </div>
-                    {/* PERBAIKAN: Input NIP & Password bertumpuk di HP agar lega diketik */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                       <div>
                         <label className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest block mb-1.5 md:mb-2 flex items-center gap-1.5 md:gap-2"><GraduationCap className="w-3.5 h-3.5 md:w-4 md:h-4"/> NIP (Atau Username) *</label>
