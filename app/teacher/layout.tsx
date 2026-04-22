@@ -48,7 +48,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
   const profileRef = useRef<HTMLDivElement>(null)
 
-  // LOGIKA "SATPAM" KEAMANAN (Mencegah Siswa / Admin Masuk)
   useEffect(() => {
     const checkAuthAndData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -59,7 +58,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
       const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single();
 
-      // STRICT ROLE CHECK: Hanya izinkan role 'teacher' atau 'proctor'
       if (!profile || !['teacher', 'proctor'].includes(profile.role)) {
         if (profile?.role === 'admin' || profile?.role === 'superadmin') {
             window.location.href = '/admin/dashboard';
@@ -81,7 +79,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
         posisi_y_avatar: profile.posisi_y_avatar ?? 0
       });
 
-      // Ambil Nama & Icon Aplikasi dari Pengaturan
       const { data: settingData } = await supabase.from('pengaturan_aplikasi').select('nama_aplikasi, ikon_aplikasi').eq('id', 1).single();
       if (settingData) {
         setAppSettings({
@@ -93,7 +90,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     
     checkAuthAndData();
 
-    // Sesuaikan sidebar di perangkat mobile saat pertama kali dimuat
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       setIsSidebarOpen(false);
     }
@@ -107,7 +103,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Tutup sidebar otomatis di HP ketika pindah halaman
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       setIsSidebarOpen(false);
@@ -121,19 +116,17 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // DAFTAR MENU KHUSUS GURU (Lebih Sedikit dari Admin)
   const menuItems = [
-    { name: 'Dashboard', desc: 'Ringkasan aktivitas guru, statistik mata pelajaran, dan jadwal terdekat.', icon: LayoutDashboard, href: '/teacher/dashboard' },
-    { name: 'Ruang Ujian', desc: 'Lihat daftar ruang ujian dan peserta yang ada di dalamnya (Read-only).', icon: Building, href: '/teacher/rooms' },
-    { name: 'Mata Pelajaran', desc: 'Lihat daftar mata pelajaran yang Anda ampu (Read-only).', icon: BookOpen, href: '/teacher/subjects' },
-    { name: 'Jadwal Ujian', desc: 'Lihat jadwal ujian, waktu pelaksanaan, dan token (Read-only).', icon: CalendarClock, href: '/teacher/exams' },
-    { name: 'Bank Soal', desc: 'Kelola kumpulan soal hanya pada mata pelajaran yang Anda ampu.', icon: Database, href: '/teacher/questions' },
-    { name: 'Pengawasan Ujian', desc: 'Pantau ujian secara langsung untuk mapel yang Anda ampu atau awasi.', icon: Activity, href: '/teacher/monitoring' },
-    { name: 'Penilaian', desc: 'Akses rekap nilai, esai, dan analisis untuk mapel yang Anda ampu.', icon: BarChart3, href: '/teacher/reports' },
-    { name: 'Pengaturan Profil', desc: 'Perbarui nama, NIP, foto profil, dan kata sandi Anda.', icon: Settings, href: '/teacher/settings' },
+    { name: 'Dashboard', icon: LayoutDashboard, href: '/teacher/dashboard' },
+    { name: 'Ruang Ujian', icon: Building, href: '/teacher/rooms' },
+    { name: 'Mata Pelajaran', icon: BookOpen, href: '/teacher/subjects' },
+    { name: 'Jadwal Ujian', icon: CalendarClock, href: '/teacher/exams' },
+    { name: 'Bank Soal', icon: Database, href: '/teacher/questions' },
+    { name: 'Pengawasan Ujian', icon: Activity, href: '/teacher/monitoring' },
+    { name: 'Penilaian', icon: BarChart3, href: '/teacher/reports' },
+    { name: 'Pengaturan Profil', icon: Settings, href: '/teacher/settings' },
   ];
 
-  const currentMenu = menuItems.find(item => pathname.startsWith(item.href)) || menuItems[0];
   const finalAvatarUrl = useMemo(() => getDriveImageUrl(teacherProfile?.avatar_url), [teacherProfile?.avatar_url]);
   const finalAppIconUrl = useMemo(() => getDriveImageUrl(appSettings.ikon_aplikasi), [appSettings.ikon_aplikasi]);
 
@@ -158,16 +151,14 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       
-      {/* ================= OVERLAY MOBILE ================= */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-200"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* ================= SIDEBAR KIRI (COLLAPSIBLE / DRAWER) ================= */}
-      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-40 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
+      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-50 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
         ${isSidebarOpen 
           ? 'w-[280px] md:w-72 translate-x-0' 
           : 'w-[280px] md:w-[88px] -translate-x-full md:translate-x-0 md:items-center'}
@@ -237,28 +228,17 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
         </div>
       </aside>
 
-      {/* ================= AREA KONTEN UTAMA (KANAN) ================= */}
       <main className="flex-1 flex flex-col h-screen min-w-0 bg-slate-50/50">
         
-        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 z-10 w-full">
-          
-          <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+        {/* HEADER ATAS KOSONG - HANYA TOMBOL MENU & PROFIL */}
+        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 relative z-50 w-full">
+          <div className="flex items-center">
             <button onClick={toggleSidebar} className={`p-2.5 bg-slate-100 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all shrink-0 ${isSidebarOpen ? 'md:hidden' : ''}`}>
               <Menu className="w-5 h-5 md:w-5 md:h-5" />
             </button>
-            
-            <div className="flex flex-col justify-center overflow-hidden h-full py-2">
-               <h2 className="text-lg md:text-2xl font-black text-slate-800 flex items-center gap-2 md:gap-3 tracking-tight truncate">
-                 <currentMenu.icon className="w-5 h-5 md:w-6 md:h-6 text-blue-600 hidden sm:block" /> 
-                 <span className="truncate">{currentMenu.name}</span>
-               </h2>
-               <p className="text-xs md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 hidden lg:block truncate pr-4">
-                 {currentMenu.desc}
-               </p>
-            </div>
           </div>
 
-          <div className="relative shrink-0 ml-2" ref={profileRef}>
+          <div className="relative shrink-0 ml-auto" ref={profileRef}>
             <button 
               onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
               className="flex items-center gap-2 md:gap-3 p-1 md:p-1.5 md:pr-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 rounded-[1rem] md:rounded-[1.5rem] transition-all select-none"
@@ -283,12 +263,12 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
               </div>
               <div className="hidden sm:block text-left pr-2 md:pr-0">
                  <p className="text-xs md:text-sm font-bold text-slate-800 leading-tight max-w-[100px] md:max-w-[150px] truncate">{teacherProfile?.full_name || 'Guru'}</p>
-                 <p className="text-[8px] md:text-[10px] font-black text-blue-600 uppercase tracking-widest mt-0.5">GURU</p>
+                 <p className="text-[8px] md:text-[10px] font-black text-blue-600 uppercase tracking-widest mt-0.5">GURU PENGAMPU</p>
               </div>
             </button>
 
             {isProfileMenuOpen && (
-              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
+              <div className="absolute z-50 top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
                 <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col items-center text-center">
                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1rem] md:rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
                     {finalAvatarUrl ? (
@@ -309,9 +289,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                     )}
                    </div>
                    <p className="text-sm md:text-base font-black text-slate-800 line-clamp-1 w-full" title={teacherProfile?.full_name}>{teacherProfile?.full_name}</p>
-                   
                    <p className="text-[11px] md:text-xs font-medium text-slate-500 line-clamp-1 w-full mt-0.5">{teacherProfile?.email}</p>
-                   
                    <span className="mt-2.5 bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-widest">
                      GURU PENGAMPU
                    </span>
@@ -329,7 +307,6 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
               </div>
             )}
           </div>
-
         </header>
 
         <div className="flex-1 overflow-y-auto relative custom-scrollbar">

@@ -124,7 +124,7 @@ export default function TeachersManagementPage() {
       if (subjErr) throw subjErr;
       if (subjData) setSubjectsList(subjData as Subject[]);
 
-      const { data: teacherData, error: teacherErr } = await supabase.from('users').select('*').eq('role', 'proctor').order('full_name', { ascending: true }); // Role di Supabase adalah 'proctor'
+      const { data: teacherData, error: teacherErr } = await supabase.from('users').select('*').eq('role', 'teacher').order('full_name', { ascending: true }); // Role di Supabase adalah 'proctor'
       if (teacherErr) throw teacherErr;
       setTeachers(teacherData || []);
     } catch (err: any) { showToast("Gagal memuat data: " + err.message, "error"); } finally { setLoading(false); }
@@ -199,7 +199,7 @@ export default function TeachersManagementPage() {
         full_name: formData.full_name, 
         username: formData.username, 
         email: `${formData.username}@nexassess.com`, 
-        role: 'proctor', // PASTIKAN ROLE ADALAH PROCTOR (KARENA GURU ADALAH PENGAWAS)
+        role: 'teacher', 
         taught_subjects: formData.taught_subjects, 
         avatar_url: formData.avatar_url || null, 
         ...(formData.password ? { password: formData.password } : {})
@@ -300,7 +300,7 @@ export default function TeachersManagementPage() {
             email: `${username}@nexassess.com`, 
             password: finalPassword,
             avatar_url: null, 
-            role: 'proctor', // PASTIKAN INI ADALAH PROCTOR
+            role: 'teacher',
             taught_subjects: matchedSubjectIds,
             isDuplicate: isDuplicateInDB || isDuplicateInFile
           };

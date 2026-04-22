@@ -161,7 +161,7 @@ export default function UnifiedQuestionsBankPage() {
       const { data: subjectsData, error } = await supabase.from('subjects').select('id, name, grade_level').order('name', { ascending: true });
       if (error) throw error;
 
-      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'proctor');
+      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'teacher');
       
       let finalSubjects: Subject[] = [];
       if (subjectsData) {

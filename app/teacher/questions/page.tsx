@@ -627,7 +627,7 @@ export default function TeacherQuestionsBankPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-5 md:px-8 md:py-6 rounded-[1.5rem] md:rounded-[2rem] border border-blue-100 shadow-sm">
             <div>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3"><Database className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Bank Soal</h1>
-              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Pilih Folder Mapel. Anda hanya bisa mengelola mapel yang Anda ampu.</p>
+              <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola kumpulan soal hanya pada mata pelajaran yang Anda ampu.</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2.5 md:gap-3 w-full md:w-auto">
               {myOwnedSubjects.length > 0 && (

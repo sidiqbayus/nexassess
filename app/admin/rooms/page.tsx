@@ -120,7 +120,7 @@ export default function RoomsManagementPage() {
       const { data: studentsData } = await supabase.from('users').select('id, full_name, student_number, class_group, room_id').eq('role', 'student').order('full_name');
       setStudents(studentsData || []);
 
-      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'proctor').order('full_name');
+      const { data: teachersData } = await supabase.from('users').select('id, full_name, taught_subjects').eq('role', 'teacher').order('full_name');
       setTeachers(teachersData || []);
 
       const { data: subjectsData } = await supabase.from('subjects').select('*').order('name');

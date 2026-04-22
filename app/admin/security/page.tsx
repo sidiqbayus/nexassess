@@ -240,7 +240,7 @@ export default function ExamSecurityPage() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
             <ShieldCheck className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Keamanan Lanjutan
           </h1>
-          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Aktifkan benteng pertahanan biometrik dan jaringan sesuai tingkat keketatan ujian.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Kelola pengaturan keamanan ujian seperti token, deteksi kecurangan.</p>
         </div>
         <button onClick={handleSave} disabled={saving || loading} className="flex items-center justify-center gap-2 bg-blue-600 text-white hover:bg-blue-700 px-6 md:px-8 py-3 md:py-3.5 rounded-xl font-bold text-xs md:text-sm shadow-md shadow-blue-200 transition-all active:scale-95 disabled:opacity-70 shrink-0 w-full sm:w-auto mt-2 sm:mt-0">
            {saving ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin"/> : <Save className="w-4 h-4 md:w-5 md:h-5"/>} {saving ? 'Mengunci...' : 'Terapkan Keamanan'}

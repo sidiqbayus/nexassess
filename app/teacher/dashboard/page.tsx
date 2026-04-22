@@ -82,9 +82,9 @@ export default function TeacherDashboard() {
 
   // Daftar Menu Pintasan Khusus Guru
   const quickLinks = [
-    { title: 'Bank Soal', desc: 'Kelola soal mapel Anda', icon: Database, href: '/teacher/question-bank', color: 'bg-emerald-50 text-emerald-600', hover: 'hover:border-emerald-300 hover:shadow-emerald-100' },
+    { title: 'Bank Soal', desc: 'Kelola soal mapel Anda', icon: Database, href: '/teacher/questions', color: 'bg-emerald-50 text-emerald-600', hover: 'hover:border-emerald-300 hover:shadow-emerald-100' },
     { title: 'Pengawasan', desc: 'Pantau ujian siswa', icon: Activity, href: '/teacher/monitoring', color: 'bg-rose-50 text-rose-600', hover: 'hover:border-rose-300 hover:shadow-rose-100' },
-    { title: 'Jadwal Ujian', desc: 'Lihat jadwal & token', icon: CalendarClock, href: '/teacher/schedules', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-300 hover:shadow-blue-100' },
+    { title: 'Jadwal Ujian', desc: 'Lihat jadwal & token', icon: CalendarClock, href: '/teacher/exams', color: 'bg-blue-50 text-blue-600', hover: 'hover:border-blue-300 hover:shadow-blue-100' },
   ];
 
   if (isLoading) {
@@ -109,7 +109,8 @@ export default function TeacherDashboard() {
             <Clock className="w-3.5 h-3.5 md:w-4 md:h-4" /> {currentDate}
           </p>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight mb-2 md:mb-3 leading-tight break-words">
-            {greeting},<br className="sm:hidden" /> {teacherName.split(' ')[0]}! 👋
+            {/* PERBAIKAN: Menghapus .split(' ')[0] agar nama dan gelar tampil penuh */}
+            {greeting},<br className="sm:hidden" /> {teacherName}! 👋
           </h1>
           <p className="text-indigo-100 font-medium max-w-xl leading-relaxed text-xs sm:text-sm md:text-base">
             Kelola bank soal untuk mata pelajaran Anda, pantau siswa selama ujian berlangsung, dan cek jadwal pelaksanaan CBT hari ini.

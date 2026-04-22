@@ -1086,9 +1086,9 @@ export default function TeacherMonitoringPage() {
         <div className="relative z-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-800 flex items-center gap-3 md:gap-4 tracking-tight">
             <div className="p-2 md:p-3 bg-indigo-50 text-indigo-600 rounded-xl md:rounded-2xl border border-indigo-100 shadow-inner"><MonitorPlay className="w-6 h-6 md:w-8 md:h-8" /></div>
-            Live Proctoring
+            Pengawasan Ujian
           </h1>
-          <p className="text-slate-500 text-xs md:text-sm mt-2 md:mt-3 font-bold max-w-xl leading-relaxed">Pantau aktivitas ujian. Anda hanya melihat daftar ujian yang mapelnya Anda ampu atau ruangannya Anda awasi.</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-2 md:mt-3 font-bold max-w-xl leading-relaxed">Pantau ujian secara langsung untuk mapel yang Anda ampu atau awasi.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-stretch sm:items-center gap-2 md:gap-3 w-full lg:w-auto relative z-10 mt-2 lg:mt-0">

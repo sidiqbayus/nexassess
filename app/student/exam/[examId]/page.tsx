@@ -6,7 +6,8 @@ import { supabase } from '@/lib/supabase';
 import { 
   ChevronLeft, ChevronRight, Flag, Monitor, CheckCircle2, 
   AlertTriangle, LoaderCircle, Maximize, Clock, Bookmark, 
-  UserCircle2, HelpCircle, Trash2, Headphones, MapPin, Globe, Lock, MessageSquare
+  UserCircle2, HelpCircle, Trash2, Headphones, MapPin, Globe, Lock, MessageSquare,
+  Menu, X, LayoutList
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -209,9 +210,9 @@ const TimerDisplay = ({ totalSeconds, sessionStartTime, onTimeUp }: { totalSecon
   };
 
   return (
-    <div className="w-full text-center flex flex-row md:flex-col items-center justify-between md:justify-center">
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest md:mb-2 flex items-center gap-1.5 md:hidden"><Clock className="w-3.5 h-3.5"/> Waktu</p>
-      <div className={`text-2xl md:text-4xl font-black tracking-tight font-mono ${timeLeft < 300 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
+    <div className="w-full text-center flex flex-row md:flex-col items-center justify-end md:justify-center gap-1.5 md:gap-0">
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest md:mb-2 flex items-center gap-1.5 md:hidden"><Clock className="w-3.5 h-3.5 text-blue-500"/> Waktu:</p>
+      <div className={`text-lg md:text-4xl font-black tracking-tight font-mono ${timeLeft < 300 ? 'text-rose-600 animate-pulse' : 'text-slate-800'}`}>
         {formatTime(timeLeft)}
       </div>
       <div className="w-1/3 md:w-full bg-slate-100 rounded-full h-1.5 md:h-2 mt-0 md:mt-4 overflow-hidden shadow-inner hidden md:block">
@@ -521,6 +522,9 @@ export default function ExamLivePage() {
   }, [params]);
 
   const router = useRouter();
+
+  // STATE BARU: Untuk Sidebar / Drawer Menu di HP
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   const [appTimeZone, setAppTimeZone] = useState('Asia/Jakarta');
   const [dialogConfig, setDialogConfig] = useState<{
@@ -1331,6 +1335,7 @@ export default function ExamLivePage() {
     if (questions.length === 0) return;
     await flushAutoSave(newIndex); 
     setCurrentIndex(newIndex);
+    setIsMobileSidebarOpen(false); // Menutup otomatis Sidebar Navigasi di Mobile saat soal dipilih
   };
 
   const handleAnswerChange = useCallback((questionId: string, selectedAnswer: string) => {
@@ -1505,13 +1510,20 @@ export default function ExamLivePage() {
            onContextMenu={blockCopyPaste}
         >
           
-          <aside className="w-full md:w-[340px] h-[35dvh] sm:h-[40dvh] md:h-[100dvh] bg-white border-b md:border-b-0 md:border-r border-slate-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20 shrink-0 overflow-hidden">
+          {/* MOBILE OVERLAY BACKDROP */}
+          {isMobileSidebarOpen && (
+             <div className="fixed inset-0 bg-slate-900/50 z-40 md:hidden animate-in fade-in" onClick={() => setIsMobileSidebarOpen(false)} />
+          )}
+
+          {/* SIDEBAR NAVIGASI (TERSEMBUNYI DI MOBILE, MUNCUL BILA KLIK MENU) */}
+          <aside className={`fixed inset-y-0 left-0 z-50 w-[85%] sm:w-[340px] md:relative md:w-[340px] h-[100dvh] bg-white border-r border-slate-200 flex flex-col shadow-[4px_0_24px_rgba(0,0,0,0.02)] shrink-0 overflow-hidden transform transition-transform duration-300 md:translate-x-0 ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             
+            {/* Header Identitas Sidebar */}
             <div className="p-3 md:p-6 border-b border-slate-100 bg-white flex items-center gap-3 md:gap-4 relative shrink-0">
               {studentAvatar ? (
-                 <img src={getAvatarUrl(studentAvatar)} alt="Profil" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-blue-100 shadow-sm shrink-0 hidden sm:block md:block" referrerPolicy="no-referrer" />
+                 <img src={getAvatarUrl(studentAvatar)} alt="Profil" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-blue-100 shadow-sm shrink-0" referrerPolicy="no-referrer" />
               ) : (
-                 <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm shrink-0 hidden sm:flex md:flex">
+                 <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-50 rounded-full flex items-center justify-center border-2 border-blue-100 shadow-sm shrink-0">
                    <UserCircle2 className="w-6 h-6 md:w-8 md:h-8 text-blue-600" strokeWidth={1.5} />
                  </div>
               )}
@@ -1523,6 +1535,11 @@ export default function ExamLivePage() {
                 </div>
               </div>
               
+              {/* Tombol Tutup Khusus Mobile */}
+              <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden ml-auto p-1.5 bg-slate-50 border border-slate-200 text-slate-500 rounded-lg hover:bg-rose-50 hover:text-rose-500 hover:border-rose-200 transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+
               {tabViolationCount > 0 && (
                  <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-rose-50 text-rose-600 text-[9px] md:text-[10px] font-black px-1.5 py-0.5 md:px-2 md:py-1 rounded-md border border-rose-200 animate-pulse flex items-center gap-1" title="Jumlah Pelanggaran Keamanan">
                     <AlertTriangle className="w-3 h-3 md:w-3.5 md:h-3.5" /> {tabViolationCount}
@@ -1530,9 +1547,9 @@ export default function ExamLivePage() {
               )}
             </div>
 
-            <div className="p-3 md:p-6 border-b border-slate-100 bg-white flex flex-col items-center justify-center shrink-0">
+            {/* Waktu (Desktop Saja, karena Mobile dipindah ke Header) */}
+            <div className="p-3 md:p-6 border-b border-slate-100 bg-white flex-col items-center justify-center shrink-0 hidden md:flex">
                <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 md:mb-2 items-center gap-1.5 hidden md:flex"><Clock className="w-3.5 h-3.5"/> Sisa Waktu Ujian</p>
-               
                {examInfo && examInfo.duration_seconds > 0 && examInfo.start_time_ms > 0 && (
                   <TimerDisplay 
                      totalSeconds={examInfo.duration_seconds} 
@@ -1542,14 +1559,16 @@ export default function ExamLivePage() {
                )}
             </div>
 
+            {/* Indikator Status Jawaban */}
             <div className="px-3 py-2 md:px-6 md:py-4 border-b border-slate-100 flex justify-between text-[9px] md:text-[10px] font-black uppercase tracking-widest text-slate-500 bg-slate-50/80 shrink-0">
               <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-blue-600 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-blue-400 rotate-45"></div></div> <span className="hidden sm:inline">Dijawab</span></span>
               <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-amber-400 shadow-sm relative overflow-hidden"><div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white/50 rotate-45"></div></div> <span className="hidden sm:inline">Ragu</span></span>
               <span className="flex items-center gap-1 md:gap-1.5"><div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-[4px] md:rounded-md bg-white border border-slate-200" /> <span className="hidden sm:inline">Kosong</span></span>
             </div>
 
+            {/* Grid Nomor Soal */}
             <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 bg-slate-50/30 custom-scrollbar">
-              <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
+              <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-5 gap-1.5 sm:gap-2 md:gap-3">
                 {questions.map((q, idx) => {
                   const ans = answers[q.id];
                   const isAnswered = isAnswerFilled(ans?.selected_answer);
@@ -1581,20 +1600,38 @@ export default function ExamLivePage() {
               </div>
             </div>
 
+            {/* Footer Sidebar (Kumpulkan) */}
             <div className="p-3 md:p-6 border-t border-slate-200 bg-white mt-auto shrink-0 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
               <div className="flex justify-between items-center mb-2 md:mb-3 text-[9px] md:text-[11px] font-black uppercase tracking-widest text-slate-500">
                 <span className="hidden sm:inline">Progres Menjawab:</span>
                 <span className={answeredQuestions === questions.length && questions.length > 0 ? 'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 ml-auto' : 'text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-100 ml-auto'}>{answeredQuestions} / {questions.length > 0 ? questions.length : 0} Soal</span>
               </div>
-              <button onClick={triggerSubmit} disabled={submitting} className="w-full py-2.5 md:py-4 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white disabled:text-slate-500 font-black uppercase tracking-widest text-[10px] md:text-xs rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 md:gap-2">
+              <button onClick={triggerSubmit} disabled={submitting} className="w-full py-3 md:py-4 bg-emerald-500 hover:bg-emerald-600 disabled:bg-slate-300 text-white disabled:text-slate-500 font-black uppercase tracking-widest text-[10px] md:text-xs rounded-xl md:rounded-2xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 md:gap-2">
                 {submitting ? <LoaderCircle className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> : <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" />}
                 {submitting ? 'Mengumpulkan...' : 'Kumpulkan'}
               </button>
             </div>
           </aside>
 
-          <main className="flex-1 min-h-0 bg-slate-50 flex flex-col relative scroll-smooth">
+          {/* MAIN KONTEN SOAL (TAMPIL PENUH DI HP) */}
+          <main className="flex-1 min-h-0 bg-slate-50 flex flex-col relative scroll-smooth w-full">
             
+            {/* HEADER MOBILE KHUSUS WAKTU & TOMBOL MENU */}
+            <div className="md:hidden flex items-center justify-between bg-white px-4 py-2 border-b border-slate-200 shrink-0 z-20 shadow-sm">
+               <button onClick={() => setIsMobileSidebarOpen(true)} className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-widest transition-colors shadow-sm">
+                  <Menu className="w-3.5 h-3.5" /> Daftar Soal
+               </button>
+               <div className="flex flex-1 justify-end pl-2">
+                  {examInfo && examInfo.duration_seconds > 0 && examInfo.start_time_ms > 0 && (
+                     <TimerDisplay 
+                        totalSeconds={examInfo.duration_seconds} 
+                        sessionStartTime={examInfo.start_time_ms} 
+                        onTimeUp={handleForceSubmit} 
+                     />
+                  )}
+               </div>
+            </div>
+
             <div className="h-1.5 w-full bg-slate-200 shrink-0 z-20">
               <div className="h-full bg-blue-500 transition-all duration-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: questions.length > 0 ? `${((currentIndex + 1) / questions.length) * 100}%` : '0%' }}></div>
             </div>

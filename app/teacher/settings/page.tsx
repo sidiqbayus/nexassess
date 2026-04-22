@@ -214,7 +214,7 @@ export default function TeacherSettingsPage() {
            <div className="p-2 md:p-3 bg-blue-50 text-blue-600 rounded-xl shrink-0"><UserCircle2 className="w-5 h-5 md:w-6 md:h-6" /></div>
            <div className="min-w-0 flex-1">
              <h1 className="text-lg md:text-xl font-black text-slate-800 truncate">Pengaturan Profil</h1>
-             <p className="text-slate-500 text-xs md:text-sm font-medium truncate mt-0.5">Sesuaikan identitas akun pengampu Anda.</p>
+             <p className="text-slate-500 text-xs md:text-sm font-medium truncate mt-0.5">Perbarui nama, NIP, foto profil, dan kata sandi Anda.</p>
            </div>
         </div>
         <button onClick={handleSave} disabled={isSaving} className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3.5 md:px-8 md:py-3.5 rounded-xl font-bold text-xs md:text-sm transition-all shadow-md shadow-blue-200 active:scale-95 whitespace-nowrap w-full sm:w-auto shrink-0">
@@ -233,7 +233,8 @@ export default function TeacherSettingsPage() {
             </div>
           </div>
           <div className="bg-indigo-50 border border-indigo-100 text-indigo-700 px-3 py-1.5 md:px-4 md:py-2 rounded-xl text-[9px] md:text-xs font-black tracking-widest uppercase flex items-center justify-center gap-1.5 md:gap-2 w-full sm:w-auto shrink-0 text-center">
-            Role: {teacherProfile.role === 'teacher' ? 'GURU PENGAMPU' : teacherProfile.role}
+            {/* PERBAIKAN DI SINI: Memaksa label menjadi GURU PENGAMPU tanpa memedulikan kata kunci di database */}
+            Role: GURU PENGAMPU
           </div>
         </div>
         

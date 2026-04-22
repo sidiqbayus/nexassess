@@ -118,7 +118,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  // DAFTAR MENU (Telah dibersihkan dari 'desc')
+  // DAFTAR MENU DENGAN DESKRIPSI SPESIFIK
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
     { name: 'Data Siswa', icon: Users, href: '/admin/students' },
@@ -164,13 +164,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ================= OVERLAY MOBILE ================= */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden animate-in fade-in duration-200"
+          className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-200"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* ================= SIDEBAR KIRI (COLLAPSIBLE / DRAWER) ================= */}
-      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-40 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
+      <aside className={`bg-white border-r border-slate-200 flex flex-col shadow-xl md:shadow-sm z-50 transition-all duration-300 ease-in-out shrink-0 fixed md:relative h-full
         ${isSidebarOpen 
           ? 'w-[280px] md:w-72 translate-x-0' 
           : 'w-[280px] md:w-[88px] -translate-x-full md:translate-x-0 md:items-center'}
@@ -243,8 +243,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* ================= AREA KONTEN UTAMA (KANAN) ================= */}
       <main className="flex-1 flex flex-col h-screen min-w-0 bg-slate-50/50">
         
-        {/* HEADER ATAS KOSONG - HANYA TOMBOL MENU & PROFIL */}
-        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 z-10 w-full">
+        {/* PERBAIKAN: Penambahan `relative` dan `z-50` pada header */}
+        <header className="bg-white border-b border-slate-200 h-20 md:h-24 flex items-center justify-between px-4 sm:px-6 md:px-10 shrink-0 relative z-50 w-full">
           
           <div className="flex items-center">
             {/* Tombol Buka Sidebar (Hamburger) jika sedang ditutup */}
@@ -285,7 +285,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Dropdown Profil Menu */}
             {isProfileMenuOpen && (
-              <div className="absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.08)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
+              <div className="absolute z-50 top-[calc(100%+0.5rem)] right-0 w-[240px] md:w-64 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_10px_40px_rgba(0,0,0,0.15)] overflow-hidden animate-in slide-in-from-top-2 fade-in duration-200">
                 <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex flex-col items-center text-center">
                    <div className="w-14 h-14 md:w-16 md:h-16 rounded-[1rem] md:rounded-[1.2rem] overflow-hidden bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center text-blue-700 font-black relative mb-3">
                     {finalAvatarUrl ? (

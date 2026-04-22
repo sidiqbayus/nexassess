@@ -53,7 +53,7 @@ export async function POST(req: Request) {
           // 2. JIKA GURU BARU (INSERT)
           // ==========================================
           const email = t.email || `${t.username}@nexassess.com`;
-          const targetRole = t.role || 'proctor'; // Ambil role dari payload frontend
+          const targetRole = t.role || 'teacher'; // Ambil role dari payload frontend
           
           // 2A. Daftarkan diam-diam ke Supabase Auth Internal
           const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({

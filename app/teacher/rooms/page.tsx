@@ -308,9 +308,9 @@ export default function TeacherRoomsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4 bg-white p-4 sm:p-5 md:px-8 md:py-6 rounded-2xl md:rounded-[2rem] border border-blue-100 shadow-sm">
               <div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
-                  <Building className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Sesi Ruang Ujian
+                  <Building className="w-6 h-6 md:w-8 md:h-8 text-blue-600" /> Ruang Ujian
                 </h1>
-                <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium md:ml-11">Lihat dan pantau daftar sesi ruangan beserta pengawasnya (Mode Baca).</p>
+                <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium md:ml-11">Lihat dan pantau daftar sesi ruangan beserta pengawasnya.</p>
               </div>
             </div>
 

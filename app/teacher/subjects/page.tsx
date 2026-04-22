@@ -211,7 +211,7 @@ export default function TeacherSubjectsPage() {
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-800 flex items-center gap-2 md:gap-3">
             <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-indigo-600" /> Mata Pelajaran
           </h1>
-          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Lihat daftar mata pelajaran yang terdaftar pada sistem (Mode Baca).</p>
+          <p className="text-slate-500 text-xs md:text-sm mt-1 font-medium ml-8 md:ml-11 leading-snug">Lihat daftar mata pelajaran yang terdaftar pada sistem.</p>
         </div>
       </div>
 
